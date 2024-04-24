@@ -11,6 +11,7 @@ import {
 } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { take } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'lib-login',
@@ -32,7 +33,10 @@ export class LoginComponent {
     }),
   });
 
-  constructor(private readonly _authService: AuthService) {}
+  constructor(
+    private readonly _authService: AuthService,
+    private readonly _router: Router
+  ) {}
 
   onSignInBtnClicked(form: FormGroup): void {
     this._authService
@@ -41,6 +45,8 @@ export class LoginComponent {
         password: form.get('password')?.value,
       })
       .pipe(take(1))
-      .subscribe();
+      .subscribe({
+        complete: () => this._router.navigateByUrl('home'),
+      });
   }
 }
