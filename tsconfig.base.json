@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@budget-app/auth": ["libs/auth/src/index.ts"]
+      "@budget-app/auth": ["libs/auth/src/index.ts"],
+      "@budget-app/core": ["libs/core/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
