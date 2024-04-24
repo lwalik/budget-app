@@ -22,25 +22,15 @@ export class AuthService {
     });
   }
 
-  getUser(): Observable<AuthUserModel | null> {
-    return this._auth.user.pipe(
-      map((data) =>
-        data
-          ? {
-              email: data.email,
-              emailVerified: data.emailVerified,
-              uid: data.uid,
-            }
-          : null
-      )
-    );
-  }
-
   isLoggedIn(): Observable<boolean> {
     return this._auth.user.pipe(map((data) => !!data));
   }
 
   logout(): Observable<void> {
     return of(this._auth.signOut()).pipe(map(() => void 0));
+  }
+
+  getUserId(): Observable<string> {
+    return this._auth.user.pipe(map((data) => (data ? data.uid : '')));
   }
 }

@@ -5,6 +5,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { provideRouter } from '@angular/router';
 import { environment } from '../environments/environment';
 import { appRoutes } from './app.routes';
+import { userContextProvider } from '../../../../libs/auth/src/lib/providers/user-context.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,5 +15,6 @@ export const appConfig: ApplicationConfig = {
       AngularFireAuthModule,
       AngularFireModule.initializeApp(environment.firebaseConfig),
     ]),
+    userContextProvider(),
   ],
 };
