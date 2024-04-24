@@ -1,25 +1,38 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { UserCredentialsModel } from '../models/user-credentials.model';
-import { Observable } from 'rxjs';
+import { LoginCredentialsModel } from '../models/login-credentials.model';
+import { map, Observable } from 'rxjs';
+import { AuthUserModel } from '../models/auth-user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(private readonly _auth: AngularFireAuth) {
-  }
+  constructor(private readonly _auth: AngularFireAuth) {}
 
-  login(user: UserCredentialsModel): Observable<any> {
-    return new Observable(observer => {
-      this._auth.signInWithEmailAndPassword(user.email, user.password)
-        .then((response) => {
-          console.log('response: ', response);
-          observer.next(response);
+  login(user: LoginCredentialsModel): Observable<void> {
+    return new Observable((observer) => {
+      this._auth
+        .signInWithEmailAndPassword(user.email, user.password)
+        .then(() => {
+          observer.next(void 0);
           observer.complete();
         })
         .catch((error) => {
-          console.log('error: ', error);
-          observer.error(error)
-        })
-    })
+          observer.error(error);
+        });
+    });
+  }
+
+  getUser(): Observable<AuthUserModel | null> {
+    return this._auth.user.pipe(
+      map((data) =>
+        data
+          ? {
+              email: data.email,
+              emailVerified: data.emailVerified,
+              uid: data.uid,
+            }
+          : null
+      )
+    );
   }
 }
