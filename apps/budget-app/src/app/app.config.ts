@@ -1,5 +1,6 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { provideRouter } from '@angular/router';
 import { environment } from '../environments/environment';
@@ -10,6 +11,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(appRoutes),
     importProvidersFrom([
       AngularFirestoreModule,
+      AngularFireAuthModule,
       AngularFireModule.initializeApp(environment.firebaseConfig),
     ]),
   ],
