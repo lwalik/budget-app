@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { LoginCredentialsModel } from '../models/login-credentials.model';
 import { map, Observable, of } from 'rxjs';
-import { AuthUserModel } from '../models/auth-user.model';
+import { LoginCredentialsModel } from '../models/login-credentials.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -31,6 +30,7 @@ export class AuthService {
   }
 
   getUserId(): Observable<string> {
+    // TODO po loginie zapisać dane usera w subject i tutaj tylko zwrócić dane z subject
     return this._auth.user.pipe(map((data) => (data ? data.uid : '')));
   }
 }
