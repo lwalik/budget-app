@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { map, Observable, of } from 'rxjs';
 import { LoginCredentialsModel } from '../models/login-credentials.model';
+import { UserContext } from '@budget-app/core';
 
 @Injectable({ providedIn: 'root' })
-export class AuthService {
+export class AuthService implements UserContext {
   constructor(private readonly _auth: AngularFireAuth) {}
 
   login(user: LoginCredentialsModel): Observable<void> {

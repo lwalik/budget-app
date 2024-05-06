@@ -5,7 +5,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { provideRouter } from '@angular/router';
 import { environment } from '../environments/environment';
 import { appRoutes } from './app.routes';
-import { userContextProvider } from '../../../../libs/auth/src/lib/providers/user-context.provider';
+import { userContextProvider } from '@budget-app/auth';
 
 export const appConfig: ApplicationConfig = {
   providers: [
