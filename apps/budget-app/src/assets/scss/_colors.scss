@@ -1,0 +1,33 @@
+@layer components {
+  .bg-primary {
+    @apply bg-slate-900;
+  }
+
+  .text-primary {
+    @apply text-slate-900;
+  }
+
+  .bg-secondary {
+    @apply bg-slate-50;
+  }
+
+  .text-secondary {
+    @apply text-slate-50;
+  }
+
+  .bg-warn {
+    @apply bg-teal-500;
+  }
+
+  .text-warn {
+    @apply text-teal-500;
+  }
+
+  .bg-accent {
+    @apply bg-teal-200;
+  }
+
+  .text-accent {
+    @apply text-teal-200;
+  }
+}
