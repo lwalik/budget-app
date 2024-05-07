@@ -1,5 +1,5 @@
 export interface AuthUserModel {
-  readonly email: string | null;
+  readonly email: string;
   readonly emailVerified: boolean;
   readonly uid: string;
 }

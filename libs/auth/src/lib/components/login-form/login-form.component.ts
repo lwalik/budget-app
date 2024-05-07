@@ -11,7 +11,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { take } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
+import { AuthState } from '../../state/auth.state';
 
 @Component({
   selector: 'lib-login',
@@ -34,12 +34,12 @@ export class LoginFormComponent {
   });
 
   constructor(
-    private readonly _authService: AuthService,
+    private readonly _authState: AuthState,
     private readonly _router: Router
   ) {}
 
   onSignInBtnClicked(form: FormGroup): void {
-    this._authService
+    this._authState
       .login({
         email: form.get('email')?.value,
         password: form.get('password')?.value,

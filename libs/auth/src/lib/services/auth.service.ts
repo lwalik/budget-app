@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { map, Observable, of } from 'rxjs';
+import { AuthUserModel } from '../models/auth-user.model';
 import { LoginCredentialsModel } from '../models/login-credentials.model';
-import { UserContext } from '@budget-app/core';
 
 @Injectable({ providedIn: 'root' })
-export class AuthService implements UserContext {
+export class AuthService {
   constructor(private readonly _auth: AngularFireAuth) {}
 
   login(user: LoginCredentialsModel): Observable<void> {
@@ -22,16 +22,21 @@ export class AuthService implements UserContext {
     });
   }
 
-  isLoggedIn(): Observable<boolean> {
-    return this._auth.user.pipe(map((data) => !!data));
-  }
-
   logout(): Observable<void> {
     return of(this._auth.signOut()).pipe(map(() => void 0));
   }
 
-  getUserId(): Observable<string> {
-    // TODO po loginie zapisać dane usera w subject i tutaj tylko zwrócić dane z subject
-    return this._auth.user.pipe(map((data) => (data ? data.uid : '')));
+  getUser(): Observable<AuthUserModel | null> {
+    return this._auth.user.pipe(
+      map((user) =>
+        user
+          ? {
+              uid: user.uid,
+              email: user.email ?? '',
+              emailVerified: user.emailVerified,
+            }
+          : null
+      )
+    );
   }
 }

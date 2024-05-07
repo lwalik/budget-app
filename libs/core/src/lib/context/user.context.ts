@@ -6,4 +6,5 @@ export const USER_CONTEXT: InjectionToken<UserContext> =
 
 export interface UserContext {
   getUserId(): Observable<string>;
+  getUserEmail(): Observable<string>;
 }
