@@ -17,7 +17,7 @@ import { AuthService } from '../services/auth.service';
 export class AuthState implements UserContext {
   private readonly _userSubject: BehaviorSubject<AuthUserModel | null> =
     new BehaviorSubject<AuthUserModel | null>(null);
-  readonly user$: Observable<AuthUserModel | null> =
+  private readonly _user$: Observable<AuthUserModel | null> =
     this._userSubject.asObservable();
 
   constructor(private readonly _authService: AuthService) {}
@@ -31,7 +31,7 @@ export class AuthState implements UserContext {
   }
 
   isLoggedIn(): Observable<boolean> {
-    return this.user$.pipe(
+    return this._user$.pipe(
       take(1),
       map((user) => !!user),
       switchMap((isLoggedIn: boolean) =>
@@ -46,10 +46,10 @@ export class AuthState implements UserContext {
   }
 
   getUserId(): Observable<string> {
-    return this.user$.pipe(map((user) => (user ? user.uid : '')));
+    return this._user$.pipe(map((user) => (user ? user.uid : '')));
   }
 
   getUserEmail(): Observable<string> {
-    return this.user$.pipe(map((user) => (user ? user.email : '')));
+    return this._user$.pipe(map((user) => (user ? user.email : '')));
   }
 }
