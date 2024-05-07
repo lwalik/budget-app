@@ -1,5 +1,5 @@
 // Components
-export * from './lib/components/login/login.component';
+export * from './lib/components/login-form/login-form.component';
 // Guards
 export * from './lib/guards/auth/auth.guard';
 // Providers

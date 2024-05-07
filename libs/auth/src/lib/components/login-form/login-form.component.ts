@@ -9,19 +9,19 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
-import { take } from 'rxjs';
 import { Router } from '@angular/router';
+import { take } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'lib-login',
   standalone: true,
   imports: [ReactiveFormsModule],
-  templateUrl: './login.component.html',
+  templateUrl: './login-form.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent {
+export class LoginFormComponent {
   readonly loginForm: FormGroup = new FormGroup({
     email: new FormControl<string>('', {
       validators: [Validators.required, Validators.email],

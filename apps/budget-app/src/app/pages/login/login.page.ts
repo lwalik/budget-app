@@ -1,16 +1,15 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
-import { LoginComponent } from '@budget-app/auth';
+import { LoginFormComponent } from '@budget-app/auth';
 
 @Component({
   standalone: true,
-  imports: [LoginComponent],
+  imports: [LoginFormComponent],
   templateUrl: './login.page.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginPage {
-}
+export class LoginPage {}
