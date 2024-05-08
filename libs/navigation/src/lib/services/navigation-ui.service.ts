@@ -31,10 +31,11 @@ export class NavigationUiService {
     return this._navLinksSubject.asObservable().pipe(
       take(1),
       tap((links: NavLinkModel[]) => {
-        const updatedLinks: NavLinkModel[] = links.map((link: NavLinkModel) =>
-          link.id === selectedLink.id
-            ? { ...link, isActive: true }
-            : { ...link, isActive: false }
+        const updatedLinks: NavLinkModel[] = links.map(
+          (link: NavLinkModel) => ({
+            ...link,
+            isActive: link.id === selectedLink.id,
+          })
         );
 
         this._navLinksSubject.next(updatedLinks);
