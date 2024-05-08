@@ -4,6 +4,7 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { NavLinkModel } from '../../models/nav-link.model';
 import { NavigationUiService } from '../../services/navigation-ui.service';
@@ -11,7 +12,7 @@ import { NavigationUiService } from '../../services/navigation-ui.service';
 @Component({
   selector: 'lib-sidebar-nav',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   styleUrls: ['./sidebar-nav.component.scss'],
   templateUrl: './sidebar-nav.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -22,11 +23,4 @@ export class SidebarNavComponent {
     this._navigationUiService.getAll();
 
   constructor(private readonly _navigationUiService: NavigationUiService) {}
-
-  onNavLinkClicked(link: NavLinkModel): void {
-    if (link.isActive) {
-      return;
-    }
-    this._navigationUiService.setActive(link).subscribe();
-  }
 }

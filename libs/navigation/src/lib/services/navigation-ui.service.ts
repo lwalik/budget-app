@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, map, take, tap } from 'rxjs';
+import { NavigationEnd, Router } from '@angular/router';
+import {
+  BehaviorSubject,
+  Observable,
+  combineLatest,
+  filter,
+  map,
+  startWith,
+} from 'rxjs';
 import { NavLinkModel } from '../models/nav-link.model';
 
 @Injectable({ providedIn: 'root' })
@@ -10,7 +17,7 @@ export class NavigationUiService {
       {
         id: 1,
         name: 'Home',
-        url: 'home',
+        url: '/home',
         isActive: false,
       },
       {
@@ -20,28 +27,26 @@ export class NavigationUiService {
         isActive: false,
       },
     ]);
+  private readonly urlState$: Observable<string> = this._router.events.pipe(
+    filter((event) => event instanceof NavigationEnd),
+    map((event) => (event as NavigationEnd).url)
+  );
+
+  private readonly navLinks$: Observable<NavLinkModel[]> = combineLatest([
+    this._navLinksSubject.asObservable(),
+    this.urlState$.pipe(startWith(this._router.url)),
+  ]).pipe(
+    map(([navLinks, url]: [NavLinkModel[], string]) => {
+      return navLinks.map((navLink: NavLinkModel) => ({
+        ...navLink,
+        isActive: navLink.url === url,
+      }));
+    })
+  );
 
   constructor(private readonly _router: Router) {}
 
   getAll(): Observable<NavLinkModel[]> {
-    return this._navLinksSubject.asObservable();
-  }
-
-  setActive(selectedLink: NavLinkModel): Observable<void> {
-    return this._navLinksSubject.asObservable().pipe(
-      take(1),
-      tap((links: NavLinkModel[]) => {
-        const updatedLinks: NavLinkModel[] = links.map(
-          (link: NavLinkModel) => ({
-            ...link,
-            isActive: link.id === selectedLink.id,
-          })
-        );
-
-        this._navLinksSubject.next(updatedLinks);
-      }),
-      tap(() => this._router.navigateByUrl(selectedLink.url)),
-      map(() => void 0)
-    );
+    return this.navLinks$;
   }
 }
