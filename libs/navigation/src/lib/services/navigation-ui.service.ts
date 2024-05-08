@@ -17,7 +17,7 @@ export class NavigationUiService {
       {
         id: 1,
         name: 'Overview',
-        url: '/home',
+        url: '/overview',
         isActive: false,
       },
       {

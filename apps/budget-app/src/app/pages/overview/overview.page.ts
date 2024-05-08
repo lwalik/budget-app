@@ -7,8 +7,8 @@ import {
 @Component({
   standalone: true,
   imports: [],
-  templateUrl: './home.page.html',
+  templateUrl: './overview.page.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomePage {}
+export class OverviewPage {}
