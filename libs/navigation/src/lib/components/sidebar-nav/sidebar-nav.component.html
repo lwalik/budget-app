@@ -9,7 +9,8 @@
             <li>
                 <ul role="list"
                     class="-mx-2 space-y-1">
-                    <li *ngFor="let link of links$ | async">
+                    <li *ngFor="let link of links$ | async"
+                        (click)="onNavLinkClicked(link)">
                         <a [ngClass]="{'active-nav-link': link.isActive, 'inactive-nav-link': !link.isActive }"
                            class="nav-link group">
                             <svg class="nav-link-icon group-hover:text-primary"

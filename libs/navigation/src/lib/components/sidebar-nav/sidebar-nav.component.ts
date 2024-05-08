@@ -22,4 +22,11 @@ export class SidebarNavComponent {
     this._navigationService.getAll();
 
   constructor(private readonly _navigationService: InMemoryNavigationService) {}
+
+  onNavLinkClicked(link: NavLinkModel): void {
+    if (link.isActive) {
+      return;
+    }
+    this._navigationService.setActive(link).subscribe();
+  }
 }
