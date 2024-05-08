@@ -28,6 +28,12 @@ export class AuthState implements UserContext {
     );
   }
 
+  logout(): Observable<void> {
+    return this._authService
+      .logout()
+      .pipe(tap(() => this._userSubject.next(null)));
+  }
+
   isLoggedIn(): Observable<boolean> {
     return this._userSubject.asObservable().pipe(
       take(1),

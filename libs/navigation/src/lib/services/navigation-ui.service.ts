@@ -20,12 +20,6 @@ export class NavigationUiService {
         url: '/home',
         isActive: false,
       },
-      {
-        id: 2,
-        name: 'Dashboard',
-        url: '/',
-        isActive: false,
-      },
     ]);
   private readonly urlState$: Observable<string> = this._router.events.pipe(
     filter((event) => event instanceof NavigationEnd),
