@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NavLinkModel } from '../../models/nav-link.model';
-import { InMemoryNavigationService } from '../../services/in-memory-navigation.service';
+import { NavigationUiService } from '../../services/navigation-ui.service';
 
 @Component({
   selector: 'lib-sidebar-nav',
@@ -19,14 +19,14 @@ import { InMemoryNavigationService } from '../../services/in-memory-navigation.s
 })
 export class SidebarNavComponent {
   readonly links$: Observable<NavLinkModel[]> =
-    this._navigationService.getAll();
+    this._navigationUiService.getAll();
 
-  constructor(private readonly _navigationService: InMemoryNavigationService) {}
+  constructor(private readonly _navigationUiService: NavigationUiService) {}
 
   onNavLinkClicked(link: NavLinkModel): void {
     if (link.isActive) {
       return;
     }
-    this._navigationService.setActive(link).subscribe();
+    this._navigationUiService.setActive(link).subscribe();
   }
 }

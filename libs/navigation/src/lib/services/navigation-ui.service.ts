@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, map, take, tap } from 'rxjs';
 import { NavLinkModel } from '../models/nav-link.model';
 
 @Injectable({ providedIn: 'root' })
-export class InMemoryNavigationService {
+export class NavigationUiService {
   private readonly _navLinksSubject: BehaviorSubject<NavLinkModel[]> =
     new BehaviorSubject<NavLinkModel[]>([
       {
