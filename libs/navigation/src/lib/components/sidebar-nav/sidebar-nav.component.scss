@@ -1,0 +1,23 @@
+.nav-link {
+  @apply flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold cursor-pointer;
+
+  .nav-link-icon {
+    @apply h-6 w-6 shrink-0;
+  }
+}
+
+.active-nav-link {
+  @apply bg-warn text-primary;
+
+  .nav-link-icon {
+    @apply text-primary;
+  }
+}
+
+.inactive-nav-link {
+  @apply text-secondary hover:text-primary hover:bg-warn;
+
+  .nav-link-icon {
+    @apply text-secondary;
+  }
+}

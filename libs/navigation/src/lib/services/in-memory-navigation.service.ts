@@ -11,6 +11,11 @@ export class InMemoryNavigationService {
         url: 'home',
         isActive: false,
       },
+      {
+        name: 'Dashboard',
+        url: 'home',
+        isActive: false,
+      },
     ]);
 
   getAll(): Observable<NavLinkModel[]> {
