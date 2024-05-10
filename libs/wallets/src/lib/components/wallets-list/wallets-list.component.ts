@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { NewWalletFormComponent } from '../new-wallet-form/new-wallet-form.component';
 import { DepositFormModalComponent } from '../deposit-form-modal/deposit-form-modal.component';
+import { WithdrawFormModalComponent } from '../withdraw-form-modal/withdraw-form-modal.component';
 
 @Component({
   selector: 'lib-wallets-list',
@@ -51,7 +52,13 @@ export class WalletsListComponent {
     });
   }
 
-  onWithdrawBtnClicked(walletId: string): void {
-    console.log('walletId: ', walletId);
+  onWithdrawBtnClicked(walletId: string, balance: number): void {
+    this._dialog.open(WithdrawFormModalComponent, {
+      hasBackdrop: true,
+      data: {
+        walletId,
+        balance,
+      },
+    });
   }
 }

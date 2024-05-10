@@ -27,7 +27,7 @@
       <dt class="text-sm font-medium leading-6 text-gray-500">Actions</dt>
       <dd class="w-full flex flex-col gap-2 text-2xl lg:text-3xl font-medium leading-10 tracking-tight text-gray-900">
         <button class="btn-success" (click)="onDepositBtnClicked(wallet.id, wallet.balance)">Deposit</button>
-        <button class="btn-info" (click)="onWithdrawBtnClicked(wallet.id)">Withdraw</button>
+        <button class="btn-info" (click)="onWithdrawBtnClicked(wallet.id, wallet.balance)">Withdraw</button>
       </dd>
     </div>
 

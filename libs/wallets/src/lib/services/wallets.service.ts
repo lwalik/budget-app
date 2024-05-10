@@ -42,7 +42,7 @@ export class WalletsService {
     });
   }
 
-  deposit(walletId: string, newBalance: number): Observable<void> {
+  updateBalance(walletId: string, newBalance: number): Observable<void> {
     return mapPromiseToVoidObservable(
       this._client.doc('wallets/' + walletId).update({ balance: newBalance })
     );

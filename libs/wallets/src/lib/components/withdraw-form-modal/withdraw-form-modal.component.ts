@@ -18,24 +18,32 @@ import {
 import { WalletsService } from '../../services/wallets.service';
 import { take } from 'rxjs';
 import { WalletOperationDialogDataModel } from '../../view-models/wallet-operation-dialog-data.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'lib-deposit-form-modal',
+  selector: 'lib-withdraw-form-modal',
   standalone: true,
   imports: [
     SimpleModalComponent,
     SimpleInputFormComponent,
     ReactiveFormsModule,
+    CommonModule,
   ],
-  templateUrl: './deposit-form-modal.component.html',
+  templateUrl: './withdraw-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DepositFormModalComponent {
-  readonly depositForm: FormGroup = new FormGroup({
+export class WithdrawFormModalComponent {
+  readonly currentBalance: number = this._dialogData.balance;
+
+  readonly withdrawForm: FormGroup = new FormGroup({
     amount: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(0.01)],
+      validators: [
+        Validators.required,
+        Validators.min(0.01),
+        Validators.max(this.currentBalance),
+      ],
     }),
   });
 
@@ -46,13 +54,20 @@ export class DepositFormModalComponent {
     private readonly _dialogData: WalletOperationDialogDataModel
   ) {}
 
-  onDepositFormSubmitted(form: FormGroup): void {
+  onWithdrawFormFormSubmitted(form: FormGroup): void {
     if (!form.valid) {
       return;
     }
 
     const newBalance: number =
-      +form.get('amount')?.value + this._dialogData.balance;
+      this._dialogData.balance - +form.get('amount')?.value;
+
+    if (newBalance < 0) {
+      console.log('Brak wystarczających środków');
+      this.withdrawForm.setErrors({ notEnoughMoney: true });
+      return;
+    }
+
     this._walletsService
       .updateBalance(this._dialogData.walletId, newBalance)
       .pipe(take(1))
