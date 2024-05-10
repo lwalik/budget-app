@@ -18,6 +18,7 @@
       "@budget-app/auth": ["libs/auth/src/index.ts"],
       "@budget-app/core": ["libs/core/src/index.ts"],
       "@budget-app/navigation": ["libs/navigation/src/index.ts"],
+      "@budget-app/shared": ["libs/shared/src/index.ts"],
       "@budget-app/wallets": ["libs/wallets/src/index.ts"]
     }
   },
