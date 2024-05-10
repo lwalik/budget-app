@@ -1,0 +1,34 @@
+// .mobile-menu-show {
+//   animation: slideIn 0.8s forwards;
+// }
+
+// .mobile-menu-hide {
+//   animation: slideOut 0.8s forwards;
+// }
+
+// .mobile-menu {
+//   transform: translateX(-1000%);
+// }
+
+// .mobile-menu-backdrop-show {
+//   animation: fadeIn 0.8s forwards;
+// }
+
+.mobile-menu {
+  .sidebar {
+    transform: translateX(-1000%);
+  }
+  .sidebar-show {
+    animation: slideIn 0.8s forwards;
+  }
+  .sidebar-hide {
+    animation: slideOut 0.8s forwards;
+  }
+
+  .backdrop-show {
+    animation: fadeIn 0.8s forwards;
+  }
+  .backdrop {
+    display: none;
+  }
+}
