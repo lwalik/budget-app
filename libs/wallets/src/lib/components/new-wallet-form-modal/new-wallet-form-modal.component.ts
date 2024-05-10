@@ -21,7 +21,7 @@ import { USER_CONTEXT, UserContext } from '@budget-app/core';
 import { switchMap, take } from 'rxjs';
 
 @Component({
-  selector: 'lib-new-wallet-form',
+  selector: 'lib-new-wallet-form-modal',
   standalone: true,
   imports: [
     CommonModule,
@@ -29,11 +29,11 @@ import { switchMap, take } from 'rxjs';
     SimpleInputFormComponent,
     SimpleModalComponent,
   ],
-  templateUrl: './new-wallet-form.component.html',
+  templateUrl: './new-wallet-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewWalletFormComponent {
+export class NewWalletFormModalComponent {
   readonly walletForm: FormGroup = new FormGroup({
     name: new FormControl('', {
       validators: [Validators.required],

@@ -10,7 +10,7 @@ import { WalletModel } from '../../models/wallet.model';
 import { WalletsService } from '../../services/wallets.service';
 import { CommonModule } from '@angular/common';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { NewWalletFormComponent } from '../new-wallet-form/new-wallet-form.component';
+import { NewWalletFormModalComponent } from '../new-wallet-form-modal/new-wallet-form-modal.component';
 import { DepositFormModalComponent } from '../deposit-form-modal/deposit-form-modal.component';
 import { WithdrawFormModalComponent } from '../withdraw-form-modal/withdraw-form-modal.component';
 
@@ -37,7 +37,7 @@ export class WalletsListComponent {
   ) {}
 
   onNewWalletBtnClicked(): void {
-    this._dialog.open(NewWalletFormComponent, {
+    this._dialog.open(NewWalletFormModalComponent, {
       hasBackdrop: true,
     });
   }
