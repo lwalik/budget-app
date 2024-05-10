@@ -1,52 +1,19 @@
-<div>
-    <form [formGroup]="walletForm">
-        <div>
-            <label for="name"
-                   class="block text-sm font-medium leading-6 text-gray-900">Name</label>
-            <div class="relative mt-2 rounded-md shadow-sm">
-                <input type="text"
-                       name="name"
-                       formControlName="name"
-                       id="name"
-                       class="block w-full rounded-md border-0 py-1.5 pr-10 text-red-900 ring-1 ring-inset  placeholder:text-red-300 focus:ring-2 focus:ring-inset  sm:text-sm sm:leading-6"
-                       [ngClass]="{'ring-red-500': !walletForm.valid && walletForm.get('name')?.touched}"
-                       aria-invalid="true"
-                       aria-describedby="name-error">
-                <div *ngIf="!walletForm.valid && walletForm.get('name')?.touched"
-                     class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                    <svg class="h-5 w-5 text-red-500"
-                         viewBox="0 0 20 20"
-                         fill="currentColor"
-                         aria-hidden="true">
-                        <path fill-rule="evenodd"
-                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
-                              clip-rule="evenodd" />
-                    </svg>
-                </div>
-            </div>
-            <p *ngIf="!walletForm.valid && walletForm.get('name')?.touched"
-               class="mt-2 text-sm text-red-600"
-               id="name-error">Name is required</p>
-        </div>
+<div class="relative bg-primary px-24 py-12 mx-2 rounded-xl">
 
-        <div>
-            <label for="price"
-                   class="block text-sm font-medium leading-6 text-gray-900">Price</label>
-            <div class="relative mt-2 rounded-md shadow-sm">
-                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <span class="text-gray-500 sm:text-sm">$</span>
-                </div>
-                <input type="text"
-                       name="price"
-                       id="price"
-                       class="block w-full rounded-md border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                       placeholder="0.00"
-                       aria-describedby="price-currency">
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                    <span class="text-gray-500 sm:text-sm"
-                          id="price-currency">USD</span>
-                </div>
-            </div>
-        </div>
+  <svg (click)="onCloseBtnClicked()" class="absolute text-secondary top-5 right-5 w-6 h-6 cursor-pointer hover:text-warn" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+  </svg>
+
+  <p class="text-2xl text-center pb-6 font-bold text-secondary">New Wallet</p>
+    <form class="flex flex-col gap-2" [formGroup]="walletForm" (ngSubmit)="onWalletFormSubmitted(walletForm)">
+        <lib-simple-input-form [control]="this.walletForm.get('name')"
+                               [label]="'Name'"
+                               [errorMsg]="'Name is required'"
+                               [type]="'text'"></lib-simple-input-form>
+        <lib-simple-input-form [control]="this.walletForm.get('balance')"
+                               [label]="'Balance (PLN)'"
+                               [errorMsg]="'Balance is required'"
+                               [type]="'number'"></lib-simple-input-form>
+      <button type="submit" [disabled]="!walletForm.valid" class="btn-primary">Save</button>
     </form>
 </div>

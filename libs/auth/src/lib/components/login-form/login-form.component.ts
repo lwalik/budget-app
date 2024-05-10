@@ -46,7 +46,7 @@ export class LoginFormComponent {
       })
       .pipe(take(1))
       .subscribe({
-        complete: () => this._router.navigateByUrl('home'),
+        complete: () => this._router.navigateByUrl('/overview'),
       });
   }
 }

@@ -11,7 +11,7 @@ export class WalletsService {
   getAllUserWallets(userId: string): Observable<WalletModel[]> {
     return this._client
       .collection<WalletResponse>('wallets', (ref) =>
-        ref.where('ownerId', '==', userId)
+        ref.where('ownerId', '==', userId).orderBy('createdAt', 'asc')
       )
       .valueChanges({ idField: 'id' })
       .pipe(
@@ -25,20 +25,12 @@ export class WalletsService {
       );
   }
 
-  create(userId: string): Observable<void> {
+  create(wallet: Omit<WalletModel, 'id'>): Observable<void> {
     return new Observable((observer) => {
       const id: string = this._client.createId();
       this._client
         .doc('wallets/' + id)
-        .set({
-          id,
-          ownerId: userId,
-          name: 'ING',
-          balance: 600,
-          currency: 'PLN',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        })
+        .set(wallet)
         .then(() => {
           observer.next(void 0);
           observer.complete();

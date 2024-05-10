@@ -1,2 +1,2 @@
 // Components
-export * from './lib/simple-input-form/simple-input-form.component';
+export * from './lib/components/simple-input-form/simple-input-form.component';
