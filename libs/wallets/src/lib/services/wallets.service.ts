@@ -3,6 +3,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { map, Observable } from 'rxjs';
 import { WalletModel } from '../models/wallet.model';
 import { WalletResponse } from '../responses/wallet.response';
+import { mapPromiseToVoidObservable } from '@budget-app/shared';
 
 @Injectable({ providedIn: 'root' })
 export class WalletsService {
@@ -39,5 +40,11 @@ export class WalletsService {
           observer.error(error);
         });
     });
+  }
+
+  deposit(walletId: string, newBalance: number): Observable<void> {
+    return mapPromiseToVoidObservable(
+      this._client.doc('wallets/' + walletId).update({ balance: newBalance })
+    );
   }
 }

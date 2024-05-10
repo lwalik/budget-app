@@ -3,23 +3,16 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { map, Observable, of } from 'rxjs';
 import { AuthUserModel } from '../models/auth-user.model';
 import { LoginCredentialsModel } from '../models/login-credentials.model';
+import { mapPromiseToVoidObservable } from '@budget-app/shared';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   constructor(private readonly _auth: AngularFireAuth) {}
 
   login(user: LoginCredentialsModel): Observable<void> {
-    return new Observable((observer) => {
-      this._auth
-        .signInWithEmailAndPassword(user.email, user.password)
-        .then(() => {
-          observer.next(void 0);
-          observer.complete();
-        })
-        .catch((error) => {
-          observer.error(error);
-        });
-    });
+    return mapPromiseToVoidObservable(
+      this._auth.signInWithEmailAndPassword(user.email, user.password)
+    );
   }
 
   logout(): Observable<void> {

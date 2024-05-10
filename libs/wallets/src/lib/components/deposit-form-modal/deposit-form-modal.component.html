@@ -1,0 +1,9 @@
+<lib-simple-modal header="Deposit">
+  <form class="flex flex-col gap-2" [formGroup]="depositForm" (ngSubmit)="onDepositFormSubmitted(depositForm)">
+    <lib-simple-input-form [control]="this.depositForm.get('amount')"
+                           [label]="'Amount'"
+                           [errorMsg]="'Amount should be greater than 0'"
+                           [type]="'number'"></lib-simple-input-form>
+    <button type="submit" [disabled]="!depositForm.valid" class="btn-warn">Save</button>
+  </form>
+</lib-simple-modal>

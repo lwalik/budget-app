@@ -11,6 +11,7 @@ import { WalletsService } from '../../services/wallets.service';
 import { CommonModule } from '@angular/common';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { NewWalletFormComponent } from '../new-wallet-form/new-wallet-form.component';
+import { DepositFormModalComponent } from '../deposit-form-modal/deposit-form-modal.component';
 
 @Component({
   selector: 'lib-wallets-list',
@@ -40,8 +41,14 @@ export class WalletsListComponent {
     });
   }
 
-  onDepositBtnClicked(walletId: string): void {
-    console.log('walletId: ', walletId);
+  onDepositBtnClicked(walletId: string, balance: number): void {
+    this._dialog.open(DepositFormModalComponent, {
+      hasBackdrop: true,
+      data: {
+        walletId,
+        balance,
+      },
+    });
   }
 
   onWithdrawBtnClicked(walletId: string): void {
