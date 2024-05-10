@@ -35,11 +35,11 @@ import { switchMap, take } from 'rxjs';
 })
 export class NewWalletFormComponent {
   readonly walletForm: FormGroup = new FormGroup({
-    name: new FormControl<string>('', {
+    name: new FormControl('', {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    balance: new FormControl<number>(0, {
+    balance: new FormControl('', {
       validators: [Validators.required],
       nonNullable: true,
     }),

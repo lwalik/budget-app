@@ -27,19 +27,10 @@ export class WalletsService {
   }
 
   create(wallet: Omit<WalletModel, 'id'>): Observable<void> {
-    return new Observable((observer) => {
-      const id: string = this._client.createId();
-      this._client
-        .doc('wallets/' + id)
-        .set(wallet)
-        .then(() => {
-          observer.next(void 0);
-          observer.complete();
-        })
-        .catch((error) => {
-          observer.error(error);
-        });
-    });
+    const id: string = this._client.createId();
+    return mapPromiseToVoidObservable(
+      this._client.doc('wallets/' + id).set(wallet)
+    );
   }
 
   updateBalance(walletId: string, newBalance: number): Observable<void> {
