@@ -22,7 +22,7 @@ type simpleInputType = 'text' | 'number';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SimpleInputFormComponent {
-  @Input() control!: AbstractControl | null;
+  @Input({ required: true }) control: AbstractControl | null = null;
   @Input() label = '';
   @Input() errorMsg = '';
   @Input() type: simpleInputType = 'text';
