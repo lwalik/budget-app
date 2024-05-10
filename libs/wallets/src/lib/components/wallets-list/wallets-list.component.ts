@@ -39,4 +39,12 @@ export class WalletsListComponent {
       hasBackdrop: true,
     });
   }
+
+  onDepositBtnClicked(walletId: string): void {
+    console.log('walletId: ', walletId);
+  }
+
+  onWithdrawBtnClicked(walletId: string): void {
+    console.log('walletId: ', walletId);
+  }
 }
