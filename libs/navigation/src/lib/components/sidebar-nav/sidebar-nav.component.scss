@@ -15,9 +15,9 @@
 }
 
 .inactive-nav-link {
-  @apply text-secondary hover:text-primary hover:bg-warn;
+  @apply text-white hover:text-primary hover:bg-warn;
 
   .nav-link-icon {
-    @apply text-secondary;
+    @apply text-white;
   }
 }

@@ -9,6 +9,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // colors: {
+      //   primary: '#006D77',
+      //   secondary: '#83C5BE',
+      //   warn: '#FFDDD2',
+      //   accent: '#EDF6F9',
+      //   info: '#E29578',
+      // },
       colors: {
         primary: '#0f172a',
         secondary: '#f8fafc',
