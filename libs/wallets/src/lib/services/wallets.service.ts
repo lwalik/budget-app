@@ -35,7 +35,9 @@ export class WalletsService {
 
   updateBalance(walletId: string, newBalance: number): Observable<void> {
     return mapPromiseToVoidObservable(
-      this._client.doc('wallets/' + walletId).update({ balance: newBalance })
+      this._client
+        .doc('wallets/' + walletId)
+        .update({ balance: newBalance, updatedAt: new Date() })
     );
   }
 }
