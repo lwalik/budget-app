@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   BehaviorSubject,
-  Observable,
   combineLatest,
   filter,
   map,
+  Observable,
   startWith,
 } from 'rxjs';
 import { NavLinkModel } from '../models/nav-link.model';
@@ -24,6 +24,12 @@ export class NavigationUiService {
         id: 2,
         name: 'Wallets',
         url: '/wallets',
+        isActive: false,
+      },
+      {
+        id: 3,
+        name: 'Products',
+        url: '/products',
         isActive: false,
       },
     ]);
