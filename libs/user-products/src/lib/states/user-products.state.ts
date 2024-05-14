@@ -84,15 +84,35 @@ export class UserProductsState {
       this._userProductsState$,
     ]).pipe(
       take(1),
-      tap(() => console.log('first tap')),
       switchMap(([userId, state]: [string, UserProductsStateModel]) =>
         this._userProductsService.delete(productId, userId).pipe(
-          tap(() => console.log('second tap')),
           tap(() =>
             this._userProductsStateSubject.next({
               ...state,
               products: state.products.filter(
                 (product: UserProductModel) => product.productId !== productId
+              ),
+            })
+          )
+        )
+      )
+    );
+  }
+
+  updateProduct(updatedProduct: UserProductModel): Observable<void> {
+    return combineLatest([
+      this._userContext.getUserId(),
+      this._userProductsState$,
+    ]).pipe(
+      take(1),
+      switchMap(([userId, state]: [string, UserProductsStateModel]) =>
+        this._userProductsService.update(updatedProduct, userId).pipe(
+          tap(() =>
+            this._userProductsStateSubject.next({
+              products: state.products.map((product: UserProductModel) =>
+                product.productId === updatedProduct.productId
+                  ? updatedProduct
+                  : product
               ),
             })
           )

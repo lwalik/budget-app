@@ -68,6 +68,28 @@ export class UserProductsService {
     );
   }
 
+  update(updatedProduct: UserProductModel, userId: string): Observable<void> {
+    return this._getUserProductsResponse(userId).pipe(
+      switchMap((data: UserProductsResponse | undefined) => {
+        const doc = this._getUserProductsDoc(userId);
+
+        if (!data) {
+          return of(void 0);
+        }
+
+        return mapPromiseToVoidObservable(
+          doc.update({
+            products: data.products.map((product: UserProductModel) =>
+              product.productId === updatedProduct.productId
+                ? updatedProduct
+                : product
+            ),
+          })
+        );
+      })
+    );
+  }
+
   private _getUserProductsResponse(
     userId: string
   ): Observable<UserProductsResponse | undefined> {
