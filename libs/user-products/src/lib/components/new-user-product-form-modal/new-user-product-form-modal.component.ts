@@ -57,15 +57,13 @@ export class NewUserProductFormModalComponent {
       .pipe(
         take(1),
         switchMap((userId: string) =>
-          this._userProductsState
-            .addProduct(
-              {
-                name: form.get('name')?.value,
-                category: form.get('category')?.value.trim().toLowerCase(),
-              },
-              userId
-            )
-            .pipe(take(1))
+          this._userProductsState.addProduct(
+            {
+              name: form.get('name')?.value,
+              category: form.get('category')?.value.trim().toLowerCase(),
+            },
+            userId
+          )
         )
       )
       .subscribe(() => this._dialogRef.close());

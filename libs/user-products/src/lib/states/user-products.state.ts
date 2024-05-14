@@ -21,6 +21,8 @@ const initialState: UserProductsStateModel = {
 export class UserProductsState {
   private readonly _userProductsStateSubject: BehaviorSubject<UserProductsStateModel> =
     new BehaviorSubject<UserProductsStateModel>(initialState);
+  private readonly _userProductsState$: Observable<UserProductsStateModel> =
+    this._userProductsStateSubject.asObservable();
 
   constructor(
     private readonly _userProductsService: UserProductsService,
@@ -30,7 +32,7 @@ export class UserProductsState {
   loadUserProducts(): Observable<void> {
     return combineLatest([
       this._userContext.getUserId(),
-      this._userProductsStateSubject.asObservable(),
+      this._userProductsState$,
     ]).pipe(
       take(1),
       switchMap(([userId, state]: [string, UserProductsStateModel]) =>
@@ -57,6 +59,20 @@ export class UserProductsState {
     product: Omit<UserProductModel, 'productId'>,
     userId: string
   ): Observable<void> {
-    return this._userProductsService.add(product, userId);
+    return this._userProductsService.add(product, userId).pipe(
+      take(1),
+      switchMap((newProduct: UserProductModel) =>
+        this._userProductsState$.pipe(
+          take(1),
+          tap((state: UserProductsStateModel) =>
+            this._userProductsStateSubject.next({
+              ...state,
+              products: [...state.products, newProduct],
+            })
+          ),
+          map(() => void 0)
+        )
+      )
+    );
   }
 }

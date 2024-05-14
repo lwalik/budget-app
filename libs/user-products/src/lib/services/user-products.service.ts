@@ -24,7 +24,7 @@ export class UserProductsService {
   add(
     product: Omit<UserProductModel, 'productId'>,
     userId: string
-  ): Observable<void> {
+  ): Observable<UserProductModel> {
     const productId: string = this._client.createId();
 
     return this._client
@@ -34,18 +34,19 @@ export class UserProductsService {
         take(1),
         switchMap((data: UserProductsResponse | undefined) => {
           const doc = this._client.doc(`${this._baseUrl}/` + userId);
+          const newProduct: UserProductModel = { productId, ...product };
 
           if (!data) {
             return mapPromiseToVoidObservable(
-              doc.set({ products: [{ productId, ...product }] })
-            );
+              doc.set({ products: [newProduct] })
+            ).pipe(map(() => newProduct));
           }
 
           return mapPromiseToVoidObservable(
             doc.update({
-              products: [...data.products, { productId, ...product }],
+              products: [...data.products, newProduct],
             })
-          );
+          ).pipe(map(() => newProduct));
         })
       );
   }
