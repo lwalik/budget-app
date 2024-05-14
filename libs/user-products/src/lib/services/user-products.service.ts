@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { UserProductModel } from '../models/user-product.model';
-import { Observable, switchMap, take } from 'rxjs';
-import { UserProductsResponse } from '../responses/user-products.response';
 import { mapPromiseToVoidObservable } from '@budget-app/shared';
+import { Observable, switchMap, take } from 'rxjs';
+import { UserProductModel } from '../models/user-product.model';
+import { UserProductsResponse } from '../responses/user-products.response';
 
 @Injectable({ providedIn: 'root' })
 export class UserProductsService {
-  private readonly _baseUrl: string = 'user-user-products';
+  private readonly _baseUrl: string = 'user-products';
   constructor(private readonly _client: AngularFirestore) {}
 
   add(product: UserProductModel, userId: string): Observable<void> {

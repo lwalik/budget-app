@@ -16,10 +16,8 @@ import { USER_CONTEXT, UserContext } from '@budget-app/core';
 import {
   SimpleInputFormComponent,
   SimpleModalComponent,
-  SimpleSelectInputComponent,
 } from '@budget-app/shared';
-import { BehaviorSubject, Observable, switchMap, take, tap } from 'rxjs';
-import { USER_PRODUCT_CATEGORY } from '../../enums/user-product-category.enum';
+import { switchMap, take } from 'rxjs';
 import { UserProductsService } from '../../services/user-products.service';
 
 @Component({
@@ -30,7 +28,6 @@ import { UserProductsService } from '../../services/user-products.service';
     SimpleModalComponent,
     ReactiveFormsModule,
     SimpleInputFormComponent,
-    SimpleSelectInputComponent,
   ],
   templateUrl: './new-user-product-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -47,28 +44,12 @@ export class NewUserProductFormModalComponent {
       validators: [Validators.required],
     }),
   });
-  readonly categoryList: string[] = Object.values(USER_PRODUCT_CATEGORY);
-  private readonly _isCategoryDropdownVisibleSubject: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
-  readonly isCategoryDropdownVisible$: Observable<boolean> =
-    this._isCategoryDropdownVisibleSubject.asObservable();
 
   constructor(
     private readonly _userProductsService: UserProductsService,
     @Inject(USER_CONTEXT) private readonly _userContext: UserContext,
     private readonly _dialogRef: DialogRef
   ) {}
-
-  toggleCategoryDropdown(): void {
-    this.isCategoryDropdownVisible$
-      .pipe(
-        take(1),
-        tap((isVisible: boolean) =>
-          this._isCategoryDropdownVisibleSubject.next(!isVisible)
-        )
-      )
-      .subscribe();
-  }
 
   newProductFormSubmitted(form: FormGroup): void {
     this._userContext
@@ -80,7 +61,7 @@ export class NewUserProductFormModalComponent {
             .add(
               {
                 name: form.get('name')?.value,
-                category: form.get('category')?.value,
+                category: form.get('category')?.value.trim().toLowerCase(),
               },
               userId
             )
