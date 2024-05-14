@@ -30,6 +30,23 @@ export class UserProductsListComponent {
   onAddProductBtnClicked(): void {
     this._dialog.open(NewUserProductFormModalComponent, {
       hasBackdrop: true,
+      data: {
+        isEdit: false,
+      },
+    });
+  }
+
+  onEditProductBtnClicked(product: UserProductModel): void {
+    this._dialog.open(NewUserProductFormModalComponent, {
+      hasBackdrop: true,
+      data: {
+        isEdit: true,
+        product: {
+          name: product.name,
+          category: product.category,
+          productId: product.productId,
+        },
+      },
     });
   }
 

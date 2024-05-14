@@ -1,19 +1,19 @@
-<lib-simple-modal header="New Product">
+<lib-simple-modal [header]="header">
   <form class="flex flex-col gap-2"
-        [formGroup]="newProductForm"
-        (ngSubmit)="newProductFormSubmitted(newProductForm)">
-    <lib-simple-input-form [control]="this.newProductForm.get('name')"
+        [formGroup]="productForm"
+        (ngSubmit)="productFormSubmitted(productForm)">
+    <lib-simple-input-form [control]="this.productForm.get('name')"
                            [label]="'Name'"
                            [errorMsg]="'Name is required'"
                            [type]="'text'"></lib-simple-input-form>
 
-    <lib-simple-input-form [control]="this.newProductForm.get('category')"
+    <lib-simple-input-form [control]="this.productForm.get('category')"
                            [label]="'Category'"
                            [errorMsg]="'Category is required'"
                            [type]="'text'"></lib-simple-input-form>
 
     <button type="submit"
-            [disabled]="!newProductForm.valid"
+            [disabled]="!productForm.valid"
             class="btn-warn">
       Save
     </button>
