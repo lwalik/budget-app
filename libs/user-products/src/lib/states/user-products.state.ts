@@ -2,9 +2,9 @@ import { Inject, Injectable } from '@angular/core';
 import { USER_CONTEXT, UserContext } from '@budget-app/core';
 import {
   BehaviorSubject,
-  Observable,
   combineLatest,
   map,
+  Observable,
   switchMap,
   take,
   tap,
@@ -55,22 +55,47 @@ export class UserProductsState {
       .pipe(map((state: UserProductsStateModel) => state.products));
   }
 
-  addProduct(
-    product: Omit<UserProductModel, 'productId'>,
-    userId: string
-  ): Observable<void> {
-    return this._userProductsService.add(product, userId).pipe(
+  addProduct(product: Omit<UserProductModel, 'productId'>): Observable<void> {
+    return this._userContext.getUserId().pipe(
       take(1),
-      switchMap((newProduct: UserProductModel) =>
-        this._userProductsState$.pipe(
+      switchMap((userId: string) =>
+        this._userProductsService.add(product, userId).pipe(
           take(1),
-          tap((state: UserProductsStateModel) =>
+          switchMap((newProduct: UserProductModel) =>
+            this._userProductsState$.pipe(
+              take(1),
+              tap((state: UserProductsStateModel) =>
+                this._userProductsStateSubject.next({
+                  ...state,
+                  products: [...state.products, newProduct],
+                })
+              ),
+              map(() => void 0)
+            )
+          )
+        )
+      )
+    );
+  }
+
+  deleteProduct(productId: string): Observable<void> {
+    return combineLatest([
+      this._userContext.getUserId(),
+      this._userProductsState$,
+    ]).pipe(
+      take(1),
+      tap(() => console.log('first tap')),
+      switchMap(([userId, state]: [string, UserProductsStateModel]) =>
+        this._userProductsService.delete(productId, userId).pipe(
+          tap(() => console.log('second tap')),
+          tap(() =>
             this._userProductsStateSubject.next({
               ...state,
-              products: [...state.products, newProduct],
+              products: state.products.filter(
+                (product: UserProductModel) => product.productId !== productId
+              ),
             })
-          ),
-          map(() => void 0)
+          )
         )
       )
     );

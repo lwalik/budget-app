@@ -5,7 +5,7 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { UserProductModel } from '../../models/user-product.model';
 import { UserProductsState } from '../../states/user-products.state';
 import { NewUserProductFormModalComponent } from '../new-user-product-form-modal/new-user-product-form-modal.component';
@@ -31,5 +31,9 @@ export class UserProductsListComponent {
     this._dialog.open(NewUserProductFormModalComponent, {
       hasBackdrop: true,
     });
+  }
+
+  onDeleteProductBtnClicked(productId: string): void {
+    this._userProductsState.deleteProduct(productId).pipe(take(1)).subscribe();
   }
 }

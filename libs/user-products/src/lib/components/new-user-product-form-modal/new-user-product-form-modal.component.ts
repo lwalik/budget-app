@@ -17,7 +17,7 @@ import {
   SimpleInputFormComponent,
   SimpleModalComponent,
 } from '@budget-app/shared';
-import { switchMap, take } from 'rxjs';
+import { take } from 'rxjs';
 import { UserProductsState } from '../../states/user-products.state';
 
 @Component({
@@ -52,20 +52,12 @@ export class NewUserProductFormModalComponent {
   ) {}
 
   newProductFormSubmitted(form: FormGroup): void {
-    this._userContext
-      .getUserId()
-      .pipe(
-        take(1),
-        switchMap((userId: string) =>
-          this._userProductsState.addProduct(
-            {
-              name: form.get('name')?.value,
-              category: form.get('category')?.value.trim().toLowerCase(),
-            },
-            userId
-          )
-        )
-      )
+    this._userProductsState
+      .addProduct({
+        name: form.get('name')?.value,
+        category: form.get('category')?.value.trim().toLowerCase(),
+      })
+      .pipe(take(1))
       .subscribe(() => this._dialogRef.close());
   }
 }
