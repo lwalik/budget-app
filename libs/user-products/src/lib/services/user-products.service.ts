@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { mapPromiseToVoidObservable } from '@budget-app/shared';
-import { Observable, switchMap, take } from 'rxjs';
+import { Observable, map, switchMap, take } from 'rxjs';
 import { UserProductModel } from '../models/user-product.model';
 import { UserProductsResponse } from '../responses/user-products.response';
 
@@ -10,7 +10,23 @@ export class UserProductsService {
   private readonly _baseUrl: string = 'user-products';
   constructor(private readonly _client: AngularFirestore) {}
 
-  add(product: UserProductModel, userId: string): Observable<void> {
+  getAll(userId: string): Observable<UserProductModel[]> {
+    return this._client
+      .doc<UserProductsResponse>(`${this._baseUrl}/` + userId)
+      .valueChanges()
+      .pipe(
+        map((resp: UserProductsResponse | undefined) =>
+          resp ? resp.products : []
+        )
+      );
+  }
+
+  add(
+    product: Omit<UserProductModel, 'productId'>,
+    userId: string
+  ): Observable<void> {
+    const productId: string = this._client.createId();
+
     return this._client
       .doc<UserProductsResponse>(`${this._baseUrl}/` + userId)
       .valueChanges()
@@ -20,11 +36,15 @@ export class UserProductsService {
           const doc = this._client.doc(`${this._baseUrl}/` + userId);
 
           if (!data) {
-            return mapPromiseToVoidObservable(doc.set({ products: [product] }));
+            return mapPromiseToVoidObservable(
+              doc.set({ products: [{ productId, ...product }] })
+            );
           }
 
           return mapPromiseToVoidObservable(
-            doc.update({ products: [...data.products, product] })
+            doc.update({
+              products: [...data.products, { productId, ...product }],
+            })
           );
         })
       );
