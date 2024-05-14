@@ -18,7 +18,7 @@ import {
   SimpleModalComponent,
 } from '@budget-app/shared';
 import { switchMap, take } from 'rxjs';
-import { UserProductsService } from '../../services/user-products.service';
+import { UserProductsState } from '../../states/user-products.state';
 
 @Component({
   selector: 'lib-new-user-product-form-modal',
@@ -46,7 +46,7 @@ export class NewUserProductFormModalComponent {
   });
 
   constructor(
-    private readonly _userProductsService: UserProductsService,
+    private readonly _userProductsState: UserProductsState,
     @Inject(USER_CONTEXT) private readonly _userContext: UserContext,
     private readonly _dialogRef: DialogRef
   ) {}
@@ -57,8 +57,8 @@ export class NewUserProductFormModalComponent {
       .pipe(
         take(1),
         switchMap((userId: string) =>
-          this._userProductsService
-            .add(
+          this._userProductsState
+            .addProduct(
               {
                 name: form.get('name')?.value,
                 category: form.get('category')?.value.trim().toLowerCase(),
