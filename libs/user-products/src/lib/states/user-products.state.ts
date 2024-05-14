@@ -47,6 +47,12 @@ export class UserProductsState {
     );
   }
 
+  getProducts(): Observable<UserProductModel[]> {
+    return this._userProductsStateSubject
+      .asObservable()
+      .pipe(map((state: UserProductsStateModel) => state.products));
+  }
+
   addProduct(
     product: Omit<UserProductModel, 'productId'>,
     userId: string

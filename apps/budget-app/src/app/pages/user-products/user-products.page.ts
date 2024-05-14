@@ -3,11 +3,11 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { OpenNewUserProductFormModalDirective } from '@budget-app/user-products';
+import { UserProductsListComponent } from '@budget-app/user-products';
 
 @Component({
   standalone: true,
-  imports: [OpenNewUserProductFormModalDirective],
+  imports: [UserProductsListComponent],
   templateUrl: './user-products.page.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
