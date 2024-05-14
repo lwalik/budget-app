@@ -1,3 +1,4 @@
+import { DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -17,7 +18,7 @@ import {
   SimpleModalComponent,
   SimpleSelectInputComponent,
 } from '@budget-app/shared';
-import { BehaviorSubject, Observable, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, switchMap, take, tap } from 'rxjs';
 import { USER_PRODUCT_CATEGORY } from '../../enums/user-product-category.enum';
 import { UserProductsService } from '../../services/user-products.service';
 
@@ -54,7 +55,8 @@ export class NewUserProductFormModalComponent {
 
   constructor(
     private readonly _userProductsService: UserProductsService,
-    @Inject(USER_CONTEXT) private readonly _userContext: UserContext
+    @Inject(USER_CONTEXT) private readonly _userContext: UserContext,
+    private readonly _dialogRef: DialogRef
   ) {}
 
   toggleCategoryDropdown(): void {
@@ -69,23 +71,22 @@ export class NewUserProductFormModalComponent {
   }
 
   newProductFormSubmitted(form: FormGroup): void {
-    console.log('category: ', form.get('category')?.value);
-    // this._userContext
-    //   .getUserId()
-    //   .pipe(
-    //     take(1),
-    //     switchMap((userId: string) =>
-    //       this._userProductsService
-    //         .add(
-    //           {
-    //             name: 'test 1',
-    //             category: USER_PRODUCT_CATEGORY.FOOD,
-    //           },
-    //           userId
-    //         )
-    //         .pipe(take(1))
-    //     )
-    //   )
-    //   .subscribe();
+    this._userContext
+      .getUserId()
+      .pipe(
+        take(1),
+        switchMap((userId: string) =>
+          this._userProductsService
+            .add(
+              {
+                name: form.get('name')?.value,
+                category: form.get('category')?.value,
+              },
+              userId
+            )
+            .pipe(take(1))
+        )
+      )
+      .subscribe(() => this._dialogRef.close());
   }
 }
