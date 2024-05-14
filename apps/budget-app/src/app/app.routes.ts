@@ -5,7 +5,7 @@ import { AuthGuard } from '@budget-app/auth';
 import { LoggedInPage } from './pages/logged-in/logged-in.page';
 import { DashboardPage } from './pages/dashboard/dashboard.page';
 import { WalletsPage } from './pages/wallets/wallets.page';
-import { ProductsPage } from './pages/products/products.page';
+import { UserProductsPage } from './pages/user-products/user-products.page';
 
 export const appRoutes: Route[] = [
   { path: 'login', component: LoginPage },
@@ -17,7 +17,10 @@ export const appRoutes: Route[] = [
     children: [
       { path: 'overview', component: OverviewPage },
       { path: 'wallets', component: WalletsPage },
-      { path: 'products', component: ProductsPage },
+      {
+        path: 'products',
+        component: UserProductsPage,
+      },
     ],
   },
 ];
