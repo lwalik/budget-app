@@ -32,6 +32,12 @@ export class NavigationUiService {
         url: '/products',
         isActive: false,
       },
+      {
+        id: 4,
+        name: 'Expenses',
+        url: '/expenses',
+        isActive: false,
+      },
     ]);
   private readonly urlState$: Observable<string> = this._router.events.pipe(
     filter((event) => event instanceof NavigationEnd),

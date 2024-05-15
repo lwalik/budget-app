@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { AuthGuard } from '@budget-app/auth';
 import { LoadUserProductsResolver } from '@budget-app/user-products';
 import { DashboardPage } from './pages/dashboard/dashboard.page';
+import { ExpensesPage } from './pages/expenses/expenses.page';
 import { LoggedInPage } from './pages/logged-in/logged-in.page';
 import { LoginPage } from './pages/login/login.page';
 import { OverviewPage } from './pages/overview/overview.page';
@@ -22,6 +23,10 @@ export const appRoutes: Route[] = [
       {
         path: 'products',
         component: UserProductsPage,
+      },
+      {
+        path: 'expenses',
+        component: ExpensesPage,
       },
     ],
   },
