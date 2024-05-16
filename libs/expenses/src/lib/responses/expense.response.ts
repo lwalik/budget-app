@@ -5,8 +5,7 @@ import Timestamp = firebase.firestore.Timestamp;
 export interface ExpenseResponse {
   readonly id: string;
   readonly ownerId: string;
-  readonly product: ExpenseProductModel;
-  readonly quantity: number;
-  readonly pricePerUnit: number;
+  readonly products: ExpenseProductModel[];
+  readonly totalPrice: number;
   readonly createdAt: Timestamp;
 }

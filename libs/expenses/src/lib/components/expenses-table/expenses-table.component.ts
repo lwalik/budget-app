@@ -3,13 +3,14 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { ExpensesTableComponent } from '@budget-app/expenses';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 
 @Component({
+  selector: 'lib-expenses-table',
   standalone: true,
-  imports: [ExpensesTableComponent],
-  templateUrl: './expenses.page.html',
+  imports: [AsyncPipe, CurrencyPipe],
+  templateUrl: './expenses-table.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpensesPage {}
+export class ExpensesTableComponent {}
