@@ -25,13 +25,19 @@
             scope="col"
             class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
           >
-            Created At
+            Total Price
           </th>
           <th
             scope="col"
             class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
           >
-            Total Price
+            Wallet
+          </th>
+          <th
+            scope="col"
+            class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
+          >
+            Created At
           </th>
           <th
             scope="col"
@@ -51,14 +57,24 @@
               <dd class="mt-1 truncate text-gray-700">Total Price: {{ expense.totalPrice | currency : expense.currency }}</dd>
             </dl>
             <dl class="font-normal lg:hidden">
+              <dd class="mt-1 truncate text-gray-700">
+                <lib-wallet-name [walletId]="expense.walletId"></lib-wallet-name>
+              </dd>
+            </dl>
+            <dl class="font-normal lg:hidden">
               <dd class="mt-1 truncate text-gray-700">{{ expense.createdAt | date }}</dd>
             </dl>
+
+          </td>
+
+          <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
+            {{ expense.totalPrice | currency : expense.currency }}
+          </td>
+          <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
+            <lib-wallet-name [walletId]="expense.walletId"></lib-wallet-name>
           </td>
           <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
             {{ expense.createdAt | date }}
-          </td>
-          <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-            {{ expense.totalPrice | currency : expense.currency }}
           </td>
           <td
             class="py-4 pl-3 pr-4 text-sm font-medium sm:pr-0 flex sm:flex-row flex-col justify-center items-center gap-4"

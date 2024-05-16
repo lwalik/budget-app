@@ -63,7 +63,6 @@ export class WithdrawFormModalComponent {
       this._dialogData.balance - +form.get('amount')?.value;
 
     if (newBalance < 0) {
-      console.log('Brak wystarczających środków');
       this.withdrawForm.setErrors({ notEnoughMoney: true });
       return;
     }

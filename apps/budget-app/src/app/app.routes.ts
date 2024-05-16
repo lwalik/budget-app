@@ -8,7 +8,8 @@ import { LoginPage } from './pages/login/login.page';
 import { OverviewPage } from './pages/overview/overview.page';
 import { UserProductsPage } from './pages/user-products/user-products.page';
 import { WalletsPage } from './pages/wallets/wallets.page';
-import { LoadExpensesResolver } from '../../../../libs/expenses/src/lib/resolvers/load-expenses.resolver';
+import { LoadExpensesResolver } from '@budget-app/expenses';
+import { LoadWalletsResolver } from '@budget-app/wallets';
 
 export const appRoutes: Route[] = [
   { path: 'login', component: LoginPage },
@@ -17,9 +18,13 @@ export const appRoutes: Route[] = [
     path: '',
     canActivate: [AuthGuard],
     component: LoggedInPage,
+    resolve: [LoadWalletsResolver],
     children: [
       { path: 'overview', component: OverviewPage },
-      { path: 'wallets', component: WalletsPage },
+      {
+        path: 'wallets',
+        component: WalletsPage,
+      },
       {
         path: 'products',
         component: UserProductsPage,
