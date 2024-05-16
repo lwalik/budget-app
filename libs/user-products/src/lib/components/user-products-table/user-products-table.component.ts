@@ -15,14 +15,14 @@ import {
 } from '@budget-app/shared';
 
 @Component({
-  selector: 'lib-user-products-list',
+  selector: 'lib-user-products-table',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './user-products-list.component.html',
+  templateUrl: './user-products-table.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserProductsListComponent {
+export class UserProductsTableComponent {
   readonly products$: Observable<UserProductModel[]> =
     this._userProductsState.getProducts();
 

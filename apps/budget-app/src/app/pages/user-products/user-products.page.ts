@@ -3,11 +3,11 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { UserProductsListComponent } from '@budget-app/user-products';
+import { UserProductsTableComponent } from '@budget-app/user-products';
 
 @Component({
   standalone: true,
-  imports: [UserProductsListComponent],
+  imports: [UserProductsTableComponent],
   templateUrl: './user-products.page.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
