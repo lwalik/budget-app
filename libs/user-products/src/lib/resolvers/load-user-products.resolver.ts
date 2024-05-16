@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of, switchMap, take } from 'rxjs';
 import { UserProductsState } from '../states/user-products.state';
 
 export const LoadUserProductsResolver: ResolveFn<
@@ -8,5 +8,10 @@ export const LoadUserProductsResolver: ResolveFn<
 > = (): Observable<void> => {
   const userProductsState: UserProductsState = inject(UserProductsState);
 
-  return userProductsState.loadUserProducts();
+  return userProductsState.isInitialized$.pipe(
+    take(1),
+    switchMap((isInitialized: boolean) =>
+      isInitialized ? of(void 0) : userProductsState.loadUserProducts()
+    )
+  );
 };

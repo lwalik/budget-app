@@ -24,6 +24,11 @@ export class ExpensesState {
   private readonly _expensesState$: Observable<ExpensesStateModel> =
     this._expensesStateSubject.asObservable();
 
+  private readonly _isInitializedSubject: BehaviorSubject<boolean> =
+    new BehaviorSubject<boolean>(false);
+  readonly isInitialized$: Observable<boolean> =
+    this._isInitializedSubject.asObservable();
+
   constructor(
     @Inject(USER_CONTEXT) private readonly _userContext: UserContext,
     private readonly _expensesService: ExpensesService
@@ -43,6 +48,7 @@ export class ExpensesState {
               expenses,
             })
           ),
+          tap(() => this._isInitializedSubject.next(true)),
           map(() => void 0)
         )
       )

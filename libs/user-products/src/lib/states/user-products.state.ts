@@ -24,6 +24,11 @@ export class UserProductsState {
   private readonly _userProductsState$: Observable<UserProductsStateModel> =
     this._userProductsStateSubject.asObservable();
 
+  private readonly _isInitializedSubject: BehaviorSubject<boolean> =
+    new BehaviorSubject<boolean>(false);
+  readonly isInitialized$: Observable<boolean> =
+    this._isInitializedSubject.asObservable();
+
   constructor(
     private readonly _userProductsService: UserProductsService,
     @Inject(USER_CONTEXT) private readonly _userContext: UserContext
@@ -43,6 +48,7 @@ export class UserProductsState {
               products: userProducts,
             })
           ),
+          tap(() => this._isInitializedSubject.next(true)),
           map(() => void 0)
         )
       )
