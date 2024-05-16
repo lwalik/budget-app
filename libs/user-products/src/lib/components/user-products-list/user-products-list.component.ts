@@ -1,14 +1,18 @@
-import { Dialog } from '@angular/cdk/dialog';
+import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { Observable, take } from 'rxjs';
+import { Observable, of, switchMap, take } from 'rxjs';
 import { UserProductModel } from '../../models/user-product.model';
 import { UserProductsState } from '../../states/user-products.state';
 import { NewUserProductFormModalComponent } from '../new-user-product-form-modal/new-user-product-form-modal.component';
+import {
+  ConfirmationModalComponent,
+  ConfirmationModalViewModel,
+} from '@budget-app/shared';
 
 @Component({
   selector: 'lib-user-products-list',
@@ -50,7 +54,28 @@ export class UserProductsListComponent {
     });
   }
 
-  onDeleteProductBtnClicked(productId: string): void {
-    this._userProductsState.deleteProduct(productId).pipe(take(1)).subscribe();
+  onDeleteProductBtnClicked(product: UserProductModel): void {
+    const dialogData: ConfirmationModalViewModel = {
+      header: 'Confirm',
+      text: `Are you sure you want to remove "${product.name}" Product?`,
+    };
+    const dialogRef: DialogRef<boolean | undefined> = this._dialog.open<
+      boolean | undefined
+    >(ConfirmationModalComponent, {
+      hasBackdrop: true,
+      data: dialogData,
+    });
+    dialogRef.closed
+      .pipe(
+        take(1),
+        switchMap((isConfirmed: boolean | undefined) =>
+          isConfirmed
+            ? this._userProductsState
+                .deleteProduct(product.productId)
+                .pipe(take(1))
+            : of(void 0)
+        )
+      )
+      .subscribe();
   }
 }
