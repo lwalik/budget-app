@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
   AngularFirestore,
   AngularFirestoreDocument,
@@ -7,11 +7,14 @@ import { mapPromiseToVoidObservable } from '@budget-app/shared';
 import { map, Observable, of, switchMap, take } from 'rxjs';
 import { UserProductModel } from '../models/user-product.model';
 import { UserProductsResponse } from '../responses/user-products.response';
+import { ENV_CONFIG, EnvConfig } from '@budget-app/core';
 
 @Injectable({ providedIn: 'root' })
 export class UserProductsService {
-  private readonly _baseUrl: string = 'user-products';
-  constructor(private readonly _client: AngularFirestore) {}
+  constructor(
+    private readonly _client: AngularFirestore,
+    @Inject(ENV_CONFIG) private _envConfig: EnvConfig
+  ) {}
 
   getAll(userId: string): Observable<UserProductModel[]> {
     return this._getUserProductsResponse(userId).pipe(
@@ -99,6 +102,8 @@ export class UserProductsService {
   private _getUserProductsDoc(
     userId: string
   ): AngularFirestoreDocument<UserProductsResponse> {
-    return this._client.doc<UserProductsResponse>(`${this._baseUrl}/` + userId);
+    return this._client.doc<UserProductsResponse>(
+      `${this._envConfig.userProductsUrl}/` + userId
+    );
   }
 }

@@ -12,6 +12,7 @@ import { appRoutes } from './app.routes';
 import { userContextProvider } from '@budget-app/auth';
 import { registerLocaleData } from '@angular/common';
 import localePl from '@angular/common/locales/pl';
+import { ENV_CONFIG } from '@budget-app/core';
 
 registerLocaleData(localePl);
 
@@ -27,6 +28,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: LOCALE_ID,
       useValue: 'pl_PL',
+    },
+    {
+      provide: ENV_CONFIG,
+      useValue: environment,
     },
   ],
 };
