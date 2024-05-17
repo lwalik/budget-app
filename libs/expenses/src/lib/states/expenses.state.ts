@@ -1,17 +1,19 @@
-import { ExpensesStateModel } from '../models/expenses-state.model';
 import { Inject, Injectable } from '@angular/core';
+import { USER_CONTEXT, UserContext } from '@budget-app/core';
 import {
   BehaviorSubject,
+  Observable,
   combineLatest,
   map,
-  Observable,
   switchMap,
   take,
   tap,
 } from 'rxjs';
-import { USER_CONTEXT, UserContext } from '@budget-app/core';
-import { ExpensesService } from '../services/expenses.service';
+import { ExpenseProductModel } from '../models/expense-product.model';
 import { ExpenseModel } from '../models/expense.model';
+import { ExpensesStateModel } from '../models/expenses-state.model';
+import { ExpensesService } from '../services/expenses.service';
+import { ExpenseViewModel } from '../view-models/expense.view-model';
 
 const initialState: ExpensesStateModel = {
   expenses: [],
@@ -55,9 +57,22 @@ export class ExpensesState {
     );
   }
 
-  getExpenses(): Observable<ExpenseModel[]> {
+  getExpenses(): Observable<ExpenseViewModel[]> {
     return this._expensesState$.pipe(
-      map((state: ExpensesStateModel) => state.expenses)
+      map((state: ExpensesStateModel) =>
+        state.expenses.map((expense: ExpenseModel) => ({
+          id: expense.id,
+          walletId: expense.walletId,
+          products: expense.products.map((product: ExpenseProductModel) => ({
+            name: product.name,
+            quantity: product.quantity,
+            totalPrice: product.quantity * product.price,
+          })),
+          totalPrice: expense.totalPrice,
+          currency: expense.currency,
+          createdAt: expense.createdAt,
+        }))
+      )
     );
   }
 }

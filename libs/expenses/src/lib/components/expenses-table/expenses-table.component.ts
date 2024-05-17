@@ -1,13 +1,13 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ExpensesState } from '../../states/expenses.state';
-import { Observable } from 'rxjs';
-import { ExpenseModel } from '../../models/expense.model';
 import { WalletNameComponent } from '@budget-app/wallets';
+import { Observable } from 'rxjs';
+import { ExpensesState } from '../../states/expenses.state';
+import { ExpenseViewModel } from '../../view-models/expense.view-model';
 
 @Component({
   selector: 'lib-expenses-table',
@@ -18,7 +18,7 @@ import { WalletNameComponent } from '@budget-app/wallets';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpensesTableComponent {
-  readonly expenses$: Observable<ExpenseModel[]> =
+  readonly expenses$: Observable<ExpenseViewModel[]> =
     this._expensesState.getExpenses();
 
   constructor(private readonly _expensesState: ExpensesState) {}
