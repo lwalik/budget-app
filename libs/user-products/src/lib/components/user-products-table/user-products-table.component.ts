@@ -8,7 +8,7 @@ import {
 import { Observable, of, switchMap, take } from 'rxjs';
 import { UserProductModel } from '../../models/user-product.model';
 import { UserProductsState } from '../../states/user-products.state';
-import { NewUserProductFormModalComponent } from '../new-user-product-form-modal/new-user-product-form-modal.component';
+import { UserProductFormModalComponent } from '../user-product-form-modal/user-product-form-modal.component';
 import {
   ConfirmationModalComponent,
   ConfirmationModalViewModel,
@@ -32,7 +32,7 @@ export class UserProductsTableComponent {
   ) {}
 
   onAddProductBtnClicked(): void {
-    this._dialog.open(NewUserProductFormModalComponent, {
+    this._dialog.open(UserProductFormModalComponent, {
       hasBackdrop: true,
       data: {
         isEdit: false,
@@ -41,7 +41,7 @@ export class UserProductsTableComponent {
   }
 
   onEditProductBtnClicked(product: UserProductModel): void {
-    this._dialog.open(NewUserProductFormModalComponent, {
+    this._dialog.open(UserProductFormModalComponent, {
       hasBackdrop: true,
       data: {
         isEdit: true,

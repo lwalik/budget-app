@@ -27,7 +27,7 @@ interface UserProductFormDialogData {
 }
 
 @Component({
-  selector: 'lib-new-user-product-form-modal',
+  selector: 'lib-user-product-form-modal',
   standalone: true,
   imports: [
     CommonModule,
@@ -35,11 +35,11 @@ interface UserProductFormDialogData {
     ReactiveFormsModule,
     SimpleInputFormComponent,
   ],
-  templateUrl: './new-user-product-form-modal.component.html',
+  templateUrl: './user-product-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewUserProductFormModalComponent implements OnInit {
+export class UserProductFormModalComponent implements OnInit {
   readonly header: string = this._dialogData.isEdit
     ? 'Update Product'
     : 'New Product';
