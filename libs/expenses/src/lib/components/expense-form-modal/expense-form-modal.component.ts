@@ -23,6 +23,10 @@ import {
   UserProductSelectListItemViewModel,
   UserProductsSelectListComponent,
 } from '@budget-app/user-products';
+import {
+  WalletSelectListComponent,
+  WalletSelectListItemViewModel,
+} from '@budget-app/wallets';
 
 interface ExpenseFormDialogData {
   readonly isEdit: boolean;
@@ -37,6 +41,7 @@ interface ExpenseFormDialogData {
     SimpleInputFormComponent,
     CommonModule,
     UserProductsSelectListComponent,
+    WalletSelectListComponent,
   ],
   templateUrl: './expense-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -56,9 +61,15 @@ export class ExpenseFormModalComponent {
     this._paginationSubject.asObservable();
 
   readonly expenseForm: FormGroup = new FormGroup({
-    wallet: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
+    wallet: new FormGroup({
+      name: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      id: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
     }),
     products: new FormArray([
       new FormGroup({
@@ -87,6 +98,10 @@ export class ExpenseFormModalComponent {
     @Inject(DIALOG_DATA)
     private readonly _dialogData: ExpenseFormDialogData
   ) {}
+
+  get walletNameFormControl(): FormControl {
+    return this._getWalletFormGroup().get('name') as FormControl;
+  }
 
   getProductControl(idx: number): FormGroup {
     const productFormArray: FormArray = this._getProductsFormArray();
@@ -189,7 +204,7 @@ export class ExpenseFormModalComponent {
       .subscribe();
   }
 
-  onOptionSelected(
+  onProductOptionSelected(
     event: UserProductSelectListItemViewModel,
     control: FormGroup
   ): void {
@@ -199,11 +214,23 @@ export class ExpenseFormModalComponent {
     });
   }
 
+  onWalletOptionSelected(event: WalletSelectListItemViewModel): void {
+    const walletFormControl: FormGroup = this._getWalletFormGroup();
+    walletFormControl.patchValue({
+      name: event.name,
+      id: event.id,
+    });
+  }
+
   onExpenseFormSubmitted(form: FormGroup): void {
     console.log('submit ? form: ', form);
   }
 
   private _getProductsFormArray(): FormArray {
     return this.expenseForm.get('products') as FormArray;
+  }
+
+  private _getWalletFormGroup(): FormGroup {
+    return this.expenseForm.get('wallet') as FormGroup;
   }
 }

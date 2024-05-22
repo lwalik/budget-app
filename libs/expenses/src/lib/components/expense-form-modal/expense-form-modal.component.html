@@ -53,7 +53,7 @@
       <div *ngIf="getProductControl(pagination.currentIdx) as control">
         <lib-user-products-select-list
           [selectedOption]="control.get('name')?.value"
-          (optionSelected)="onOptionSelected($event, control)"
+          (optionSelected)="onProductOptionSelected($event, control)"
         ></lib-user-products-select-list>
 
         <div class="flex gap-2">
@@ -121,12 +121,8 @@
       </div>
     </div>
 
-    <lib-simple-input-form
-      [control]="expenseForm.get('wallet')"
-      [label]="'Wallet'"
-      [errorMsg]="'Wallet is required'"
-      [type]="'text'"
-    ></lib-simple-input-form>
+    <lib-wallet-select-list [selectedOption]="walletNameFormControl.value"
+                            (optionSelected)="onWalletOptionSelected($event)"></lib-wallet-select-list>
 
     <button type="submit" [disabled]="!expenseForm.valid" class="btn-warn">
       Save

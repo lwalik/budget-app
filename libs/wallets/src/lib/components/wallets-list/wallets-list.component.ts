@@ -23,6 +23,7 @@ import { WithdrawFormModalComponent } from '../withdraw-form-modal/withdraw-form
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletsListComponent {
+  // TODO move getAll to state
   readonly wallets$: Observable<WalletModel[]> = this._userContext
     .getUserId()
     .pipe(

@@ -17,7 +17,7 @@ import {
 } from '@angular/forms';
 import { WalletsService } from '../../services/wallets.service';
 import { take } from 'rxjs';
-import { WalletOperationDialogDataModel } from '../../view-models/wallet-operation-dialog-data.model';
+import { WalletOperationDialogDataViewModel } from '../../view-models/wallet-operation-dialog-data.view-model';
 
 @Component({
   selector: 'lib-deposit-form-modal',
@@ -43,7 +43,7 @@ export class DepositFormModalComponent {
     private readonly _walletsService: WalletsService,
     private readonly _dialogRef: DialogRef,
     @Inject(DIALOG_DATA)
-    private readonly _dialogData: WalletOperationDialogDataModel
+    private readonly _dialogData: WalletOperationDialogDataViewModel
   ) {}
 
   onDepositFormSubmitted(form: FormGroup): void {
