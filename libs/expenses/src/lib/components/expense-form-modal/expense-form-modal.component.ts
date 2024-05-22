@@ -19,6 +19,10 @@ import {
   SimplePaginationViewModel,
 } from '@budget-app/shared';
 import { BehaviorSubject, Observable, take, tap } from 'rxjs';
+import {
+  UserProductSelectListItemViewModel,
+  UserProductsSelectListComponent,
+} from '@budget-app/user-products';
 
 interface ExpenseFormDialogData {
   readonly isEdit: boolean;
@@ -32,6 +36,7 @@ interface ExpenseFormDialogData {
     ReactiveFormsModule,
     SimpleInputFormComponent,
     CommonModule,
+    UserProductsSelectListComponent,
   ],
   templateUrl: './expense-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -61,7 +66,15 @@ export class ExpenseFormModalComponent {
           nonNullable: true,
           validators: [Validators.required],
         }),
+        category: new FormControl('', {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
         price: new FormControl(0, {
+          nonNullable: true,
+          validators: [Validators.required, Validators.min(0)],
+        }),
+        quantity: new FormControl(0, {
           nonNullable: true,
           validators: [Validators.required, Validators.min(0)],
         }),
@@ -128,6 +141,14 @@ export class ExpenseFormModalComponent {
         nonNullable: true,
         validators: [Validators.required, Validators.min(0)],
       }),
+      category: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      quantity: new FormControl(0, {
+        nonNullable: true,
+        validators: [Validators.required, Validators.min(0)],
+      }),
     });
 
     this.pagination$
@@ -166,6 +187,16 @@ export class ExpenseFormModalComponent {
         })
       )
       .subscribe();
+  }
+
+  onOptionSelected(
+    event: UserProductSelectListItemViewModel,
+    control: FormGroup
+  ): void {
+    control.patchValue({
+      name: event.name,
+      category: event.category,
+    });
   }
 
   onExpenseFormSubmitted(form: FormGroup): void {
