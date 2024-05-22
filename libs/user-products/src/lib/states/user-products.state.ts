@@ -55,7 +55,7 @@ export class UserProductsState {
     );
   }
 
-  getProducts(): Observable<UserProductModel[]> {
+  getAllProducts(): Observable<UserProductModel[]> {
     return this._userProductsState$.pipe(
       map((state: UserProductsStateModel) => state.products)
     );

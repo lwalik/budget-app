@@ -24,7 +24,7 @@ import {
 })
 export class UserProductsTableComponent {
   readonly products$: Observable<UserProductModel[]> =
-    this._userProductsState.getProducts();
+    this._userProductsState.getAllProducts();
 
   constructor(
     private readonly _userProductsState: UserProductsState,
