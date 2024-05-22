@@ -18,7 +18,9 @@ module.exports = {
       // },
       colors: {
         primary: '#0f172a',
+        'primary-light': '#242d42',
         secondary: '#f8fafc',
+        'secondary-hover': '#c6ced6',
         warn: '#14b8a6',
         accent: '#99f6e4',
       },

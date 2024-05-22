@@ -8,6 +8,8 @@ import { WalletNameComponent } from '@budget-app/wallets';
 import { Observable } from 'rxjs';
 import { ExpensesState } from '../../states/expenses.state';
 import { ExpenseViewModel } from '../../view-models/expense.view-model';
+import { Dialog } from '@angular/cdk/dialog';
+import { ExpenseFormModalComponent } from '../expense-form-modal/expense-form-modal.component';
 
 @Component({
   selector: 'lib-expenses-table',
@@ -21,5 +23,17 @@ export class ExpensesTableComponent {
   readonly expenses$: Observable<ExpenseViewModel[]> =
     this._expensesState.getExpenses();
 
-  constructor(private readonly _expensesState: ExpensesState) {}
+  constructor(
+    private readonly _expensesState: ExpensesState,
+    private readonly _dialog: Dialog
+  ) {}
+
+  onAddExpenseBtnClicked(): void {
+    this._dialog.open(ExpenseFormModalComponent, {
+      hasBackdrop: true,
+      data: {
+        isEdit: false,
+      },
+    });
+  }
 }

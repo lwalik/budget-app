@@ -2,12 +2,12 @@
   <form class="flex flex-col gap-2"
         [formGroup]="productForm"
         (ngSubmit)="productFormSubmitted(productForm)">
-    <lib-simple-input-form [control]="this.productForm.get('name')"
+    <lib-simple-input-form [control]="productForm.get('name')"
                            [label]="'Name'"
                            [errorMsg]="'Name is required'"
                            [type]="'text'"></lib-simple-input-form>
 
-    <lib-simple-input-form [control]="this.productForm.get('category')"
+    <lib-simple-input-form [control]="productForm.get('category')"
                            [label]="'Category'"
                            [errorMsg]="'Category is required'"
                            [type]="'text'"></lib-simple-input-form>
