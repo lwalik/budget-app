@@ -1,3 +1,5 @@
+import { EXPENSE_PRODUCT_PRIORITY } from '../enums/expense-product-priority.enum';
+
 export interface ExpenseViewModel {
   readonly id: string;
   readonly walletId: string;
@@ -11,4 +13,5 @@ interface ExpenseProductViewModel {
   readonly name: string;
   readonly quantity: number;
   readonly totalPrice: number;
+  readonly priority: EXPENSE_PRODUCT_PRIORITY;
 }

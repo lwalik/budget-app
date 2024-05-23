@@ -17,8 +17,8 @@ import {
   SimpleInputFormComponent,
   SimpleModalComponent,
   SimplePaginationViewModel,
+  SimpleSelectListComponent,
 } from '@budget-app/shared';
-import { BehaviorSubject, Observable, take, tap } from 'rxjs';
 import {
   UserProductSelectListItemViewModel,
   UserProductsSelectListComponent,
@@ -27,8 +27,10 @@ import {
   WalletSelectListComponent,
   WalletSelectListItemViewModel,
 } from '@budget-app/wallets';
-import { ExpensesState } from '../../states/expenses.state';
+import { BehaviorSubject, Observable, of, take, tap } from 'rxjs';
+import { EXPENSE_PRODUCT_PRIORITY } from '../../enums/expense-product-priority.enum';
 import { ExpenseProductModel } from '../../models/expense-product.model';
+import { ExpensesState } from '../../states/expenses.state';
 
 interface ExpenseFormDialogData {
   readonly isEdit: boolean;
@@ -44,6 +46,7 @@ interface ExpenseFormDialogData {
     CommonModule,
     UserProductsSelectListComponent,
     WalletSelectListComponent,
+    SimpleSelectListComponent,
   ],
   templateUrl: './expense-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -61,6 +64,10 @@ export class ExpenseFormModalComponent {
     });
   readonly pagination$: Observable<SimplePaginationViewModel> =
     this._paginationSubject.asObservable();
+
+  readonly priorityList$: Observable<string[]> = of(
+    Object.values(EXPENSE_PRODUCT_PRIORITY)
+  );
 
   readonly expenseForm: FormGroup = new FormGroup({
     wallet: new FormGroup({
@@ -94,6 +101,10 @@ export class ExpenseFormModalComponent {
         quantity: new FormControl(0, {
           nonNullable: true,
           validators: [Validators.required, Validators.min(0)],
+        }),
+        priority: new FormControl('', {
+          nonNullable: true,
+          validators: [Validators.required],
         }),
       }),
     ]),
@@ -171,6 +182,10 @@ export class ExpenseFormModalComponent {
         nonNullable: true,
         validators: [Validators.required, Validators.min(0)],
       }),
+      priority: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
     });
 
     this.pagination$
@@ -227,6 +242,12 @@ export class ExpenseFormModalComponent {
       name: event.name,
       id: event.id,
       currency: event.currency,
+    });
+  }
+
+  onPriorityOptionSelected(event: string, control: FormGroup): void {
+    control.patchValue({
+      priority: event,
     });
   }
 

@@ -67,6 +67,7 @@ export class ExpensesState {
             name: product.name,
             quantity: product.quantity,
             totalPrice: product.quantity * product.price,
+            priority: product.priority,
           })),
           totalPrice: expense.totalPrice,
           currency: expense.currency,
