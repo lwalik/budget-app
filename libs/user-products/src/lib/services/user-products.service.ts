@@ -3,11 +3,11 @@ import {
   AngularFirestore,
   AngularFirestoreDocument,
 } from '@angular/fire/compat/firestore';
+import { ENV_CONFIG, EnvConfig } from '@budget-app/core';
 import { mapPromiseToVoidObservable } from '@budget-app/shared';
-import { map, Observable, of, switchMap, take } from 'rxjs';
+import { Observable, map, of, switchMap, take } from 'rxjs';
 import { UserProductModel } from '../models/user-product.model';
 import { UserProductsResponse } from '../responses/user-products.response';
-import { ENV_CONFIG, EnvConfig } from '@budget-app/core';
 
 @Injectable({ providedIn: 'root' })
 export class UserProductsService {
@@ -17,11 +17,13 @@ export class UserProductsService {
   ) {}
 
   getAll(userId: string): Observable<UserProductModel[]> {
-    return this._getUserProductsResponse(userId).pipe(
-      map((resp: UserProductsResponse | undefined) =>
-        resp ? resp.products : []
-      )
-    );
+    return this._getUserProductsDoc(userId)
+      .valueChanges({ idFields: 'id' })
+      .pipe(
+        map((resp: UserProductsResponse | undefined) =>
+          resp ? resp.products : []
+        )
+      );
   }
 
   add(
@@ -30,73 +32,73 @@ export class UserProductsService {
   ): Observable<UserProductModel> {
     const productId: string = this._client.createId();
 
-    return this._getUserProductsResponse(userId).pipe(
-      take(1),
-      switchMap((data: UserProductsResponse | undefined) => {
-        const doc = this._getUserProductsDoc(userId);
-        const newProduct: UserProductModel = { productId, ...product };
+    return this._getUserProductsDoc(userId)
+      .valueChanges({ idFields: 'id' })
+      .pipe(
+        take(1),
+        switchMap((data: UserProductsResponse | undefined) => {
+          const doc = this._getUserProductsDoc(userId);
+          const newProduct: UserProductModel = { productId, ...product };
 
-        if (!data) {
+          if (!data) {
+            return mapPromiseToVoidObservable(
+              doc.set({ products: [newProduct] })
+            ).pipe(map(() => newProduct));
+          }
+
           return mapPromiseToVoidObservable(
-            doc.set({ products: [newProduct] })
+            doc.update({
+              products: [...data.products, newProduct],
+            })
           ).pipe(map(() => newProduct));
-        }
-
-        return mapPromiseToVoidObservable(
-          doc.update({
-            products: [...data.products, newProduct],
-          })
-        ).pipe(map(() => newProduct));
-      })
-    );
+        })
+      );
   }
 
   delete(productId: string, userId: string): Observable<void> {
-    return this._getUserProductsResponse(userId).pipe(
-      switchMap((data: UserProductsResponse | undefined) => {
-        const doc = this._getUserProductsDoc(userId);
+    return this._getUserProductsDoc(userId)
+      .valueChanges({ idFields: 'id' })
+      .pipe(
+        switchMap((data: UserProductsResponse | undefined) => {
+          const doc = this._getUserProductsDoc(userId);
 
-        if (!data) {
-          return of(void 0);
-        }
+          if (!data) {
+            return of(void 0);
+          }
 
-        return mapPromiseToVoidObservable(
-          doc.update({
-            products: data.products.filter(
-              (product: UserProductModel) => product.productId !== productId
-            ),
-          })
-        );
-      })
-    );
+          return mapPromiseToVoidObservable(
+            doc.update({
+              products: data.products.filter(
+                (product: UserProductModel) => product.productId !== productId
+              ),
+            })
+          );
+        })
+      );
   }
 
   update(updatedProduct: UserProductModel, userId: string): Observable<void> {
-    return this._getUserProductsResponse(userId).pipe(
-      switchMap((data: UserProductsResponse | undefined) => {
-        const doc = this._getUserProductsDoc(userId);
+    return this._getUserProductsDoc(userId)
+      .valueChanges({ idFields: 'id' })
+      .pipe(
+        switchMap((data: UserProductsResponse | undefined) => {
+          const doc = this._getUserProductsDoc(userId);
 
-        if (!data) {
-          return of(void 0);
-        }
+          if (!data) {
+            return of(void 0);
+          }
 
-        return mapPromiseToVoidObservable(
-          doc.update({
-            products: data.products.map((product: UserProductModel) =>
-              product.productId === updatedProduct.productId
-                ? updatedProduct
-                : product
-            ),
-          })
-        );
-      })
-    );
-  }
-
-  private _getUserProductsResponse(
-    userId: string
-  ): Observable<UserProductsResponse | undefined> {
-    return this._getUserProductsDoc(userId).valueChanges();
+          return mapPromiseToVoidObservable(
+            doc.update({
+              products: data.products.map((product: UserProductModel) =>
+                product.productId === updatedProduct.productId
+                  ? updatedProduct
+                  : product
+              ),
+            })
+          );
+        })
+      );
   }
 
   private _getUserProductsDoc(

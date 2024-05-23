@@ -75,4 +75,26 @@ export class ExpensesState {
       )
     );
   }
+
+  addExpense(
+    expense: Omit<ExpenseModel, 'id' | 'ownerId' | 'createdAt' | 'expenseId'>
+  ): Observable<void> {
+    return combineLatest([
+      this._userContext.getUserId(),
+      this._expensesState$,
+    ]).pipe(
+      take(1),
+      switchMap(([userId, state]: [string, ExpensesStateModel]) =>
+        this._expensesService.add(expense, userId).pipe(
+          tap((newExpense: ExpenseModel) =>
+            this._expensesStateSubject.next({
+              ...state,
+              expenses: [...state.expenses, newExpense],
+            })
+          )
+        )
+      ),
+      map(() => void 0)
+    );
+  }
 }

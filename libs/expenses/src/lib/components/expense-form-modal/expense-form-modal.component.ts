@@ -27,6 +27,8 @@ import {
   WalletSelectListComponent,
   WalletSelectListItemViewModel,
 } from '@budget-app/wallets';
+import { ExpensesState } from '../../states/expenses.state';
+import { ExpenseProductModel } from '../../models/expense-product.model';
 
 interface ExpenseFormDialogData {
   readonly isEdit: boolean;
@@ -70,6 +72,10 @@ export class ExpenseFormModalComponent {
         nonNullable: true,
         validators: [Validators.required],
       }),
+      currency: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
     }),
     products: new FormArray([
       new FormGroup({
@@ -96,7 +102,8 @@ export class ExpenseFormModalComponent {
   constructor(
     private readonly _dialogRef: DialogRef,
     @Inject(DIALOG_DATA)
-    private readonly _dialogData: ExpenseFormDialogData
+    private readonly _dialogData: ExpenseFormDialogData,
+    private readonly _expenseState: ExpensesState
   ) {}
 
   get walletNameFormControl(): FormControl {
@@ -219,11 +226,25 @@ export class ExpenseFormModalComponent {
     walletFormControl.patchValue({
       name: event.name,
       id: event.id,
+      currency: event.currency,
     });
   }
 
-  onExpenseFormSubmitted(form: FormGroup): void {
-    console.log('submit ? form: ', form);
+  onExpenseFormSubmitted(): void {
+    const products: ExpenseProductModel[] = this._getProductsFormArray().value;
+    this._expenseState
+      .addExpense({
+        walletId: this._getWalletFormGroup().get('id')?.value,
+        products: products,
+        totalPrice: products.reduce(
+          (total: number, product: ExpenseProductModel) =>
+            total + product.price * product.quantity,
+          0
+        ),
+        currency: this._getWalletFormGroup().get('currency')?.value,
+      })
+      .pipe(take(1))
+      .subscribe(() => this._dialogRef.close());
   }
 
   private _getProductsFormArray(): FormArray {

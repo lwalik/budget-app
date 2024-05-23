@@ -78,6 +78,7 @@ export class WalletSelectListComponent {
           this.optionSelected.emit({
             name: selectedWallet.name,
             id: selectedWallet.id,
+            currency: selectedWallet.currency,
           });
         })
       )

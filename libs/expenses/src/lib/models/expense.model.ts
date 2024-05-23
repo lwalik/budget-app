@@ -2,7 +2,7 @@ import { ExpenseProductModel } from './expense-product.model';
 
 export interface ExpenseModel {
   readonly id: string;
-  readonly ownerId: string;
+  readonly expenseId: string;
   readonly walletId: string;
   readonly products: ExpenseProductModel[];
   readonly totalPrice: number;

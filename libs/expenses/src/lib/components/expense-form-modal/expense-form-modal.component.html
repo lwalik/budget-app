@@ -2,7 +2,7 @@
   <form
     class="flex flex-col gap-2"
     [formGroup]="expenseForm"
-    (ngSubmit)="onExpenseFormSubmitted(expenseForm)"
+    (ngSubmit)="onExpenseFormSubmitted()"
   >
     <div
       *ngIf="pagination$ | async as pagination"
