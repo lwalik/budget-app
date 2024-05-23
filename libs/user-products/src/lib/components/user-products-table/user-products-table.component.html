@@ -15,7 +15,11 @@
             <thead>
                 <tr>
                     <th scope="col"
-                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Name</th>
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0 lg:hidden">Product
+                    </th>
+                    <th scope="col"
+                        class="hidden py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0 lg:table-cell">
+                        Name</th>
                     <th scope="col"
                         class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Category
                     </th>
@@ -27,16 +31,17 @@
                 <tr *ngFor="let product of products$ | async">
                     <td
                         class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
-                        {{ product.name }}
+                        <span class="lg:hidden text-gray-700">Name:</span> {{ product.name }}
                         <dl class="font-normal lg:hidden">
-                            <dd class="mt-1 truncate text-gray-700">{{ product.category | titlecase }}</dd>
+                            <dd class="mt-1 truncate text-gray-700">Category: {{ product.category | titlecase }}</dd>
                         </dl>
                     </td>
-                    <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">{{ product.category | titlecase }}</td>
+                    <td class="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">{{ product.category | titlecase }}
+                    </td>
                     <td
                         class="py-4 pl-3 pr-4 text-sm font-medium sm:pr-0 flex sm:flex-row flex-col justify-center items-center gap-4">
                         <button class="text-gray-500 hover:text-gray-800"
-                        (click)="onEditProductBtnClicked(product)">
+                                (click)="onEditProductBtnClicked(product)">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  fill="none"
                                  viewBox="0 0 24 24"
@@ -50,7 +55,7 @@
 
                         </button>
                         <button class="text-red-500 hover:text-red-800"
-                        (click)="onDeleteProductBtnClicked(product)">
+                                (click)="onDeleteProductBtnClicked(product)">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  fill="none"
                                  viewBox="0 0 24 24"
