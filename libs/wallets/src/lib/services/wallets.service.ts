@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { map, Observable } from 'rxjs';
+import { ENV_CONFIG, EnvConfig } from '@budget-app/core';
+import { mapPromiseToVoidObservable } from '@budget-app/shared';
+import { Observable, map } from 'rxjs';
 import { WalletModel } from '../models/wallet.model';
 import { WalletResponse } from '../responses/wallet.response';
-import { mapPromiseToVoidObservable } from '@budget-app/shared';
-import { ENV_CONFIG, EnvConfig } from '@budget-app/core';
 
 @Injectable({ providedIn: 'root' })
 export class WalletsService {
@@ -30,11 +30,12 @@ export class WalletsService {
       );
   }
 
-  create(wallet: Omit<WalletModel, 'id'>): Observable<void> {
+  create(wallet: Omit<WalletModel, 'id'>): Observable<WalletModel> {
     const id: string = this._client.createId();
+    const newWallet: WalletModel = { ...wallet, id };
     return mapPromiseToVoidObservable(
-      this._client.doc(`${this._envConfig.walletsUrl}/` + id).set(wallet)
-    );
+      this._client.doc(`${this._envConfig.walletsUrl}/` + id).set(newWallet)
+    ).pipe(map(() => newWallet));
   }
 
   updateBalance(walletId: string, newBalance: number): Observable<void> {

@@ -1,17 +1,15 @@
+import { Dialog, DialogModule } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  Inject,
   ViewEncapsulation,
 } from '@angular/core';
-import { USER_CONTEXT, UserContext } from '@budget-app/core';
-import { Observable, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { WalletModel } from '../../models/wallet.model';
-import { WalletsService } from '../../services/wallets.service';
-import { CommonModule } from '@angular/common';
-import { Dialog, DialogModule } from '@angular/cdk/dialog';
-import { NewWalletFormModalComponent } from '../new-wallet-form-modal/new-wallet-form-modal.component';
+import { WalletsState } from '../../states/wallets.state';
 import { DepositFormModalComponent } from '../deposit-form-modal/deposit-form-modal.component';
+import { NewWalletFormModalComponent } from '../new-wallet-form-modal/new-wallet-form-modal.component';
 import { WithdrawFormModalComponent } from '../withdraw-form-modal/withdraw-form-modal.component';
 
 @Component({
@@ -23,17 +21,11 @@ import { WithdrawFormModalComponent } from '../withdraw-form-modal/withdraw-form
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletsListComponent {
-  // TODO move getAll to state
-  readonly wallets$: Observable<WalletModel[]> = this._userContext
-    .getUserId()
-    .pipe(
-      switchMap((userId: string) =>
-        this._walletsService.getAllUserWallets(userId)
-      )
-    );
+  readonly wallets$: Observable<WalletModel[]> =
+    this._walletsState.getAllWallets();
+
   constructor(
-    @Inject(USER_CONTEXT) private readonly _userContext: UserContext,
-    private readonly _walletsService: WalletsService,
+    private readonly _walletsState: WalletsState,
     private readonly _dialog: Dialog
   ) {}
 
@@ -43,12 +35,11 @@ export class WalletsListComponent {
     });
   }
 
-  onDepositBtnClicked(walletId: string, balance: number): void {
+  onDepositBtnClicked(walletId: string): void {
     this._dialog.open(DepositFormModalComponent, {
       hasBackdrop: true,
       data: {
         walletId,
-        balance,
       },
     });
   }

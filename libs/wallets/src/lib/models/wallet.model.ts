@@ -7,3 +7,9 @@ export interface WalletModel {
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
+
+export interface CreateWalletModel {
+  readonly name: string;
+  readonly balance: number;
+  readonly currency: string;
+}

@@ -1,3 +1,4 @@
+import { DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -11,14 +12,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { USER_CONTEXT, UserContext } from '@budget-app/core';
 import {
   SimpleInputFormComponent,
   SimpleModalComponent,
 } from '@budget-app/shared';
-import { DialogRef } from '@angular/cdk/dialog';
-import { WalletsService } from '../../services/wallets.service';
-import { USER_CONTEXT, UserContext } from '@budget-app/core';
-import { switchMap, take } from 'rxjs';
+import { take } from 'rxjs';
+import { WalletsState } from '../../states/wallets.state';
 
 @Component({
   selector: 'lib-new-wallet-form-modal',
@@ -47,7 +47,7 @@ export class NewWalletFormModalComponent {
 
   constructor(
     private readonly _dialogRef: DialogRef,
-    private readonly _walletsService: WalletsService,
+    private readonly _walletsState: WalletsState,
     @Inject(USER_CONTEXT) private readonly _userContext: UserContext
   ) {}
 
@@ -56,22 +56,13 @@ export class NewWalletFormModalComponent {
       return;
     }
 
-    this._userContext
-      .getUserId()
-      .pipe(
-        take(1),
-        switchMap((userId: string) => {
-          const createdAt: Date = new Date();
-          return this._walletsService.create({
-            ownerId: userId,
-            name: form.get('name')?.value,
-            balance: +form.get('balance')?.value,
-            currency: 'PLN',
-            createdAt: createdAt,
-            updatedAt: createdAt,
-          });
-        })
-      )
+    this._walletsState
+      .create({
+        name: form.get('name')?.value,
+        balance: +form.get('balance')?.value,
+        currency: 'PLN',
+      })
+      .pipe(take(1))
       .subscribe(() => this._dialogRef.close());
   }
 }

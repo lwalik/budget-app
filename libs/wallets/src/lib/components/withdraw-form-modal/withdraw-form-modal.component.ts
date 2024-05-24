@@ -1,3 +1,5 @@
+import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,20 +7,18 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  SimpleInputFormComponent,
-  SimpleModalComponent,
-} from '@budget-app/shared';
-import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { WalletsService } from '../../services/wallets.service';
+import {
+  SimpleInputFormComponent,
+  SimpleModalComponent,
+} from '@budget-app/shared';
 import { take } from 'rxjs';
+import { WalletsState } from '../../states/wallets.state';
 import { WalletOperationDialogDataViewModel } from '../../view-models/wallet-operation-dialog-data.view-model';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lib-withdraw-form-modal',
@@ -48,7 +48,7 @@ export class WithdrawFormModalComponent {
   });
 
   constructor(
-    private readonly _walletsService: WalletsService,
+    private readonly _walletsState: WalletsState,
     private readonly _dialogRef: DialogRef,
     @Inject(DIALOG_DATA)
     private readonly _dialogData: WalletOperationDialogDataViewModel
@@ -59,16 +59,15 @@ export class WithdrawFormModalComponent {
       return;
     }
 
-    const newBalance: number =
-      this._dialogData.balance - +form.get('amount')?.value;
+    const inputValue: number = +form.get('amount')?.value;
 
-    if (newBalance < 0) {
+    if (this._dialogData.balance - inputValue < 0) {
       this.withdrawForm.setErrors({ notEnoughMoney: true });
       return;
     }
 
-    this._walletsService
-      .updateBalance(this._dialogData.walletId, newBalance)
+    this._walletsState
+      .decreaseWalletBalance(this._dialogData.walletId, inputValue)
       .pipe(take(1))
       .subscribe(() => this._dialogRef.close());
   }

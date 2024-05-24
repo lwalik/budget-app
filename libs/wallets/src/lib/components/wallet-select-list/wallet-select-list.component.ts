@@ -1,27 +1,17 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Inject,
   Input,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
 import { SimpleSelectListComponent } from '@budget-app/shared';
-import { CommonModule } from '@angular/common';
-import { WalletSelectListItemViewModel } from '../../view-models/wallet-select-list-item.view-model';
-import {
-  BehaviorSubject,
-  map,
-  Observable,
-  shareReplay,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs';
-import { USER_CONTEXT, UserContext } from '@budget-app/core';
-import { WalletsService } from '../../services/wallets.service';
+import { BehaviorSubject, Observable, map, shareReplay, take, tap } from 'rxjs';
 import { WalletModel } from '../../models/wallet.model';
+import { WalletsState } from '../../states/wallets.state';
+import { WalletSelectListItemViewModel } from '../../view-models/wallet-select-list-item.view-model';
 
 @Component({
   selector: 'lib-wallet-select-list',
@@ -43,25 +33,16 @@ export class WalletSelectListComponent {
   readonly selectedOption$: Observable<string | null> =
     this._selectedOptionSubject.asObservable();
 
-  // TODO move getAll to state
-  readonly wallets$: Observable<WalletModel[]> = this._userContext
-    .getUserId()
-    .pipe(
-      switchMap((userId: string) =>
-        this._walletsService.getAllUserWallets(userId)
-      ),
-      shareReplay(1)
-    );
+  readonly wallets$: Observable<WalletModel[]> = this._walletsState
+    .getAllWallets()
+    .pipe(shareReplay(1));
   readonly walletsName$: Observable<string[]> = this.wallets$.pipe(
     map((wallets: WalletModel[]) =>
       wallets.map((wallet: WalletModel) => wallet.name)
     )
   );
 
-  constructor(
-    @Inject(USER_CONTEXT) private readonly _userContext: UserContext,
-    private readonly _walletsService: WalletsService
-  ) {}
+  constructor(private readonly _walletsState: WalletsState) {}
 
   onOptionSelected(event: string): void {
     this.wallets$
