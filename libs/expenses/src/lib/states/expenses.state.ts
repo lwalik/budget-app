@@ -142,6 +142,14 @@ export class ExpensesState {
     );
   }
 
+  revertWalletBalance(expense: ExpenseModel): Observable<void> {
+    console.log('revert');
+    return this._walletBalance.increaseWalletBalance(
+      expense.walletId,
+      expense.totalPrice
+    );
+  }
+
   private _updateWalletBalance(
     allExpenses: ExpenseModel[],
     updatedExpense: ExpenseModel

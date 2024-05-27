@@ -8,6 +8,8 @@ import {
 import {
   ConfirmationModalComponent,
   ConfirmationModalViewModel,
+  TwoOptionConfirmationModalComponent,
+  TwoOptionConfirmationViewModel,
 } from '@budget-app/shared';
 import { WalletNameComponent } from '@budget-app/wallets';
 import { Observable, of, switchMap, take } from 'rxjs';
@@ -53,24 +55,35 @@ export class ExpensesTableComponent {
 
   onDeleteExpenseBtnClicked(expense: ExpenseModel): void {
     const createdAt = `${expense.createdAt.toDateString()}`;
-    const dialogData: ConfirmationModalViewModel = {
+    const dialogData: TwoOptionConfirmationViewModel = {
       header: 'Confirm',
       text: `Are you sure you want to remove expense from ${createdAt} ?`,
+      firstOptionText: 'Remove and Revert Balance',
+      secondOptionText: 'Only Remove',
     };
-    const dialogRef: DialogRef<boolean | undefined> = this._dialog.open<
-      boolean | undefined
-    >(ConfirmationModalComponent, {
+    const dialogRef: DialogRef<number | undefined> = this._dialog.open<
+      number | undefined
+    >(TwoOptionConfirmationModalComponent, {
       hasBackdrop: true,
       data: dialogData,
     });
     dialogRef.closed
       .pipe(
         take(1),
-        switchMap((isConfirmed: boolean | undefined) =>
-          isConfirmed
-            ? this._expensesState.deleteExpense(expense.expenseId)
-            : of(void 0)
-        )
+        switchMap((result: number | undefined) => {
+          if (result === 0) {
+            return of(void 0);
+          }
+          console.log('result: ', result);
+          return this._expensesState.deleteExpense(expense.expenseId).pipe(
+            take(1),
+            switchMap(() =>
+              result === 1
+                ? this._expensesState.revertWalletBalance(expense)
+                : of(void 0)
+            )
+          );
+        })
       )
       .subscribe();
   }
