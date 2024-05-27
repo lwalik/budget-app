@@ -31,50 +31,45 @@ export class UserProductsService {
     userId: string
   ): Observable<UserProductModel> {
     const productId: string = this._client.createId();
+    const doc = this._getUserProductsDoc(userId);
 
-    return this._getUserProductsDoc(userId)
-      .valueChanges({ idFields: 'id' })
-      .pipe(
-        take(1),
-        switchMap((data: UserProductsResponse | undefined) => {
-          const doc = this._getUserProductsDoc(userId);
-          const newProduct: UserProductModel = { productId, ...product };
+    return doc.valueChanges({ idFields: 'id' }).pipe(
+      take(1),
+      switchMap((data: UserProductsResponse | undefined) => {
+        const newProduct: UserProductModel = { productId, ...product };
 
-          if (!data) {
-            return mapPromiseToVoidObservable(
-              doc.set({ products: [newProduct] })
-            ).pipe(map(() => newProduct));
-          }
-
+        if (!data) {
           return mapPromiseToVoidObservable(
-            doc.update({
-              products: [...data.products, newProduct],
-            })
+            doc.set({ products: [newProduct] })
           ).pipe(map(() => newProduct));
-        })
-      );
+        }
+
+        return mapPromiseToVoidObservable(
+          doc.update({
+            products: [...data.products, newProduct],
+          })
+        ).pipe(map(() => newProduct));
+      })
+    );
   }
 
   delete(productId: string, userId: string): Observable<void> {
-    return this._getUserProductsDoc(userId)
-      .valueChanges({ idFields: 'id' })
-      .pipe(
-        switchMap((data: UserProductsResponse | undefined) => {
-          const doc = this._getUserProductsDoc(userId);
+    const doc = this._getUserProductsDoc(userId);
+    return doc.valueChanges({ idFields: 'id' }).pipe(
+      switchMap((data: UserProductsResponse | undefined) => {
+        if (!data) {
+          return of(void 0);
+        }
 
-          if (!data) {
-            return of(void 0);
-          }
-
-          return mapPromiseToVoidObservable(
-            doc.update({
-              products: data.products.filter(
-                (product: UserProductModel) => product.productId !== productId
-              ),
-            })
-          );
-        })
-      );
+        return mapPromiseToVoidObservable(
+          doc.update({
+            products: data.products.filter(
+              (product: UserProductModel) => product.productId !== productId
+            ),
+          })
+        );
+      })
+    );
   }
 
   update(updatedProduct: UserProductModel, userId: string): Observable<void> {

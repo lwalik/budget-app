@@ -115,4 +115,26 @@ export class ExpensesState {
       )
     );
   }
+
+  deleteExpense(expenseId: string): Observable<void> {
+    // TODO Ograć opcję wracania balance na konto
+    return combineLatest([
+      this._userContext.getUserId(),
+      this._expensesState$,
+    ]).pipe(
+      take(1),
+      switchMap(([userId, state]: [string, ExpensesStateModel]) =>
+        this._expensesService.delete(expenseId, userId).pipe(
+          tap(() =>
+            this._expensesStateSubject.next({
+              ...state,
+              expenses: state.expenses.filter(
+                (expense: ExpenseModel) => expense.expenseId !== expenseId
+              ),
+            })
+          )
+        )
+      )
+    );
+  }
 }

@@ -105,6 +105,25 @@ export class ExpensesService {
     );
   }
 
+  delete(expenseId: string, userId: string): Observable<void> {
+    const doc = this._getExpensesDoc(userId);
+    return doc.valueChanges({ idFields: 'id' }).pipe(
+      switchMap((data: UserExpenseResponse | undefined) => {
+        if (!data) {
+          return of(void 0);
+        }
+
+        return mapPromiseToVoidObservable(
+          doc.update({
+            expenses: data.expenses.filter(
+              (expense: ExpenseResponse) => expense.expenseId !== expenseId
+            ),
+          })
+        );
+      })
+    );
+  }
+
   private _getExpensesDoc(
     userId: string
   ): AngularFirestoreDocument<UserExpenseResponse> {

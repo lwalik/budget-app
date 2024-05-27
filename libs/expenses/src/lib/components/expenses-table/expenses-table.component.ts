@@ -1,12 +1,16 @@
-import { Dialog } from '@angular/cdk/dialog';
+import { Dialog, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
 } from '@angular/core';
+import {
+  ConfirmationModalComponent,
+  ConfirmationModalViewModel,
+} from '@budget-app/shared';
 import { WalletNameComponent } from '@budget-app/wallets';
-import { Observable } from 'rxjs';
+import { Observable, of, switchMap, take } from 'rxjs';
 import { ExpenseModel } from '../../models/expense.model';
 import { ExpensesState } from '../../states/expenses.state';
 import { ExpenseFormModalComponent } from '../expense-form-modal/expense-form-modal.component';
@@ -45,5 +49,29 @@ export class ExpensesTableComponent {
         expense,
       },
     });
+  }
+
+  onDeleteExpenseBtnClicked(expense: ExpenseModel): void {
+    const createdAt = `${expense.createdAt.toDateString()}`;
+    const dialogData: ConfirmationModalViewModel = {
+      header: 'Confirm',
+      text: `Are you sure you want to remove expense from ${createdAt} ?`,
+    };
+    const dialogRef: DialogRef<boolean | undefined> = this._dialog.open<
+      boolean | undefined
+    >(ConfirmationModalComponent, {
+      hasBackdrop: true,
+      data: dialogData,
+    });
+    dialogRef.closed
+      .pipe(
+        take(1),
+        switchMap((isConfirmed: boolean | undefined) =>
+          isConfirmed
+            ? this._expensesState.deleteExpense(expense.expenseId)
+            : of(void 0)
+        )
+      )
+      .subscribe();
   }
 }
