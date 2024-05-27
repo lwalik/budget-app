@@ -115,6 +115,7 @@ export class UserProductsState {
         this._userProductsService.update(updatedProduct, userId).pipe(
           tap(() =>
             this._userProductsStateSubject.next({
+              ...state,
               products: state.products.map((product: UserProductModel) =>
                 product.productId === updatedProduct.productId
                   ? updatedProduct

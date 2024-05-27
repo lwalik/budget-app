@@ -6,7 +6,7 @@ import {
 import { ENV_CONFIG, EnvConfig } from '@budget-app/core';
 import { mapPromiseToVoidObservable } from '@budget-app/shared';
 import { Timestamp } from 'firebase/firestore';
-import { Observable, map, switchMap, take } from 'rxjs';
+import { Observable, map, of, switchMap, take } from 'rxjs';
 import { ExpenseModel } from '../models/expense.model';
 import {
   ExpenseResponse,
@@ -78,6 +78,30 @@ export class ExpensesService {
             ],
           })
         ).pipe(map(() => newExpense));
+      })
+    );
+  }
+
+  update(updatedExpense: ExpenseModel, userId: string): Observable<void> {
+    const doc = this._getExpensesDoc(userId);
+    return doc.valueChanges({ idFields: 'id' }).pipe(
+      switchMap((data: UserExpenseResponse | undefined) => {
+        if (!data) {
+          return of(void 0);
+        }
+
+        return mapPromiseToVoidObservable(
+          doc.update({
+            expenses: data.expenses.map((expense: ExpenseResponse) =>
+              expense.expenseId === updatedExpense.expenseId
+                ? {
+                    ...updatedExpense,
+                    createdAt: expense.createdAt,
+                  }
+                : expense
+            ),
+          })
+        );
       })
     );
   }

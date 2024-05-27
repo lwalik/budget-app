@@ -82,11 +82,11 @@ export class UserProductsService {
       .valueChanges({ idFields: 'id' })
       .pipe(
         switchMap((data: UserProductsResponse | undefined) => {
-          const doc = this._getUserProductsDoc(userId);
-
           if (!data) {
             return of(void 0);
           }
+
+          const doc = this._getUserProductsDoc(userId);
 
           return mapPromiseToVoidObservable(
             doc.update({

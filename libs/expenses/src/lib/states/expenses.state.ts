@@ -107,4 +107,27 @@ export class ExpensesState {
       map(() => void 0)
     );
   }
+
+  updateExpense(updatedExpense: ExpenseModel): Observable<void> {
+    return combineLatest([
+      this._userContext.getUserId(),
+      this._expensesState$,
+    ]).pipe(
+      take(1),
+      switchMap(([userId, state]: [string, ExpensesStateModel]) =>
+        this._expensesService.update(updatedExpense, userId).pipe(
+          tap(() =>
+            this._expensesStateSubject.next({
+              ...state,
+              expenses: state.expenses.map((expense: ExpenseModel) =>
+                expense.expenseId === updatedExpense.expenseId
+                  ? updatedExpense
+                  : expense
+              ),
+            })
+          )
+        )
+      )
+    );
+  }
 }
