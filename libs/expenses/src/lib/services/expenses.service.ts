@@ -49,7 +49,6 @@ export class ExpensesService {
       switchMap((data: UserExpenseResponse | undefined) => {
         const newExpense: ExpenseModel = {
           ...expense,
-          id: expenseId,
           expenseId,
           createdAt: new Date(),
         };

@@ -42,7 +42,8 @@
         <tr *ngFor="let expense of expenses$ | async">
           <td class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
             <p *ngFor="let product of expense.products">{{ product.quantity }} x {{ product.name }} ({{
-              product.totalPrice | currency : expense.currency }}) <span class="text-slate-500">Priority: {{
+              product.price * product.quantity | currency : expense.currency }}) <span class="text-slate-500">Priority:
+                {{
                 product.priority }}</span></p>
             <dl class="font-normal lg:hidden">
               <dd class="mt-1 truncate text-gray-700">Total Price: {{ expense.totalPrice | currency : expense.currency
@@ -70,7 +71,8 @@
           </td>
           <td
               class="py-4 pl-3 pr-4 text-sm font-medium sm:pr-0 flex sm:flex-row flex-col justify-center items-center gap-4">
-            <button class="text-gray-500 hover:text-gray-800">
+            <button (click)="onEditExpenseBtnClicked(expense)"
+                    class="text-gray-500 hover:text-gray-800">
               <svg xmlns="http://www.w3.org/2000/svg"
                    fill="none"
                    viewBox="0 0 24 24"

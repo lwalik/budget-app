@@ -4,6 +4,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Inject,
+  OnInit,
   ViewEncapsulation,
 } from '@angular/core';
 import {
@@ -27,13 +28,15 @@ import {
   WalletSelectListComponent,
   WalletSelectListItemViewModel,
 } from '@budget-app/wallets';
-import { BehaviorSubject, Observable, of, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, of, take, tap } from 'rxjs';
 import { EXPENSE_PRODUCT_PRIORITY } from '../../enums/expense-product-priority.enum';
 import { ExpenseProductModel } from '../../models/expense-product.model';
+import { ExpenseModel } from '../../models/expense.model';
 import { ExpensesState } from '../../states/expenses.state';
 
 interface ExpenseFormDialogData {
   readonly isEdit: boolean;
+  readonly expense?: ExpenseModel;
 }
 
 @Component({
@@ -52,8 +55,8 @@ interface ExpenseFormDialogData {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpenseFormModalComponent {
-  readonly header: string = this._dialogData.isEdit
+export class ExpenseFormModalComponent implements OnInit {
+  readonly header: string = this.dialogData.isEdit
     ? 'Update Expense'
     : 'New Expense';
 
@@ -84,38 +87,27 @@ export class ExpenseFormModalComponent {
         validators: [Validators.required],
       }),
     }),
-    products: new FormArray([
-      new FormGroup({
-        name: new FormControl('', {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        category: new FormControl('', {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-        price: new FormControl(0, {
-          nonNullable: true,
-          validators: [Validators.required, Validators.min(0)],
-        }),
-        quantity: new FormControl(0, {
-          nonNullable: true,
-          validators: [Validators.required, Validators.min(0)],
-        }),
-        priority: new FormControl('', {
-          nonNullable: true,
-          validators: [Validators.required],
-        }),
-      }),
-    ]),
+    products: new FormArray([]),
   });
 
   constructor(
     private readonly _dialogRef: DialogRef,
     @Inject(DIALOG_DATA)
-    private readonly _dialogData: ExpenseFormDialogData,
+    readonly dialogData: ExpenseFormDialogData,
     private readonly _expenseState: ExpensesState
   ) {}
+
+  ngOnInit(): void {
+    if (!this.dialogData.isEdit || !this.dialogData.expense) {
+      this._addProductControl();
+      return;
+    }
+
+    const expense: ExpenseModel = this.dialogData.expense;
+
+    expense.products.forEach((product) => this._addProductControl(product));
+    this._changePaginationPagesCount(expense.products.length - 1).subscribe();
+  }
 
   get walletNameFormControl(): FormControl {
     return this._getWalletFormGroup().get('name') as FormControl;
@@ -163,47 +155,38 @@ export class ExpenseFormModalComponent {
   }
 
   addProductControl(): void {
+    this._addProductControl();
+
+    this._changePaginationPagesCount(1).subscribe();
+  }
+
+  private _addProductControl(product?: ExpenseProductModel): void {
     const productsFormArray: FormArray = this._getProductsFormArray();
 
     const productForm: FormGroup = new FormGroup({
-      name: new FormControl('', {
+      name: new FormControl((!!product && product.name) || '', {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      price: new FormControl(0, {
+      price: new FormControl((!!product && product.price) || 0, {
         nonNullable: true,
         validators: [Validators.required, Validators.min(0)],
       }),
-      category: new FormControl('', {
+      category: new FormControl((!!product && product.category) || '', {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      quantity: new FormControl(0, {
+      quantity: new FormControl((!!product && product.quantity) || 0, {
         nonNullable: true,
         validators: [Validators.required, Validators.min(0)],
       }),
-      priority: new FormControl('', {
+      priority: new FormControl((!!product && product.priority) || '', {
         nonNullable: true,
         validators: [Validators.required],
       }),
     });
 
-    this.pagination$
-      .pipe(
-        take(1),
-        tap(() => productsFormArray.push(productForm)),
-        tap((subject: SimplePaginationViewModel) => {
-          this._paginationSubject.next({
-            ...subject,
-            currentIdx: Math.min(
-              subject.lastPageIdx + 1,
-              subject.currentIdx + 1
-            ),
-            lastPageIdx: subject.lastPageIdx + 1,
-          });
-        })
-      )
-      .subscribe();
+    productsFormArray.push(productForm);
   }
 
   removeProductControl(): void {
@@ -253,8 +236,28 @@ export class ExpenseFormModalComponent {
 
   onExpenseFormSubmitted(): void {
     const products: ExpenseProductModel[] = this._getProductsFormArray().value;
+
+    if (!this.dialogData.isEdit || !this.dialogData.expense) {
+      this._expenseState
+        .addExpense({
+          walletId: this._getWalletFormGroup().get('id')?.value,
+          products: products,
+          totalPrice: products.reduce(
+            (total: number, product: ExpenseProductModel) =>
+              total + product.price * product.quantity,
+            0
+          ),
+          currency: this._getWalletFormGroup().get('currency')?.value,
+        })
+        .pipe(take(1))
+        .subscribe(() => this._dialogRef.close());
+      return;
+    }
+
     this._expenseState
-      .addExpense({
+      .updateExpense({
+        expenseId: this.dialogData.expense.expenseId,
+        createdAt: this.dialogData.expense.createdAt,
         walletId: this._getWalletFormGroup().get('id')?.value,
         products: products,
         totalPrice: products.reduce(
@@ -274,5 +277,22 @@ export class ExpenseFormModalComponent {
 
   private _getWalletFormGroup(): FormGroup {
     return this.expenseForm.get('wallet') as FormGroup;
+  }
+
+  private _changePaginationPagesCount(value: number): Observable<void> {
+    return this.pagination$.pipe(
+      take(1),
+      tap((subject: SimplePaginationViewModel) => {
+        this._paginationSubject.next({
+          ...subject,
+          currentIdx: Math.min(
+            subject.lastPageIdx + value,
+            subject.currentIdx + value
+          ),
+          lastPageIdx: subject.lastPageIdx + value,
+        });
+      }),
+      map(() => void 0)
+    );
   }
 }

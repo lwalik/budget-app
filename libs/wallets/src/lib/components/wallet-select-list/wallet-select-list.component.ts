@@ -22,6 +22,32 @@ import { WalletSelectListItemViewModel } from '../../view-models/wallet-select-l
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletSelectListComponent {
+  @Input() set initialValueId(id: string | undefined) {
+    if (!id) {
+      return;
+    }
+
+    this.wallets$
+      .pipe(
+        take(1),
+        tap((wallets: WalletModel[]) => {
+          const selectedWallet: WalletModel | undefined = wallets.find(
+            (wallet: WalletModel) => wallet.id === id
+          );
+
+          if (!selectedWallet) {
+            return;
+          }
+
+          this.optionSelected.emit({
+            name: selectedWallet.name,
+            id: selectedWallet.id,
+            currency: selectedWallet.currency,
+          });
+        })
+      )
+      .subscribe();
+  }
   @Input() set selectedOption(option: string | null) {
     this._selectedOptionSubject.next(option);
   }

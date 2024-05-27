@@ -8,7 +8,6 @@ export interface UserExpenseResponse {
 }
 
 export interface ExpenseResponse {
-  readonly id: string;
   readonly expenseId: string;
   readonly walletId: string;
   readonly products: ExpenseProductModel[];
