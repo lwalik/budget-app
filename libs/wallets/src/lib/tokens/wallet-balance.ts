@@ -6,4 +6,5 @@ export const WALLET_BALANCE: InjectionToken<WalletBalance> =
 
 export interface WalletBalance {
   decreaseWalletBalance(walletId: string, value: number): Observable<void>;
+  increaseWalletBalance(walletId: string, value: number): Observable<void>;
 }

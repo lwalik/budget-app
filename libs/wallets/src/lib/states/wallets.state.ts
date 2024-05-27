@@ -139,6 +139,11 @@ export class WalletsState implements WalletBalance {
             : selectedWallet.balance - value;
 
         return this._walletsService.updateBalance(walletId, newBalance).pipe(
+          tap(() => {
+            console.log('selectedWallet: ', selectedWallet.name);
+            console.log('operation: ', operation);
+            console.log('newBalance: ', newBalance);
+          }),
           tap(() =>
             this._walletsStateSubject.next({
               ...state,

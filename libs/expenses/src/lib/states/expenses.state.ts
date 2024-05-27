@@ -9,6 +9,7 @@ import {
   switchMap,
   take,
   tap,
+  of,
 } from 'rxjs';
 import { ExpenseModel } from '../models/expense.model';
 import { ExpensesStateModel } from '../models/expenses-state.model';
@@ -93,7 +94,6 @@ export class ExpensesState {
   }
 
   updateExpense(updatedExpense: ExpenseModel): Observable<void> {
-    // TODO ograc zmiane balance w portfelu także po zmianie portfela
     return combineLatest([
       this._userContext.getUserId(),
       this._expensesState$,
@@ -101,6 +101,7 @@ export class ExpensesState {
       take(1),
       switchMap(([userId, state]: [string, ExpensesStateModel]) =>
         this._expensesService.update(updatedExpense, userId).pipe(
+          take(1),
           tap(() =>
             this._expensesStateSubject.next({
               ...state,
@@ -110,6 +111,9 @@ export class ExpensesState {
                   : expense
               ),
             })
+          ),
+          switchMap(() =>
+            this._updateWalletBalance(state.expenses, updatedExpense)
           )
         )
       )
@@ -136,5 +140,52 @@ export class ExpensesState {
         )
       )
     );
+  }
+
+  private _updateWalletBalance(
+    allExpenses: ExpenseModel[],
+    updatedExpense: ExpenseModel
+  ): Observable<void> {
+    const prevExpenseState: ExpenseModel | undefined = allExpenses.find(
+      (expense: ExpenseModel) => expense.expenseId === updatedExpense.expenseId
+    );
+    if (!prevExpenseState) {
+      return of(void 0);
+    }
+
+    const diff: number =
+      prevExpenseState.totalPrice - updatedExpense.totalPrice;
+
+    if (diff === 0 && prevExpenseState.walletId === updatedExpense.walletId) {
+      return of(void 0);
+    }
+
+    if (prevExpenseState.walletId === updatedExpense.walletId) {
+      return diff > 0
+        ? this._walletBalance.increaseWalletBalance(
+            updatedExpense.walletId,
+            diff
+          )
+        : this._walletBalance.decreaseWalletBalance(
+            updatedExpense.walletId,
+            diff
+          );
+    }
+
+    return this._walletBalance
+      .increaseWalletBalance(
+        prevExpenseState.walletId,
+        prevExpenseState.totalPrice
+      )
+      .pipe(
+        take(1),
+        switchMap(() =>
+          this._walletBalance.decreaseWalletBalance(
+            updatedExpense.walletId,
+            updatedExpense.totalPrice
+          )
+        ),
+        map(() => void 0)
+      );
   }
 }
