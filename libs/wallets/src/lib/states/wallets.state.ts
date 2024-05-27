@@ -14,13 +14,14 @@ import { WALLET_BALANCE_OPERATION_TYPE } from '../enums/wallet-balance-operation
 import { WalletStateModel } from '../models/wallet-state.model';
 import { CreateWalletModel, WalletModel } from '../models/wallet.model';
 import { WalletsService } from '../services/wallets.service';
+import { DecreaseWalletBalance } from '../tokens/decrease-wallet-balance';
 
 const initialState: WalletStateModel = {
   wallets: [],
 };
 
 @Injectable({ providedIn: 'root' })
-export class WalletsState {
+export class WalletsState implements DecreaseWalletBalance {
   private readonly _walletsStateSubject: BehaviorSubject<WalletStateModel> =
     new BehaviorSubject<WalletStateModel>(initialState);
   private readonly _walletsState$: Observable<WalletStateModel> =

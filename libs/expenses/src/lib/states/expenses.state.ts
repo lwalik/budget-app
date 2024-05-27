@@ -1,6 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { USER_CONTEXT, UserContext } from '@budget-app/core';
 import {
+  DECREASE_WALLET_BALANCE,
+  DecreaseWalletBalance,
+} from '@budget-app/wallets';
+import {
   BehaviorSubject,
   Observable,
   combineLatest,
@@ -32,8 +36,10 @@ export class ExpensesState {
     this._isInitializedSubject.asObservable();
 
   constructor(
+    private readonly _expensesService: ExpensesService,
     @Inject(USER_CONTEXT) private readonly _userContext: UserContext,
-    private readonly _expensesService: ExpensesService
+    @Inject(DECREASE_WALLET_BALANCE)
+    private readonly _decreaseWalletBalance: DecreaseWalletBalance
   ) {}
 
   loadExpenses(): Observable<void> {
@@ -93,6 +99,12 @@ export class ExpensesState {
               expenses: [...state.expenses, newExpense],
             })
           )
+        )
+      ),
+      switchMap(() =>
+        this._decreaseWalletBalance.decreaseWalletBalance(
+          expense.walletId,
+          expense.totalPrice
         )
       ),
       map(() => void 0)

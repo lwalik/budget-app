@@ -1,3 +1,5 @@
+import { registerLocaleData } from '@angular/common';
+import localePl from '@angular/common/locales/pl';
 import {
   ApplicationConfig,
   importProvidersFrom,
@@ -7,12 +9,11 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { provideRouter } from '@angular/router';
+import { userContextProvider } from '@budget-app/auth';
+import { ENV_CONFIG } from '@budget-app/core';
+import { decreaseWalletBalanceProvider } from '@budget-app/wallets';
 import { environment } from '../environments/environment';
 import { appRoutes } from './app.routes';
-import { userContextProvider } from '@budget-app/auth';
-import { registerLocaleData } from '@angular/common';
-import localePl from '@angular/common/locales/pl';
-import { ENV_CONFIG } from '@budget-app/core';
 
 registerLocaleData(localePl);
 
@@ -25,6 +26,7 @@ export const appConfig: ApplicationConfig = {
       AngularFireModule.initializeApp(environment.firebaseConfig),
     ]),
     userContextProvider(),
+    decreaseWalletBalanceProvider(),
     {
       provide: LOCALE_ID,
       useValue: 'pl_PL',
