@@ -170,25 +170,30 @@ export class ExpensesState {
       }))
     );
   }
-  // getSortList(): Observable<SortListItemViewModel[]> {
-  //   return this._sortState$.pipe(
-  //     map((sort: SortModel) =>
-  //       Object.entries(SORT_TYPE).map(([key, value]) => ({
-  //         label: value,
-  //         type: key as SORT_TYPE,
-  //         isSelected: sort.sortBy === key,
-  //       }))
-  //     )
-  //   );
-  // }
 
-  updateSort(sortBy: SORT_TYPE): Observable<void> {
+  updateSortBy(sortBy: SORT_TYPE): Observable<void> {
     return this._sortState$.pipe(
       take(1),
       tap((state: SortModel) =>
         this._sortStateSubject.next({
           ...state,
           sortBy,
+        })
+      ),
+      map(() => void 0)
+    );
+  }
+
+  updateSortDirection(): Observable<void> {
+    return this._sortState$.pipe(
+      take(1),
+      tap((state: SortModel) =>
+        this._sortStateSubject.next({
+          ...state,
+          direction:
+            state.direction === SORT_DIRECTION.ASC
+              ? SORT_DIRECTION.DESC
+              : SORT_DIRECTION.ASC,
         })
       ),
       map(() => void 0)
