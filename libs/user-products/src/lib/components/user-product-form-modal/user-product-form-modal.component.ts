@@ -14,6 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  SelectAutocompleteListComponent,
   SimpleInputFormComponent,
   SimpleModalComponent,
 } from '@budget-app/shared';
@@ -34,6 +35,7 @@ interface UserProductFormDialogData {
     SimpleModalComponent,
     ReactiveFormsModule,
     SimpleInputFormComponent,
+    SelectAutocompleteListComponent,
   ],
   templateUrl: './user-product-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,

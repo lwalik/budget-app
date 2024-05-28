@@ -4,6 +4,7 @@ export * from './lib/components/simple-input-form/simple-input-form.component';
 export * from './lib/components/simple-modal/simple-modal.component';
 export * from './lib/components/simple-select-list/simple-select-list.component';
 export * from './lib/components/two-option-confirmation-modal/two-option-confirmation-modal.component';
+export * from './lib/components/select-autocomplete-list/select-autocomplete-list.component';
 // View Models
 export * from './lib/view-models/confirmation-modal.view-model';
 export * from './lib/view-models/simple-pagination.view-model';

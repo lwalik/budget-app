@@ -1,0 +1,34 @@
+<ng-container *ngIf="filteredListOptions$ | async as filteredListOptions">
+  <ng-container>
+    <ng-container *ngIf="listOptions$ | async as listOptions">
+<!--      TODO to ograć + style -->
+<!--      <ul-->
+<!--        class="list-group autocomplete-list"-->
+<!--        libArrowSelectOnUlList-->
+<!--        (onEnterKey)="onOptionSelected($event)">-->
+      <ul
+        class="list-group autocomplete-list bg-warn"
+        >
+        <ng-container >
+          <li
+            class="d-flex gap-3 flex-row justify-content-between list-group-item pointer-on-hover"
+            (mousedown)="onOptionSelected(listOptions.inputValue, $event)"
+            *ngIf="!filteredListOptions.length">
+            <span id="optionHook">{{ listOptions.inputValue }}</span
+            ><i class="bi bi-plus-square"></i>
+          </li>
+
+          <li
+            class="d-flex gap-3 flex-row justify-content-between list-group-item pointer-on-hover text-white"
+            *ngFor="let option of filteredListOptions"
+            (mousedown)="onOptionSelected(option)">
+            <div id="optionHook" [attr.data-value]="option">
+              {{ option }}
+            </div>
+          </li>
+        </ng-container>
+
+      </ul>
+    </ng-container>
+  </ng-container>
+</ng-container>

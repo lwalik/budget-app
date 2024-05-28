@@ -1,20 +1,32 @@
 <lib-simple-modal [header]="header">
-  <form class="flex flex-col gap-2"
-        [formGroup]="productForm"
-        (ngSubmit)="productFormSubmitted(productForm)">
-    <lib-simple-input-form [control]="productForm.get('name')"
-                           [label]="'Name'"
-                           [errorMsg]="'Name is required'"
-                           [type]="'text'"></lib-simple-input-form>
+  <form
+    class="flex flex-col gap-2"
+    [formGroup]="productForm"
+    (ngSubmit)="productFormSubmitted(productForm)"
+  >
+    <lib-simple-input-form
+      [control]="productForm.get('name')"
+      [label]="'Name'"
+      [errorMsg]="'Name is required'"
+      [type]="'text'"
+    ></lib-simple-input-form>
 
-    <lib-simple-input-form [control]="productForm.get('category')"
-                           [label]="'Category'"
-                           [errorMsg]="'Category is required'"
-                           [type]="'text'"></lib-simple-input-form>
+    <lib-simple-input-form
+      [control]="productForm.get('category')"
+      [label]="'Category'"
+      [errorMsg]="'Category is required'"
+      [type]="'text'"
+    ></lib-simple-input-form>
+    <lib-select-autocomplete-list
+      *ngIf="
+        productForm.get('category')?.value && productForm.get('category')?.dirty
+      "
+      [options]="['Abonamenty', 'Jedzenie', 'Samochód']"
+      [inputValue]="productForm.get('category')?.value"
+    >
+    </lib-select-autocomplete-list>
 
-    <button type="submit"
-            [disabled]="!productForm.valid"
-            class="btn-warn">
+    <button type="submit" [disabled]="!productForm.valid" class="btn-warn">
       Save
     </button>
   </form>
