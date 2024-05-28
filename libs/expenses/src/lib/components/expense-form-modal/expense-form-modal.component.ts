@@ -176,7 +176,7 @@ export class ExpenseFormModalComponent implements OnInit {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      quantity: new FormControl((!!product && product.quantity) || 0, {
+      quantity: new FormControl((!!product && product.quantity) || 1, {
         nonNullable: true,
         validators: [Validators.required, Validators.min(0)],
       }),

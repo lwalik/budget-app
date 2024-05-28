@@ -14,11 +14,12 @@ import { Observable, of, switchMap, take } from 'rxjs';
 import { ExpenseModel } from '../../models/expense.model';
 import { ExpensesState } from '../../states/expenses.state';
 import { ExpenseFormModalComponent } from '../expense-form-modal/expense-form-modal.component';
+import { ExpensesSortComponent } from '../expenses-sort/expenses-sort.component';
 
 @Component({
   selector: 'lib-expenses-table',
   standalone: true,
-  imports: [CommonModule, WalletNameComponent],
+  imports: [CommonModule, WalletNameComponent, ExpensesSortComponent],
   templateUrl: './expenses-table.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -17,6 +17,7 @@ import { ExpenseModel } from '../models/expense.model';
 import { ExpensesStateModel } from '../models/expenses-state.model';
 import { SortModel } from '../models/sort.model';
 import { ExpensesService } from '../services/expenses.service';
+import { SortListViewModel } from '../view-models/sort-list.view-model';
 
 const initialState: ExpensesStateModel = {
   expenses: [],
@@ -158,6 +159,39 @@ export class ExpensesState {
     return this._walletBalance.increaseWalletBalance(
       expense.walletId,
       expense.totalPrice
+    );
+  }
+
+  getSortList(): Observable<SortListViewModel> {
+    return this._sortState$.pipe(
+      map((sort: SortModel) => ({
+        items: Object.values(SORT_TYPE),
+        selectedItem: sort.sortBy,
+      }))
+    );
+  }
+  // getSortList(): Observable<SortListItemViewModel[]> {
+  //   return this._sortState$.pipe(
+  //     map((sort: SortModel) =>
+  //       Object.entries(SORT_TYPE).map(([key, value]) => ({
+  //         label: value,
+  //         type: key as SORT_TYPE,
+  //         isSelected: sort.sortBy === key,
+  //       }))
+  //     )
+  //   );
+  // }
+
+  updateSort(sortBy: SORT_TYPE): Observable<void> {
+    return this._sortState$.pipe(
+      take(1),
+      tap((state: SortModel) =>
+        this._sortStateSubject.next({
+          ...state,
+          sortBy,
+        })
+      ),
+      map(() => void 0)
     );
   }
 

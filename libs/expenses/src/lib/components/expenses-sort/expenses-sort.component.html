@@ -1,0 +1,4 @@
+<lib-simple-select-list *ngIf="sortList$ | async as sortList"
+                        [options]="sortList.items"
+                        [selectedOption]="sortList.selectedItem"
+                        (optionSelected)="onOptionSelected($event)"></lib-simple-select-list>
