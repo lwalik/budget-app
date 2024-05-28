@@ -1,30 +1,22 @@
 <ng-container *ngIf="filteredListOptions$ | async as filteredListOptions">
   <ng-container>
     <ng-container *ngIf="listOptions$ | async as listOptions">
-<!--      TODO to ograć + style -->
-<!--      <ul-->
-<!--        class="list-group autocomplete-list"-->
-<!--        libArrowSelectOnUlList-->
-<!--        (onEnterKey)="onOptionSelected($event)">-->
       <ul
-        class="list-group autocomplete-list bg-warn"
+        class="divide-y divide-gray-200 bg-secondary min-w-max overflow-y-auto rounded-md shadow"
         >
-        <ng-container >
+        <ng-container>
           <li
-            class="d-flex gap-3 flex-row justify-content-between list-group-item pointer-on-hover"
-            (mousedown)="onOptionSelected(listOptions.inputValue, $event)"
-            *ngIf="!filteredListOptions.length">
-            <span id="optionHook">{{ listOptions.inputValue }}</span
-            ><i class="bi bi-plus-square"></i>
+            class="cursor-pointer text-primary z-40 px-4 py-2 hover:bg-warn"
+            (click)="onOptionSelected(listOptions.inputValue)"
+            *ngIf="inputValueShouldBeVisible | async">
+            {{ listOptions.inputValue }}
           </li>
 
           <li
-            class="d-flex gap-3 flex-row justify-content-between list-group-item pointer-on-hover text-white"
+            class="cursor-pointer text-primary z-40 px-4 py-2 hover:bg-warn"
             *ngFor="let option of filteredListOptions"
-            (mousedown)="onOptionSelected(option)">
-            <div id="optionHook" [attr.data-value]="option">
+            (click)="onOptionSelected(option)">
               {{ option }}
-            </div>
           </li>
         </ng-container>
 

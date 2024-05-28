@@ -29,9 +29,9 @@ export class ProductsCategoryService {
   create(category: string): Observable<void> {
     const id: string = this._client.createId();
     return mapPromiseToVoidObservable(
-      this._client
-        .doc(`${this._envConfig.productsCategoryUrl}/` + id)
-        .set(category)
+      this._client.doc(`${this._envConfig.productsCategoryUrl}/` + id).set({
+        name: category,
+      })
     );
   }
 }

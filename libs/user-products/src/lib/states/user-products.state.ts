@@ -5,6 +5,7 @@ import {
   combineLatest,
   map,
   Observable,
+  of,
   switchMap,
   take,
   tap,
@@ -12,6 +13,7 @@ import {
 import { UserProductModel } from '../models/user-product.model';
 import { UserProductsStateModel } from '../models/user-products-state.model';
 import { UserProductsService } from '../services/user-products.service';
+import { ProductsCategoryService } from '../services/products-category.service';
 
 const initialState: UserProductsStateModel = {
   products: [],
@@ -31,6 +33,7 @@ export class UserProductsState {
 
   constructor(
     private readonly _userProductsService: UserProductsService,
+    private readonly _productsCategoryService: ProductsCategoryService,
     @Inject(USER_CONTEXT) private readonly _userContext: UserContext
   ) {}
 
@@ -126,5 +129,16 @@ export class UserProductsState {
         )
       )
     );
+  }
+
+  getCategoriesList(): Observable<string[]> {
+    return this._productsCategoryService.getAll();
+  }
+
+  createCategory(category: string): Observable<void> {
+    const formattedCategoryName = `${category.charAt(0).toUpperCase()}${category
+      .slice(1)
+      .toLowerCase()}`;
+    return this._productsCategoryService.create(formattedCategoryName);
   }
 }

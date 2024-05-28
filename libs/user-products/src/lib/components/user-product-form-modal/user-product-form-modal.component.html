@@ -4,27 +4,35 @@
     [formGroup]="productForm"
     (ngSubmit)="productFormSubmitted(productForm)"
   >
-    <lib-simple-input-form
-      [control]="productForm.get('name')"
-      [label]="'Name'"
-      [errorMsg]="'Name is required'"
-      [type]="'text'"
-    ></lib-simple-input-form>
+    <div class="h-24">
+      <lib-simple-input-form
+        [control]="productForm.get('name')"
+        [label]="'Name'"
+        [errorMsg]="'Name is required'"
+        [type]="'text'"
+      ></lib-simple-input-form>
+    </div>
 
-    <lib-simple-input-form
-      [control]="productForm.get('category')"
-      [label]="'Category'"
-      [errorMsg]="'Category is required'"
-      [type]="'text'"
-    ></lib-simple-input-form>
-    <lib-select-autocomplete-list
-      *ngIf="
-        productForm.get('category')?.value && productForm.get('category')?.dirty
-      "
-      [options]="['Abonamenty', 'Jedzenie', 'Samochód']"
-      [inputValue]="productForm.get('category')?.value"
-    >
-    </lib-select-autocomplete-list>
+    <div class="relative">
+      <lib-simple-input-form
+        [control]="productForm.get('category')"
+        [label]="'Category'"
+        [errorMsg]="'Category is required'"
+        [type]="'text'"
+      ></lib-simple-input-form>
+      <div class="absolute top-3/4 left-0 w-full z-10" *ngIf="categoryList$ | async as categoryList">
+        <lib-select-autocomplete-list
+          *ngIf="
+            productForm.get('category')?.value &&
+            productForm.get('category')?.dirty
+          "
+          (optionSelected)="onCategoryOptionSelected($event)"
+          [options]="categoryList"
+          [inputValue]="productForm.get('category')?.value"
+        >
+        </lib-select-autocomplete-list>
+      </div>
+    </div>
 
     <button type="submit" [disabled]="!productForm.valid" class="btn-warn">
       Save

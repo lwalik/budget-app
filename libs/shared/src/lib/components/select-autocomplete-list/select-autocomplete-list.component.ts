@@ -62,11 +62,19 @@ export class SelectAutocompleteListComponent {
     )
   );
 
-  onOptionSelected(option: string, mouseEvent?: MouseEvent): void {
-    if (mouseEvent) {
-      mouseEvent.preventDefault();
-    }
+  get inputValueShouldBeVisible(): Observable<boolean> {
+    return this.listOptions$.pipe(
+      take(1),
+      map(
+        (listOptions: AutocompleteOptionsViewModel) =>
+          !listOptions.list
+            .map((item: string) => item.toLowerCase())
+            .includes(listOptions.inputValue.toLowerCase())
+      )
+    );
+  }
 
+  onOptionSelected(option: string): void {
     this.optionSelected.emit(option);
   }
 }

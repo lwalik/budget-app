@@ -18,7 +18,7 @@ import {
   SimpleInputFormComponent,
   SimpleModalComponent,
 } from '@budget-app/shared';
-import { take } from 'rxjs';
+import { Observable, of, shareReplay, switchMap, take, tap } from 'rxjs';
 import { UserProductsState } from '../../states/user-products.state';
 import { UserProductModel } from '../../models/user-product.model';
 
@@ -45,6 +45,11 @@ export class UserProductFormModalComponent implements OnInit {
   readonly header: string = this._dialogData.isEdit
     ? 'Update Product'
     : 'New Product';
+
+  readonly categoryList$: Observable<string[]> = this._userProductsState
+    .getCategoriesList()
+    .pipe(shareReplay(1));
+
   readonly productForm: FormGroup = new FormGroup({
     name: new FormControl('', {
       nonNullable: true,
@@ -95,5 +100,25 @@ export class UserProductFormModalComponent implements OnInit {
       })
       .pipe(take(1))
       .subscribe(() => this._dialogRef.close());
+  }
+
+  onCategoryOptionSelected(option: string): void {
+    this.categoryList$
+      .pipe(
+        take(1),
+        tap(() =>
+          this.productForm.patchValue({
+            category: option,
+          })
+        ),
+        switchMap((list: string[]) =>
+          list
+            .map((item: string) => item.toLowerCase())
+            .includes(option.toLowerCase())
+            ? of(void 0)
+            : this._userProductsState.createCategory(option)
+        )
+      )
+      .subscribe(() => this.productForm.get('category')?.markAsPristine());
   }
 }
