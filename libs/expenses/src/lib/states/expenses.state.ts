@@ -11,8 +11,11 @@ import {
   take,
   tap,
 } from 'rxjs';
+import { SORT_DIRECTION } from '../enums/sort-direction.enum';
+import { SORT_TYPE } from '../enums/sort-type.enum';
 import { ExpenseModel } from '../models/expense.model';
 import { ExpensesStateModel } from '../models/expenses-state.model';
+import { SortModel } from '../models/sort.model';
 import { ExpensesService } from '../services/expenses.service';
 
 const initialState: ExpensesStateModel = {
@@ -21,15 +24,23 @@ const initialState: ExpensesStateModel = {
 
 @Injectable({ providedIn: 'root' })
 export class ExpensesState {
+  private readonly _isInitializedSubject: BehaviorSubject<boolean> =
+    new BehaviorSubject<boolean>(false);
+  readonly isInitialized$: Observable<boolean> =
+    this._isInitializedSubject.asObservable();
+
   private readonly _expensesStateSubject: BehaviorSubject<ExpensesStateModel> =
     new BehaviorSubject<ExpensesStateModel>(initialState);
   private readonly _expensesState$: Observable<ExpensesStateModel> =
     this._expensesStateSubject.asObservable();
 
-  private readonly _isInitializedSubject: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
-  readonly isInitialized$: Observable<boolean> =
-    this._isInitializedSubject.asObservable();
+  private readonly _sortStateSubject: BehaviorSubject<SortModel> =
+    new BehaviorSubject<SortModel>({
+      sortBy: SORT_TYPE.CREATED_AT,
+      direction: SORT_DIRECTION.ASC,
+    });
+  private readonly _sortState$: Observable<SortModel> =
+    this._sortStateSubject.asObservable();
 
   constructor(
     private readonly _expensesService: ExpensesService,
@@ -60,8 +71,10 @@ export class ExpensesState {
   }
 
   getExpenses(): Observable<ExpenseModel[]> {
-    return this._expensesState$.pipe(
-      map((state: ExpensesStateModel) => state.expenses)
+    return combineLatest([this._expensesState$, this._sortState$]).pipe(
+      map(([state, sort]: [ExpensesStateModel, SortModel]) =>
+        this._sortExpenses(sort, state.expenses)
+      )
     );
   }
 
@@ -193,5 +206,32 @@ export class ExpensesState {
         ),
         map(() => void 0)
       );
+  }
+
+  private _sortExpenses(
+    sort: SortModel,
+    expenses: ExpenseModel[]
+  ): ExpenseModel[] {
+    if (sort.sortBy === SORT_TYPE.TOTAL_PRICE) {
+      return expenses.sort((a, b) =>
+        sort.direction === SORT_DIRECTION.ASC
+          ? a.totalPrice - b.totalPrice
+          : b.totalPrice - a.totalPrice
+      );
+    }
+
+    if (sort.sortBy === SORT_TYPE.PRODUCTS_COUNT) {
+      return expenses.sort((a, b) =>
+        sort.direction === SORT_DIRECTION.ASC
+          ? a.products.length - b.products.length
+          : b.products.length - a.products.length
+      );
+    }
+
+    return expenses.sort((a, b) =>
+      sort.direction === SORT_DIRECTION.ASC
+        ? a.createdAt.getTime() - b.createdAt.getTime()
+        : b.createdAt.getTime() - a.createdAt.getTime()
+    );
   }
 }

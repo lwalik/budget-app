@@ -1,0 +1,5 @@
+export enum SORT_TYPE {
+  CREATED_AT = 1,
+  TOTAL_PRICE = 2,
+  PRODUCTS_COUNT = 3,
+}

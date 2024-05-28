@@ -6,8 +6,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  ConfirmationModalComponent,
-  ConfirmationModalViewModel,
   TwoOptionConfirmationModalComponent,
   TwoOptionConfirmationViewModel,
 } from '@budget-app/shared';
