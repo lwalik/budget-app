@@ -6,10 +6,10 @@ import {
   Observable,
   combineLatest,
   map,
+  of,
   switchMap,
   take,
   tap,
-  of,
 } from 'rxjs';
 import { ExpenseModel } from '../models/expense.model';
 import { ExpensesStateModel } from '../models/expenses-state.model';
@@ -121,7 +121,6 @@ export class ExpensesState {
   }
 
   deleteExpense(expenseId: string): Observable<void> {
-    // TODO Ograć opcję wracania balance na konto
     return combineLatest([
       this._userContext.getUserId(),
       this._expensesState$,
@@ -143,7 +142,6 @@ export class ExpensesState {
   }
 
   revertWalletBalance(expense: ExpenseModel): Observable<void> {
-    console.log('revert');
     return this._walletBalance.increaseWalletBalance(
       expense.walletId,
       expense.totalPrice

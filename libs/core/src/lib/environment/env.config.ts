@@ -8,6 +8,7 @@ export interface EnvConfig {
   readonly firebaseConfig: FirebaseConfig;
   readonly walletsUrl: string;
   readonly userProductsUrl: string;
+  readonly productsCategoryUrl: string;
   readonly expansesUrl: string;
 }
 

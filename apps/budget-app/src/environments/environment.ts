@@ -13,4 +13,5 @@ export const environment: EnvConfig = {
   walletsUrl: 'wallets',
   userProductsUrl: 'user-products',
   expansesUrl: 'expanses',
+  productsCategoryUrl: 'products-category',
 };
