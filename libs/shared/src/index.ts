@@ -11,3 +11,5 @@ export * from './lib/view-models/simple-pagination.view-model';
 export * from './lib/view-models/two-option-confirmation.view-model';
 // Utils
 export * from './lib/utils/rxjs';
+// Directives
+export * from './lib/directives/on-click-outside-the-element.directive';

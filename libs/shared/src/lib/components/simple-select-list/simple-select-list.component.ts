@@ -9,11 +9,16 @@ import {
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, Observable, shareReplay, take, tap } from 'rxjs';
+import { OnClickOutsideTheElementDirective } from '../../directives/on-click-outside-the-element.directive';
 
 @Component({
   selector: 'lib-simple-select-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    OnClickOutsideTheElementDirective,
+  ],
   templateUrl: './simple-select-list.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,5 +56,9 @@ export class SimpleSelectListComponent {
         )
       )
       .subscribe();
+  }
+
+  hideDropdown(): void {
+    this._isDropdownVisibleSubject.next(false);
   }
 }
