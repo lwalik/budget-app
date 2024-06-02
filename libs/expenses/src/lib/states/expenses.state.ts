@@ -167,6 +167,7 @@ export class ExpensesState {
       map((sort: SortModel) => ({
         items: Object.values(SORT_TYPE),
         selectedItem: sort.sortBy,
+        selectedDirection: sort.direction,
       }))
     );
   }

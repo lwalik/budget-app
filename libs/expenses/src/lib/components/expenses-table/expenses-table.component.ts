@@ -6,11 +6,24 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
+  PaginationComponent,
+  PaginationViewModel,
+  SimpleSelectListComponent,
   TwoOptionConfirmationModalComponent,
   TwoOptionConfirmationViewModel,
 } from '@budget-app/shared';
 import { WalletNameComponent } from '@budget-app/wallets';
-import { Observable, of, switchMap, take } from 'rxjs';
+import {
+  combineLatest,
+  map,
+  Observable,
+  of,
+  ReplaySubject,
+  shareReplay,
+  startWith,
+  switchMap,
+  take,
+} from 'rxjs';
 import { ExpenseModel } from '../../models/expense.model';
 import { ExpensesState } from '../../states/expenses.state';
 import { ExpenseFormModalComponent } from '../expense-form-modal/expense-form-modal.component';
@@ -19,14 +32,47 @@ import { ExpensesSortComponent } from '../expenses-sort/expenses-sort.component'
 @Component({
   selector: 'lib-expenses-table',
   standalone: true,
-  imports: [CommonModule, WalletNameComponent, ExpensesSortComponent],
+  imports: [
+    CommonModule,
+    WalletNameComponent,
+    ExpensesSortComponent,
+    PaginationComponent,
+    SimpleSelectListComponent,
+  ],
   templateUrl: './expenses-table.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpensesTableComponent {
-  readonly expenses$: Observable<ExpenseModel[]> =
-    this._expensesState.getExpenses();
+  readonly initialPaginationState: PaginationViewModel = {
+    first: 1,
+    last: 1,
+    current: 1,
+    limit: 5,
+    totalItems: 1,
+  };
+  private readonly _paginationSubject: ReplaySubject<PaginationViewModel> =
+    new ReplaySubject<PaginationViewModel>(1);
+  private readonly _pagination$: Observable<PaginationViewModel> =
+    this._paginationSubject
+      .asObservable()
+      .pipe(startWith(this.initialPaginationState));
+  readonly allExpenses$: Observable<ExpenseModel[]> = this._expensesState
+    .getExpenses()
+    .pipe(shareReplay(1));
+  readonly expenses$: Observable<ExpenseModel[]> = combineLatest([
+    this._pagination$,
+    this.allExpenses$,
+  ]).pipe(
+    map(([pagination, expenses]: [PaginationViewModel, ExpenseModel[]]) => {
+      const start: number =
+        pagination.current === 1
+          ? 0
+          : pagination.limit * (pagination.current - 1);
+      const end: number = pagination.current * pagination.limit;
+      return expenses.slice(start, end);
+    })
+  );
 
   constructor(
     private readonly _expensesState: ExpensesState,
@@ -85,5 +131,9 @@ export class ExpensesTableComponent {
         })
       )
       .subscribe();
+  }
+
+  onPaginationChanged(pagination: PaginationViewModel): void {
+    this._paginationSubject.next(pagination);
   }
 }

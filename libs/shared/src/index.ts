@@ -5,10 +5,12 @@ export * from './lib/components/simple-modal/simple-modal.component';
 export * from './lib/components/simple-select-list/simple-select-list.component';
 export * from './lib/components/two-option-confirmation-modal/two-option-confirmation-modal.component';
 export * from './lib/components/select-autocomplete-list/select-autocomplete-list.component';
+export * from './lib/components/pagination/pagination.component';
 // View Models
 export * from './lib/view-models/confirmation-modal.view-model';
 export * from './lib/view-models/simple-pagination.view-model';
 export * from './lib/view-models/two-option-confirmation.view-model';
+export * from './lib/view-models/pagination.view-model';
 // Utils
 export * from './lib/utils/rxjs';
 // Directives
