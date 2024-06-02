@@ -16,26 +16,26 @@ export class NavigationUiService {
     new BehaviorSubject<NavLinkModel[]>([
       {
         id: 1,
-        name: 'Overview',
-        url: '/overview',
-        isActive: false,
-      },
-      {
-        id: 2,
         name: 'Wallets',
         url: '/wallets',
         isActive: false,
       },
       {
-        id: 3,
+        id: 2,
         name: 'Products',
         url: '/products',
         isActive: false,
       },
       {
-        id: 4,
+        id: 3,
         name: 'Expenses',
         url: '/expenses',
+        isActive: false,
+      },
+      {
+        id: 4,
+        name: 'Overview',
+        url: '/overview',
         isActive: false,
       },
     ]);
