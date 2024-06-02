@@ -14,6 +14,7 @@ import { ENV_CONFIG } from '@budget-app/core';
 import { decreaseWalletBalanceProvider } from '@budget-app/wallets';
 import { environment } from '../environments/environment';
 import { appRoutes } from './app.routes';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 registerLocaleData(localePl);
 
@@ -27,6 +28,7 @@ export const appConfig: ApplicationConfig = {
     ]),
     userContextProvider(),
     decreaseWalletBalanceProvider(),
+    provideCharts(withDefaultRegisterables()),
     {
       provide: LOCALE_ID,
       useValue: 'pl_PL',

@@ -1,3 +1,14 @@
-<div class="flex justify-center items-center">
-    <h2 class="text-white">Home Page</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div class="p-12 bg-primary-light">
+    <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'"> </canvas>
+  </div>
+  <div class="p-12 bg-primary-light">
+    <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'"> </canvas>
+  </div>
+  <div class="p-12 bg-primary-light">
+    <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'"> </canvas>
+  </div>
+  <div class="p-12 bg-primary-light">
+    <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'"> </canvas>
+  </div>
 </div>
