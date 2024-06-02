@@ -119,7 +119,6 @@ export class ExpensesTableComponent {
           if (result === 0) {
             return of(void 0);
           }
-          console.log('result: ', result);
           return this._expensesState.deleteExpense(expense.expenseId).pipe(
             take(1),
             switchMap(() =>
