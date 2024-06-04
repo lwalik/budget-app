@@ -46,19 +46,16 @@
         <lib-user-products-select-list [selectedOption]="control.get('name')?.value"
                                        (optionSelected)="onProductOptionSelected($event, control)"></lib-user-products-select-list>
 
-        <div class="grid grid-cols-5 gap-2">
-          <lib-simple-input-form class="col-span-2"
-                                 [control]="control.get('price')"
+        <div class="grid grid-cols-3 gap-2">
+          <lib-simple-input-form [control]="control.get('price')"
                                  [label]="'Price'"
                                  [errorMsg]="'Price is required'"
                                  [type]="'number'"></lib-simple-input-form>
-          <lib-simple-input-form class="col-span-2"
-                                 [control]="control.get('quantity')"
+          <lib-simple-input-form [control]="control.get('quantity')"
                                  [label]="'Quantity'"
                                  [errorMsg]="'Quantity is required'"
                                  [type]="'number'"></lib-simple-input-form>
-          <lib-simple-select-list class="col-span-1"
-                                  *ngIf="priorityList$ | async as priorityList"
+          <lib-simple-select-list *ngIf="priorityList$ | async as priorityList"
                                   label="Priority"
                                   [options]="priorityList"
                                   [selectedOption]="control.get('priority')?.value"
