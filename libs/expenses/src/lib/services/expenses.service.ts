@@ -126,6 +126,27 @@ export class ExpensesService {
     );
   }
 
+  deleteAllByWalletId(userId: string, walletId: string): Observable<void> {
+    const doc = this._getExpensesDoc(userId);
+
+    return doc.valueChanges({ idFields: 'id' }).pipe(
+      take(1),
+      switchMap((data: UserExpenseResponse | undefined) => {
+        if (!data) {
+          return of(void 0);
+        }
+
+        return mapPromiseToVoidObservable(
+          doc.update({
+            expenses: data.expenses.filter(
+              (expense: ExpenseResponse) => expense.walletId !== walletId
+            ),
+          })
+        );
+      })
+    );
+  }
+
   private _getExpensesDoc(
     userId: string
   ): AngularFirestoreDocument<UserExpenseResponse> {

@@ -57,7 +57,7 @@ export class NewWalletFormModalComponent {
     }
 
     this._walletsState
-      .create({
+      .createWallet({
         name: form.get('name')?.value,
         balance: +form.get('balance')?.value,
         currency: 'PLN',

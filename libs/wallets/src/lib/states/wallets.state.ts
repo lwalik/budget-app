@@ -65,7 +65,7 @@ export class WalletsState implements WalletBalance {
     );
   }
 
-  create(wallet: CreateWalletModel): Observable<void> {
+  createWallet(wallet: CreateWalletModel): Observable<void> {
     return combineLatest([
       this._userContext.getUserId(),
       this._walletsState$,
@@ -95,6 +95,24 @@ export class WalletsState implements WalletBalance {
         );
       }),
       map(() => void 0)
+    );
+  }
+
+  deleteWallet(walletId: string): Observable<void> {
+    return this._walletsState$.pipe(
+      take(1),
+      switchMap((state: WalletStateModel) =>
+        this._walletsService.delete(walletId).pipe(
+          tap(() =>
+            this._walletsStateSubject.next({
+              ...state,
+              wallets: state.wallets.filter(
+                (wallet: WalletModel) => wallet.id !== walletId
+              ),
+            })
+          )
+        )
+      )
     );
   }
 

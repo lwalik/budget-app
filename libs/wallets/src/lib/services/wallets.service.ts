@@ -43,6 +43,12 @@ export class WalletsService {
     ).pipe(map(() => newWallet));
   }
 
+  delete(walletId: string): Observable<void> {
+    return mapPromiseToVoidObservable(
+      this._client.doc(`${this._envConfig.walletsUrl}/` + walletId).delete()
+    );
+  }
+
   updateBalance(
     walletId: string,
     newBalance: number,

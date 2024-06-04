@@ -155,6 +155,27 @@ export class ExpensesState {
     );
   }
 
+  deleteAllWalletExpenses(walletId: string): Observable<void> {
+    return combineLatest([
+      this._userContext.getUserId(),
+      this._expensesState$,
+    ]).pipe(
+      take(1),
+      switchMap(([userId, state]: [string, ExpensesStateModel]) =>
+        this._expensesService.deleteAllByWalletId(userId, walletId).pipe(
+          tap(() =>
+            this._expensesStateSubject.next({
+              ...state,
+              expenses: state.expenses.filter(
+                (expense: ExpenseModel) => expense.walletId !== walletId
+              ),
+            })
+          )
+        )
+      )
+    );
+  }
+
   revertWalletBalance(expense: ExpenseModel): Observable<void> {
     return this._walletBalance.increaseWalletBalance(
       expense.walletId,
