@@ -11,6 +11,7 @@ import {
   tap,
 } from 'rxjs';
 import { WALLET_BALANCE_OPERATION_TYPE } from '../enums/wallet-balance-operation-type.enum';
+import { WalletDepositModel } from '../models/wallet-deposit.model';
 import { WalletStateModel } from '../models/wallet-state.model';
 import { CreateWalletModel, WalletModel } from '../models/wallet.model';
 import { WalletsService } from '../services/wallets.service';
@@ -77,6 +78,7 @@ export class WalletsState implements WalletBalance {
           ownerId: userId,
           createdAt,
           updatedAt: createdAt,
+          deposits: [],
         };
         return this._walletsService.create(newWallet).pipe(
           tap((createdWallet: WalletModel) =>
@@ -101,11 +103,19 @@ export class WalletsState implements WalletBalance {
     );
   }
 
+  deposit(walletId: string, value: number): Observable<void> {
+    return this._updateWalletBalance(
+      walletId,
+      value,
+      WALLET_BALANCE_OPERATION_TYPE.DEPOSIT
+    );
+  }
+
   increaseWalletBalance(walletId: string, value: number): Observable<void> {
     return this._updateWalletBalance(
       walletId,
       value,
-      WALLET_BALANCE_OPERATION_TYPE.INCREASE
+      WALLET_BALANCE_OPERATION_TYPE.RETURN
     );
   }
 
@@ -113,7 +123,7 @@ export class WalletsState implements WalletBalance {
     return this._updateWalletBalance(
       walletId,
       value,
-      WALLET_BALANCE_OPERATION_TYPE.DECREASE
+      WALLET_BALANCE_OPERATION_TYPE.EXPENSE
     );
   }
 
@@ -133,28 +143,38 @@ export class WalletsState implements WalletBalance {
           return of(void 0);
         }
 
+        const deposit: WalletDepositModel | undefined =
+          operation === WALLET_BALANCE_OPERATION_TYPE.DEPOSIT
+            ? {
+                value,
+                createdAt: new Date(),
+              }
+            : undefined;
         const newBalance: number =
-          operation === WALLET_BALANCE_OPERATION_TYPE.INCREASE
+          operation === WALLET_BALANCE_OPERATION_TYPE.RETURN || !!deposit
             ? selectedWallet.balance + value
             : selectedWallet.balance - value;
 
-        return this._walletsService.updateBalance(walletId, newBalance).pipe(
-          tap(() => {
-            console.log('selectedWallet: ', selectedWallet.name);
-            console.log('operation: ', operation);
-            console.log('newBalance: ', newBalance);
-          }),
-          tap(() =>
-            this._walletsStateSubject.next({
-              ...state,
-              wallets: state.wallets.map((wallet: WalletModel) =>
-                wallet.id === walletId
-                  ? { ...wallet, balance: newBalance }
-                  : wallet
-              ),
-            })
-          )
-        );
+        return this._walletsService
+          .updateBalance(walletId, newBalance, deposit)
+          .pipe(
+            tap(() =>
+              this._walletsStateSubject.next({
+                ...state,
+                wallets: state.wallets.map((wallet: WalletModel) =>
+                  wallet.id === walletId
+                    ? {
+                        ...wallet,
+                        balance: newBalance,
+                        deposits: !!deposit
+                          ? [...wallet.deposits, deposit]
+                          : wallet.deposits,
+                      }
+                    : wallet
+                ),
+              })
+            )
+          );
       })
     );
   }

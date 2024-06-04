@@ -10,7 +10,6 @@ import { WalletModel } from '../../models/wallet.model';
 import { WalletsState } from '../../states/wallets.state';
 import { DepositFormModalComponent } from '../deposit-form-modal/deposit-form-modal.component';
 import { NewWalletFormModalComponent } from '../new-wallet-form-modal/new-wallet-form-modal.component';
-import { WithdrawFormModalComponent } from '../withdraw-form-modal/withdraw-form-modal.component';
 
 @Component({
   selector: 'lib-wallets-list',
@@ -40,16 +39,6 @@ export class WalletsListComponent {
       hasBackdrop: true,
       data: {
         walletId,
-      },
-    });
-  }
-
-  onWithdrawBtnClicked(walletId: string, balance: number): void {
-    this._dialog.open(WithdrawFormModalComponent, {
-      hasBackdrop: true,
-      data: {
-        walletId,
-        balance,
       },
     });
   }

@@ -1,9 +1,0 @@
-<lib-simple-modal header="Withdraw">
-  <form class="flex flex-col gap-2" [formGroup]="withdrawForm" (ngSubmit)="onWithdrawFormFormSubmitted(withdrawForm)">
-    <lib-simple-input-form [control]="this.withdrawForm.get('amount')"
-                           [label]="'Amount'"
-                           [errorMsg]="this.withdrawForm.get('amount')?.value > currentBalance ? 'Amount should be and not more than ' + currentBalance : 'Amount should be grater than 0'"
-                           [type]="'number'"></lib-simple-input-form>
-    <button type="submit" [disabled]="!withdrawForm.valid" class="btn-warn mt-5">Save</button>
-  </form>
-</lib-simple-modal>

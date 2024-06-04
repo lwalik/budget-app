@@ -52,10 +52,7 @@ export class DepositFormModalComponent {
     }
 
     this._walletsState
-      .increaseWalletBalance(
-        this._dialogData.walletId,
-        +form.get('amount')?.value
-      )
+      .deposit(this._dialogData.walletId, +form.get('amount')?.value)
       .pipe(take(1))
       .subscribe(() => this._dialogRef.close());
   }

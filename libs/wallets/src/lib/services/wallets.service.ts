@@ -1,8 +1,13 @@
 import { Inject, Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+} from '@angular/fire/compat/firestore';
 import { ENV_CONFIG, EnvConfig } from '@budget-app/core';
 import { mapPromiseToVoidObservable } from '@budget-app/shared';
-import { Observable, map } from 'rxjs';
+import { Timestamp } from 'firebase/firestore';
+import { Observable, map, of, switchMap, take } from 'rxjs';
+import { WalletDepositModel } from '../models/wallet-deposit.model';
 import { WalletModel } from '../models/wallet.model';
 import { WalletResponse } from '../responses/wallet.response';
 
@@ -38,11 +43,30 @@ export class WalletsService {
     ).pipe(map(() => newWallet));
   }
 
-  updateBalance(walletId: string, newBalance: number): Observable<void> {
-    return mapPromiseToVoidObservable(
-      this._client
-        .doc(`${this._envConfig.walletsUrl}/` + walletId)
-        .update({ balance: newBalance, updatedAt: new Date() })
+  updateBalance(
+    walletId: string,
+    newBalance: number,
+    deposit?: WalletDepositModel
+  ): Observable<void> {
+    const doc: AngularFirestoreDocument<WalletResponse> = this._client.doc(
+      `${this._envConfig.walletsUrl}/` + walletId
+    );
+
+    return doc.valueChanges({ idFields: 'id' }).pipe(
+      take(1),
+      switchMap((data: WalletResponse | undefined) => {
+        if (!data) {
+          return of(void 0);
+        }
+
+        return mapPromiseToVoidObservable(
+          doc.update({
+            balance: newBalance,
+            updatedAt: Timestamp.fromDate(new Date()),
+            deposits: !!deposit ? [...data.deposits, deposit] : data.deposits,
+          })
+        );
+      })
     );
   }
 }

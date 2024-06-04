@@ -84,6 +84,7 @@ export class ExpensesService {
   update(updatedExpense: ExpenseModel, userId: string): Observable<void> {
     const doc = this._getExpensesDoc(userId);
     return doc.valueChanges({ idFields: 'id' }).pipe(
+      take(1),
       switchMap((data: UserExpenseResponse | undefined) => {
         if (!data) {
           return of(void 0);
@@ -108,6 +109,7 @@ export class ExpensesService {
   delete(expenseId: string, userId: string): Observable<void> {
     const doc = this._getExpensesDoc(userId);
     return doc.valueChanges({ idFields: 'id' }).pipe(
+      take(1),
       switchMap((data: UserExpenseResponse | undefined) => {
         if (!data) {
           return of(void 0);
