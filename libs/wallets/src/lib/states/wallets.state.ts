@@ -78,7 +78,12 @@ export class WalletsState implements WalletBalance {
           ownerId: userId,
           createdAt,
           updatedAt: createdAt,
-          deposits: [],
+          deposits: [
+            {
+              value: wallet.balance,
+              createdAt: new Date(),
+            },
+          ],
         };
         return this._walletsService.create(newWallet).pipe(
           tap((createdWallet: WalletModel) =>
