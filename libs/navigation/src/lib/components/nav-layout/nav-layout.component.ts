@@ -4,7 +4,8 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { Observable, ReplaySubject, shareReplay } from 'rxjs';
+import { Observable, take } from 'rxjs';
+import { NavigationUiService } from '../../services/navigation-ui.service';
 
 @Component({
   selector: 'lib-nav-layout',
@@ -16,17 +17,30 @@ import { Observable, ReplaySubject, shareReplay } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavLayoutComponent {
-  private readonly _isMobileNavVisible: ReplaySubject<boolean> =
-    new ReplaySubject<boolean>(1);
-  readonly isMobileNavVisible$: Observable<boolean> = this._isMobileNavVisible
-    .asObservable()
-    .pipe(shareReplay(1));
+  // private readonly _isMobileNavVisible: ReplaySubject<boolean> =
+  //   new ReplaySubject<boolean>(1);
+  // readonly isMobileNavVisible$: Observable<boolean> = this._isMobileNavVisible
+  //   .asObservable()
+  //   .pipe(shareReplay(1));
+
+  readonly isMobileNavVisible$: Observable<boolean> =
+    this._navigationUiService.getMobileNavVisibility();
+
+  constructor(private readonly _navigationUiService: NavigationUiService) {}
 
   openMobileNav(): void {
-    this._isMobileNavVisible.next(true);
+    this._navigationUiService
+      .setMobileNavVisibility(true)
+      .pipe(take(1))
+      .subscribe();
+    // this._isMobileNavVisible.next(true);
   }
 
   closeMobileNav(): void {
-    this._isMobileNavVisible.next(false);
+    this._navigationUiService
+      .setMobileNavVisibility(false)
+      .pipe(take(1))
+      .subscribe();
+    // this._isMobileNavVisible.next(false);
   }
 }

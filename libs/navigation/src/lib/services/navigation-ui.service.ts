@@ -2,11 +2,14 @@ import { Injectable } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   BehaviorSubject,
+  Observable,
+  ReplaySubject,
   combineLatest,
   filter,
   map,
-  Observable,
+  of,
   startWith,
+  tap,
 } from 'rxjs';
 import { NavLinkModel } from '../models/nav-link.model';
 
@@ -39,6 +42,10 @@ export class NavigationUiService {
         isActive: false,
       },
     ]);
+
+  private readonly _isMobileNavVisible: ReplaySubject<boolean> =
+    new ReplaySubject<boolean>(1);
+
   private readonly urlState$: Observable<string> = this._router.events.pipe(
     filter((event) => event instanceof NavigationEnd),
     map((event) => (event as NavigationEnd).url)
@@ -53,12 +60,21 @@ export class NavigationUiService {
         ...navLink,
         isActive: navLink.url === url,
       }));
-    })
+    }),
+    tap(() => this._isMobileNavVisible.next(false))
   );
 
   constructor(private readonly _router: Router) {}
 
   getAll(): Observable<NavLinkModel[]> {
     return this.navLinks$;
+  }
+
+  getMobileNavVisibility(): Observable<boolean> {
+    return this._isMobileNavVisible.asObservable();
+  }
+
+  setMobileNavVisibility(isVisible: boolean): Observable<void> {
+    return of(void 0).pipe(tap(() => this._isMobileNavVisible.next(isVisible)));
   }
 }
