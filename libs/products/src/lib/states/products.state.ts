@@ -10,21 +10,21 @@ import {
   take,
   tap,
 } from 'rxjs';
-import { UserProductModel } from '../models/user-product.model';
-import { UserProductsStateModel } from '../models/user-products-state.model';
-import { UserProductsService } from '../services/user-products.service';
+import { ProductModel } from '../models/product.model';
+import { ProductsStateModel } from '../models/products-state.model';
+import { ProductsService } from '../services/products.service';
 import { ProductsCategoryService } from '../services/products-category.service';
 
-const initialState: UserProductsStateModel = {
+const initialState: ProductsStateModel = {
   products: [],
 };
 
 @Injectable({ providedIn: 'root' })
-export class UserProductsState {
-  private readonly _userProductsStateSubject: BehaviorSubject<UserProductsStateModel> =
-    new BehaviorSubject<UserProductsStateModel>(initialState);
-  private readonly _userProductsState$: Observable<UserProductsStateModel> =
-    this._userProductsStateSubject.asObservable();
+export class ProductsState {
+  private readonly _productsStateSubject: BehaviorSubject<ProductsStateModel> =
+    new BehaviorSubject<ProductsStateModel>(initialState);
+  private readonly _productsState$: Observable<ProductsStateModel> =
+    this._productsStateSubject.asObservable();
 
   private readonly _isInitializedSubject: BehaviorSubject<boolean> =
     new BehaviorSubject<boolean>(false);
@@ -32,23 +32,23 @@ export class UserProductsState {
     this._isInitializedSubject.asObservable();
 
   constructor(
-    private readonly _userProductsService: UserProductsService,
+    private readonly _productsService: ProductsService,
     private readonly _productsCategoryService: ProductsCategoryService,
     @Inject(USER_CONTEXT) private readonly _userContext: UserContext
   ) {}
 
-  loadUserProducts(): Observable<void> {
+  loadProducts(): Observable<void> {
     return combineLatest([
       this._userContext.getUserId(),
-      this._userProductsState$,
+      this._productsState$,
     ]).pipe(
       take(1),
-      switchMap(([userId, state]: [string, UserProductsStateModel]) =>
-        this._userProductsService.getAll(userId).pipe(
-          tap((userProducts: UserProductModel[]) =>
-            this._userProductsStateSubject.next({
+      switchMap(([userId, state]: [string, ProductsStateModel]) =>
+        this._productsService.getAll(userId).pipe(
+          tap((products: ProductModel[]) =>
+            this._productsStateSubject.next({
               ...state,
-              products: userProducts,
+              products,
             })
           ),
           tap(() => this._isInitializedSubject.next(true)),
@@ -58,23 +58,23 @@ export class UserProductsState {
     );
   }
 
-  getAllProducts(): Observable<UserProductModel[]> {
-    return this._userProductsState$.pipe(
-      map((state: UserProductsStateModel) => state.products)
+  getAllProducts(): Observable<ProductModel[]> {
+    return this._productsState$.pipe(
+      map((state: ProductsStateModel) => state.products)
     );
   }
 
-  addProduct(product: Omit<UserProductModel, 'productId'>): Observable<void> {
+  addProduct(product: Omit<ProductModel, 'productId'>): Observable<void> {
     return this._userContext.getUserId().pipe(
       take(1),
       switchMap((userId: string) =>
-        this._userProductsService.add(product, userId).pipe(
+        this._productsService.add(product, userId).pipe(
           take(1),
-          switchMap((newProduct: UserProductModel) =>
-            this._userProductsState$.pipe(
+          switchMap((newProduct: ProductModel) =>
+            this._productsState$.pipe(
               take(1),
-              tap((state: UserProductsStateModel) =>
-                this._userProductsStateSubject.next({
+              tap((state: ProductsStateModel) =>
+                this._productsStateSubject.next({
                   ...state,
                   products: [...state.products, newProduct],
                 })
@@ -90,16 +90,16 @@ export class UserProductsState {
   deleteProduct(productId: string): Observable<void> {
     return combineLatest([
       this._userContext.getUserId(),
-      this._userProductsState$,
+      this._productsState$,
     ]).pipe(
       take(1),
-      switchMap(([userId, state]: [string, UserProductsStateModel]) =>
-        this._userProductsService.delete(productId, userId).pipe(
+      switchMap(([userId, state]: [string, ProductsStateModel]) =>
+        this._productsService.delete(productId, userId).pipe(
           tap(() =>
-            this._userProductsStateSubject.next({
+            this._productsStateSubject.next({
               ...state,
               products: state.products.filter(
-                (product: UserProductModel) => product.productId !== productId
+                (product: ProductModel) => product.productId !== productId
               ),
             })
           )
@@ -108,18 +108,18 @@ export class UserProductsState {
     );
   }
 
-  updateProduct(updatedProduct: UserProductModel): Observable<void> {
+  updateProduct(updatedProduct: ProductModel): Observable<void> {
     return combineLatest([
       this._userContext.getUserId(),
-      this._userProductsState$,
+      this._productsState$,
     ]).pipe(
       take(1),
-      switchMap(([userId, state]: [string, UserProductsStateModel]) =>
-        this._userProductsService.update(updatedProduct, userId).pipe(
+      switchMap(([userId, state]: [string, ProductsStateModel]) =>
+        this._productsService.update(updatedProduct, userId).pipe(
           tap(() =>
-            this._userProductsStateSubject.next({
+            this._productsStateSubject.next({
               ...state,
-              products: state.products.map((product: UserProductModel) =>
+              products: state.products.map((product: ProductModel) =>
                 product.productId === updatedProduct.productId
                   ? updatedProduct
                   : product

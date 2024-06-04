@@ -19,16 +19,16 @@ import {
   SimpleModalComponent,
 } from '@budget-app/shared';
 import { Observable, of, shareReplay, switchMap, take, tap } from 'rxjs';
-import { UserProductsState } from '../../states/user-products.state';
-import { UserProductModel } from '../../models/user-product.model';
+import { ProductsState } from '../../states/products.state';
+import { ProductModel } from '../../models/product.model';
 
-interface UserProductFormDialogData {
+interface ProductFormDialogData {
   readonly isEdit: boolean;
-  readonly product?: UserProductModel;
+  readonly product?: ProductModel;
 }
 
 @Component({
-  selector: 'lib-user-product-form-modal',
+  selector: 'lib-product-form-modal',
   standalone: true,
   imports: [
     CommonModule,
@@ -37,16 +37,16 @@ interface UserProductFormDialogData {
     SimpleInputFormComponent,
     SelectAutocompleteListComponent,
   ],
-  templateUrl: './user-product-form-modal.component.html',
+  templateUrl: './product-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserProductFormModalComponent implements OnInit {
+export class ProductFormModalComponent implements OnInit {
   readonly header: string = this._dialogData.isEdit
     ? 'Update Product'
     : 'New Product';
 
-  readonly categoryList$: Observable<string[]> = this._userProductsState
+  readonly categoryList$: Observable<string[]> = this._productsState
     .getCategoriesList()
     .pipe(shareReplay(1));
 
@@ -62,10 +62,10 @@ export class UserProductFormModalComponent implements OnInit {
   });
 
   constructor(
-    private readonly _userProductsState: UserProductsState,
+    private readonly _productsState: ProductsState,
     private readonly _dialogRef: DialogRef,
     @Inject(DIALOG_DATA)
-    private readonly _dialogData: UserProductFormDialogData
+    private readonly _dialogData: ProductFormDialogData
   ) {}
 
   ngOnInit(): void {
@@ -80,9 +80,9 @@ export class UserProductFormModalComponent implements OnInit {
   }
 
   productFormSubmitted(form: FormGroup): void {
-    const product: UserProductModel | undefined = this._dialogData.product;
+    const product: ProductModel | undefined = this._dialogData.product;
     if (!this._dialogData.isEdit || !product) {
-      this._userProductsState
+      this._productsState
         .addProduct({
           name: form.get('name')?.value,
           category: form.get('category')?.value.trim().toLowerCase(),
@@ -92,7 +92,7 @@ export class UserProductFormModalComponent implements OnInit {
       return;
     }
 
-    this._userProductsState
+    this._productsState
       .updateProduct({
         name: form.get('name')?.value,
         category: form.get('category')?.value.trim().toLowerCase(),
@@ -116,7 +116,7 @@ export class UserProductFormModalComponent implements OnInit {
             .map((item: string) => item.toLowerCase())
             .includes(option.toLowerCase())
             ? of(void 0)
-            : this._userProductsState.createCategory(option)
+            : this._productsState.createCategory(option)
         )
       )
       .subscribe(() => this.productForm.get('category')?.markAsPristine());

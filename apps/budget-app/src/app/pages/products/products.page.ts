@@ -3,13 +3,13 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { UserProductsTableComponent } from '@budget-app/user-products';
+import { ProductsTableComponent } from '@budget-app/products';
 
 @Component({
   standalone: true,
-  imports: [UserProductsTableComponent],
-  templateUrl: './user-products.page.html',
+  imports: [ProductsTableComponent],
+  templateUrl: './products.page.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserProductsPage {}
+export class ProductsPage {}

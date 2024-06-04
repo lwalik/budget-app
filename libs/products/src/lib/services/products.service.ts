@@ -6,37 +6,35 @@ import {
 import { ENV_CONFIG, EnvConfig } from '@budget-app/core';
 import { mapPromiseToVoidObservable } from '@budget-app/shared';
 import { Observable, map, of, switchMap, take } from 'rxjs';
-import { UserProductModel } from '../models/user-product.model';
-import { UserProductsResponse } from '../responses/user-products.response';
+import { ProductModel } from '../models/product.model';
+import { ProductsResponse } from '../responses/products.response';
 
 @Injectable({ providedIn: 'root' })
-export class UserProductsService {
+export class ProductsService {
   constructor(
     private readonly _client: AngularFirestore,
     @Inject(ENV_CONFIG) private _envConfig: EnvConfig
   ) {}
 
-  getAll(userId: string): Observable<UserProductModel[]> {
-    return this._getUserProductsDoc(userId)
+  getAll(userId: string): Observable<ProductModel[]> {
+    return this._getProductsDoc(userId)
       .valueChanges({ idFields: 'id' })
       .pipe(
-        map((resp: UserProductsResponse | undefined) =>
-          resp ? resp.products : []
-        )
+        map((resp: ProductsResponse | undefined) => (resp ? resp.products : []))
       );
   }
 
   add(
-    product: Omit<UserProductModel, 'productId'>,
+    product: Omit<ProductModel, 'productId'>,
     userId: string
-  ): Observable<UserProductModel> {
+  ): Observable<ProductModel> {
     const productId: string = this._client.createId();
-    const doc = this._getUserProductsDoc(userId);
+    const doc = this._getProductsDoc(userId);
 
     return doc.valueChanges({ idFields: 'id' }).pipe(
       take(1),
-      switchMap((data: UserProductsResponse | undefined) => {
-        const newProduct: UserProductModel = { productId, ...product };
+      switchMap((data: ProductsResponse | undefined) => {
+        const newProduct: ProductModel = { productId, ...product };
 
         if (!data) {
           return mapPromiseToVoidObservable(
@@ -54,9 +52,9 @@ export class UserProductsService {
   }
 
   delete(productId: string, userId: string): Observable<void> {
-    const doc = this._getUserProductsDoc(userId);
+    const doc = this._getProductsDoc(userId);
     return doc.valueChanges({ idFields: 'id' }).pipe(
-      switchMap((data: UserProductsResponse | undefined) => {
+      switchMap((data: ProductsResponse | undefined) => {
         if (!data) {
           return of(void 0);
         }
@@ -64,7 +62,7 @@ export class UserProductsService {
         return mapPromiseToVoidObservable(
           doc.update({
             products: data.products.filter(
-              (product: UserProductModel) => product.productId !== productId
+              (product: ProductModel) => product.productId !== productId
             ),
           })
         );
@@ -72,20 +70,20 @@ export class UserProductsService {
     );
   }
 
-  update(updatedProduct: UserProductModel, userId: string): Observable<void> {
-    return this._getUserProductsDoc(userId)
+  update(updatedProduct: ProductModel, userId: string): Observable<void> {
+    return this._getProductsDoc(userId)
       .valueChanges({ idFields: 'id' })
       .pipe(
-        switchMap((data: UserProductsResponse | undefined) => {
+        switchMap((data: ProductsResponse | undefined) => {
           if (!data) {
             return of(void 0);
           }
 
-          const doc = this._getUserProductsDoc(userId);
+          const doc = this._getProductsDoc(userId);
 
           return mapPromiseToVoidObservable(
             doc.update({
-              products: data.products.map((product: UserProductModel) =>
+              products: data.products.map((product: ProductModel) =>
                 product.productId === updatedProduct.productId
                   ? updatedProduct
                   : product
@@ -96,11 +94,11 @@ export class UserProductsService {
       );
   }
 
-  private _getUserProductsDoc(
+  private _getProductsDoc(
     userId: string
-  ): AngularFirestoreDocument<UserProductsResponse> {
-    return this._client.doc<UserProductsResponse>(
-      `${this._envConfig.userProductsUrl}/` + userId
+  ): AngularFirestoreDocument<ProductsResponse> {
+    return this._client.doc<ProductsResponse>(
+      `${this._envConfig.productsUrl}/` + userId
     );
   }
 }

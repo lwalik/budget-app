@@ -6,52 +6,52 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { UserProductsState } from '../../states/user-products.state';
+import { ProductsState } from '../../states/products.state';
 import { BehaviorSubject, map, Observable, shareReplay, take, tap } from 'rxjs';
-import { UserProductModel } from '../../models/user-product.model';
+import { ProductModel } from '../../models/product.model';
 import { SimpleSelectListComponent } from '@budget-app/shared';
 import { CommonModule } from '@angular/common';
-import { UserProductSelectListItemViewModel } from '../../view-models/user-product-select-list-item.view-model';
+import { ProductSelectListItemViewModel } from '../../view-models/product-select-list-item.view-model';
 
 @Component({
-  selector: 'lib-user-products-select-list',
+  selector: 'lib-products-select-list',
   standalone: true,
   imports: [SimpleSelectListComponent, CommonModule],
-  templateUrl: './user-products-select-list.component.html',
+  templateUrl: './products-select-list.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserProductsSelectListComponent {
+export class ProductsSelectListComponent {
   @Input() set selectedOption(option: string | null) {
     this._selectedOptionSubject.next(option);
   }
-  @Output() optionSelected: EventEmitter<UserProductSelectListItemViewModel> =
-    new EventEmitter<UserProductSelectListItemViewModel>();
+  @Output() optionSelected: EventEmitter<ProductSelectListItemViewModel> =
+    new EventEmitter<ProductSelectListItemViewModel>();
 
   private readonly _selectedOptionSubject: BehaviorSubject<string | null> =
     new BehaviorSubject<string | null>(null);
   readonly selectedOption$: Observable<string | null> =
     this._selectedOptionSubject.asObservable();
 
-  readonly products$: Observable<UserProductModel[]> = this._userProductsState
+  readonly products$: Observable<ProductModel[]> = this._productsState
     .getAllProducts()
     .pipe(shareReplay(1));
   readonly productsName$: Observable<string[]> = this.products$.pipe(
-    map((products: UserProductModel[]) =>
-      products.map((product: UserProductModel) => product.name)
+    map((products: ProductModel[]) =>
+      products.map((product: ProductModel) => product.name)
     )
   );
 
-  constructor(private readonly _userProductsState: UserProductsState) {}
+  constructor(private readonly _productsState: ProductsState) {}
 
   onOptionSelected(event: string): void {
     this.products$
       .pipe(
         take(1),
-        map((products: UserProductModel[]) =>
-          products.find((product: UserProductModel) => product.name === event)
+        map((products: ProductModel[]) =>
+          products.find((product: ProductModel) => product.name === event)
         ),
-        tap((selectedProduct: UserProductModel | undefined) => {
+        tap((selectedProduct: ProductModel | undefined) => {
           if (!selectedProduct) {
             return;
           }

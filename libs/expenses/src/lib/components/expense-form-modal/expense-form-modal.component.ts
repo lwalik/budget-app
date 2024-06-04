@@ -15,15 +15,15 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  ProductSelectListItemViewModel,
+  ProductsSelectListComponent,
+} from '@budget-app/products';
+import {
   SimpleInputFormComponent,
   SimpleModalComponent,
   SimplePaginationViewModel,
   SimpleSelectListComponent,
 } from '@budget-app/shared';
-import {
-  UserProductSelectListItemViewModel,
-  UserProductsSelectListComponent,
-} from '@budget-app/user-products';
 import {
   WalletSelectListComponent,
   WalletSelectListItemViewModel,
@@ -47,7 +47,7 @@ interface ExpenseFormDialogData {
     ReactiveFormsModule,
     SimpleInputFormComponent,
     CommonModule,
-    UserProductsSelectListComponent,
+    ProductsSelectListComponent,
     WalletSelectListComponent,
     SimpleSelectListComponent,
   ],
@@ -188,7 +188,7 @@ export class ExpenseFormModalComponent implements OnInit {
   }
 
   onProductOptionSelected(
-    event: UserProductSelectListItemViewModel,
+    event: ProductSelectListItemViewModel,
     control: FormGroup
   ): void {
     control.patchValue({

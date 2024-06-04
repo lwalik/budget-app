@@ -11,6 +11,7 @@ export const environment: EnvConfig = {
     appId: '1:1063541746333:web:4a30c737d911e5259d4274',
   },
   walletsUrl: 'wallets',
-  userProductsUrl: 'user-products',
+  productsUrl: 'products',
   expansesUrl: 'expanses',
+  productsCategoryUrl: 'products-category',
 };
