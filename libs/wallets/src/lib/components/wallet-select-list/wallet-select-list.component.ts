@@ -43,6 +43,7 @@ export class WalletSelectListComponent {
             name: selectedWallet.name,
             id: selectedWallet.id,
             currency: selectedWallet.currency,
+            balance: selectedWallet.balance,
           });
         })
       )
@@ -86,6 +87,7 @@ export class WalletSelectListComponent {
             name: selectedWallet.name,
             id: selectedWallet.id,
             currency: selectedWallet.currency,
+            balance: selectedWallet.balance,
           });
         })
       )

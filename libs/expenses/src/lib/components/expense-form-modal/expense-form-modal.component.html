@@ -105,6 +105,11 @@
     <lib-wallet-select-list [initialValueId]="dialogData.expense?.walletId"
                             [selectedOption]="walletNameFormControl.value"
                             (optionSelected)="onWalletOptionSelected($event)"></lib-wallet-select-list>
+    <div class="h-4">
+      <p *ngIf="expenseForm.hasError('insufficientBalance')"
+         class="text-sm text-red-600"
+         id="error">Insufficient Balance</p>
+    </div>
 
     <button type="submit"
             [disabled]="!expenseForm.valid"

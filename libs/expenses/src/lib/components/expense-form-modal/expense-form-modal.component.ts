@@ -33,12 +33,12 @@ import { EXPENSE_PRODUCT_PRIORITY } from '../../enums/expense-product-priority.e
 import { ExpenseProductModel } from '../../models/expense-product.model';
 import { ExpenseModel } from '../../models/expense.model';
 import { ExpensesState } from '../../states/expenses.state';
+import { availableBalanceValidator } from '../../validators/available-balance.validator';
 
 interface ExpenseFormDialogData {
   readonly isEdit: boolean;
   readonly expense?: ExpenseModel;
 }
-
 @Component({
   selector: 'lib-expense-form-modal',
   standalone: true,
@@ -72,23 +72,30 @@ export class ExpenseFormModalComponent implements OnInit {
     Object.values(EXPENSE_PRODUCT_PRIORITY)
   );
 
-  readonly expenseForm: FormGroup = new FormGroup({
-    wallet: new FormGroup({
-      name: new FormControl('', {
-        nonNullable: true,
-        validators: [Validators.required],
+  readonly expenseForm: FormGroup = new FormGroup(
+    {
+      wallet: new FormGroup({
+        name: new FormControl('', {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+        id: new FormControl('', {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+        currency: new FormControl('', {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
+        balance: new FormControl(0, {
+          nonNullable: true,
+          validators: [Validators.required],
+        }),
       }),
-      id: new FormControl('', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      currency: new FormControl('', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-    }),
-    products: new FormArray([]),
-  });
+      products: new FormArray([]),
+    },
+    availableBalanceValidator
+  );
 
   constructor(
     private readonly _dialogRef: DialogRef,
@@ -160,35 +167,6 @@ export class ExpenseFormModalComponent implements OnInit {
     this._changePaginationPagesCount(1).subscribe();
   }
 
-  private _addProductControl(product?: ExpenseProductModel): void {
-    const productsFormArray: FormArray = this._getProductsFormArray();
-
-    const productForm: FormGroup = new FormGroup({
-      name: new FormControl((!!product && product.name) || '', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      price: new FormControl((!!product && product.price) || 0, {
-        nonNullable: true,
-        validators: [Validators.required, Validators.min(0)],
-      }),
-      category: new FormControl((!!product && product.category) || '', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      quantity: new FormControl((!!product && product.quantity) || 1, {
-        nonNullable: true,
-        validators: [Validators.required, Validators.min(0)],
-      }),
-      priority: new FormControl((!!product && product.priority) || '', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-    });
-
-    productsFormArray.push(productForm);
-  }
-
   removeProductControl(): void {
     const productsFormArray: FormArray = this._getProductsFormArray();
 
@@ -225,6 +203,7 @@ export class ExpenseFormModalComponent implements OnInit {
       name: event.name,
       id: event.id,
       currency: event.currency,
+      balance: event.balance,
     });
   }
 
@@ -269,6 +248,35 @@ export class ExpenseFormModalComponent implements OnInit {
       })
       .pipe(take(1))
       .subscribe(() => this._dialogRef.close());
+  }
+
+  private _addProductControl(product?: ExpenseProductModel): void {
+    const productsFormArray: FormArray = this._getProductsFormArray();
+
+    const productForm: FormGroup = new FormGroup({
+      name: new FormControl((!!product && product.name) || '', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      price: new FormControl((!!product && product.price) || 0, {
+        nonNullable: true,
+        validators: [Validators.required, Validators.min(0)],
+      }),
+      category: new FormControl((!!product && product.category) || '', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      quantity: new FormControl((!!product && product.quantity) || 1, {
+        nonNullable: true,
+        validators: [Validators.required, Validators.min(0)],
+      }),
+      priority: new FormControl((!!product && product.priority) || '', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+    });
+
+    productsFormArray.push(productForm);
   }
 
   private _getProductsFormArray(): FormArray {
