@@ -1,0 +1,5 @@
+<canvas baseChart
+        *ngIf="chartData$ | async as chartData"
+        [data]="chartData"
+        [type]="'bar'">
+</canvas>
