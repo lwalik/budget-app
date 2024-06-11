@@ -82,6 +82,7 @@ export class ExpensesState {
   addExpense(
     expense: Omit<ExpenseModel, 'id' | 'ownerId' | 'createdAt' | 'expenseId'>
   ): Observable<void> {
+    // TODO Obsłużyć ręczny wybór daty
     return combineLatest([
       this._userContext.getUserId(),
       this._expensesState$,

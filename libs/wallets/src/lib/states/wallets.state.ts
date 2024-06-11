@@ -16,6 +16,11 @@ import { WalletStateModel } from '../models/wallet-state.model';
 import { CreateWalletModel, WalletModel } from '../models/wallet.model';
 import { WalletsService } from '../services/wallets.service';
 import { WalletBalance } from '../tokens/wallet-balance';
+import {
+  DashboardFiltersState,
+  DashboardFiltersStateModel,
+  TransactionSummaryViewModel,
+} from '@budget-app/shared';
 
 const initialState: WalletStateModel = {
   wallets: [],
@@ -35,7 +40,8 @@ export class WalletsState implements WalletBalance {
 
   constructor(
     @Inject(USER_CONTEXT) private readonly _userContext: UserContext,
-    private readonly _walletsService: WalletsService
+    private readonly _walletsService: WalletsService,
+    private readonly dashboardFilters: DashboardFiltersState
   ) {}
 
   loadWallets(): Observable<void> {
@@ -126,7 +132,51 @@ export class WalletsState implements WalletBalance {
     );
   }
 
+  getDepositTotal(): Observable<TransactionSummaryViewModel> {
+    return combineLatest([
+      this._walletsState$,
+      this.dashboardFilters.getFilters(),
+    ]).pipe(
+      map(
+        ([state, filters]: [WalletStateModel, DashboardFiltersStateModel]) => {
+          const total: number = state.wallets.reduce(
+            (total: number, wallet: WalletModel) => {
+              if (wallet.id !== filters.walletId && !!filters.walletId) {
+                return total;
+              }
+
+              const walletDepositTotal: number = wallet.deposits.reduce(
+                (walletTotal: number, deposit: WalletDepositModel) => {
+                  if (
+                    deposit.createdAt >= filters.startDate &&
+                    deposit.createdAt <= filters.endDate
+                  ) {
+                    return walletTotal + deposit.value;
+                  }
+
+                  return walletTotal;
+                },
+                0
+              );
+
+              return total + walletDepositTotal;
+            },
+            0
+          );
+
+          return {
+            total,
+            currency: 'PLN',
+            // TODO handle diff
+            diffSinceLastRangeInPercentage: 0,
+          };
+        }
+      )
+    );
+  }
+
   deposit(walletId: string, value: number): Observable<void> {
+    // TODO Obsłużyć ręczny wybór daty
     return this._updateWalletBalance(
       walletId,
       value,

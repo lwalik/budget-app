@@ -5,7 +5,6 @@ import { DashboardPage } from './pages/dashboard/dashboard.page';
 import { ExpensesPage } from './pages/expenses/expenses.page';
 import { LoggedInPage } from './pages/logged-in/logged-in.page';
 import { LoginPage } from './pages/login/login.page';
-import { OverviewPage } from './pages/overview/overview.page';
 import { ProductsPage } from './pages/products/products.page';
 import { WalletsPage } from './pages/wallets/wallets.page';
 import { LoadExpensesResolver } from '@budget-app/expenses';
@@ -13,14 +12,13 @@ import { LoadWalletsResolver } from '@budget-app/wallets';
 
 export const appRoutes: Route[] = [
   { path: 'login', component: LoginPage },
-  { path: 'dashboard', component: DashboardPage },
   {
     path: '',
     canActivate: [AuthGuard],
     component: LoggedInPage,
     resolve: [LoadWalletsResolver, LoadProductsResolver],
     children: [
-      { path: 'overview', component: OverviewPage },
+      { path: 'dashboard', component: DashboardPage },
       {
         path: 'wallets',
         component: WalletsPage,

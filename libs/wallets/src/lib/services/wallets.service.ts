@@ -9,7 +9,10 @@ import { Timestamp } from 'firebase/firestore';
 import { Observable, map, of, switchMap, take } from 'rxjs';
 import { WalletDepositModel } from '../models/wallet-deposit.model';
 import { WalletModel } from '../models/wallet.model';
-import { WalletResponse } from '../responses/wallet.response';
+import {
+  WalletDepositResponse,
+  WalletResponse,
+} from '../responses/wallet.response';
 
 @Injectable({ providedIn: 'root' })
 export class WalletsService {
@@ -28,6 +31,10 @@ export class WalletsService {
         map((wallets: WalletResponse[]) =>
           wallets.map((wallet: WalletResponse) => ({
             ...wallet,
+            deposits: wallet.deposits.map((deposit: WalletDepositResponse) => ({
+              ...deposit,
+              createdAt: deposit.createdAt.toDate(),
+            })),
             createdAt: wallet.createdAt.toDate(),
             updatedAt: wallet.updatedAt.toDate(),
           }))
@@ -69,7 +76,15 @@ export class WalletsService {
           doc.update({
             balance: newBalance,
             updatedAt: Timestamp.fromDate(new Date()),
-            deposits: !!deposit ? [...data.deposits, deposit] : data.deposits,
+            deposits: !!deposit
+              ? [
+                  ...data.deposits,
+                  {
+                    ...deposit,
+                    createdAt: Timestamp.fromDate(deposit.createdAt),
+                  },
+                ]
+              : data.deposits,
           })
         );
       })

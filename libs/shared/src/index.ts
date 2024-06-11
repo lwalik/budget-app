@@ -13,7 +13,10 @@ export * from './lib/view-models/confirmation-modal.view-model';
 export * from './lib/view-models/pagination.view-model';
 export * from './lib/view-models/simple-pagination.view-model';
 export * from './lib/view-models/two-option-confirmation.view-model';
+export * from './lib/view-models/transaction-summary.view-model';
 // Utils
 export * from './lib/utils/rxjs';
 // Directives
 export * from './lib/directives/on-click-outside-the-element.directive';
+// DashboardFilters
+export * from './lib/dashboard-filters';
