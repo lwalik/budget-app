@@ -4,7 +4,7 @@ import { DashboardFiltersStateModel } from '../models/dashboard-filters-state.mo
 
 const initialState: DashboardFiltersStateModel = {
   walletId: null,
-  startDate: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+  startDate: new Date(new Date().setMonth(new Date().getMonth() - 1)),
   endDate: new Date(),
 };
 
