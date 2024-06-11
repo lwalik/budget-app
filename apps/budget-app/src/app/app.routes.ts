@@ -16,7 +16,7 @@ export const appRoutes: Route[] = [
     path: '',
     canActivate: [AuthGuard],
     component: LoggedInPage,
-    resolve: [LoadWalletsResolver, LoadProductsResolver],
+    resolve: [LoadWalletsResolver, LoadProductsResolver, LoadExpensesResolver],
     children: [
       { path: 'dashboard', component: DashboardPage },
       {
@@ -31,7 +31,6 @@ export const appRoutes: Route[] = [
       {
         path: 'expenses',
         component: ExpensesPage,
-        resolve: [LoadExpensesResolver],
       },
     ],
   },

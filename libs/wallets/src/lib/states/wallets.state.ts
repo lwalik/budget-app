@@ -41,7 +41,7 @@ export class WalletsState implements WalletBalance {
   constructor(
     @Inject(USER_CONTEXT) private readonly _userContext: UserContext,
     private readonly _walletsService: WalletsService,
-    private readonly dashboardFilters: DashboardFiltersState
+    private readonly dashboardFiltersState: DashboardFiltersState
   ) {}
 
   loadWallets(): Observable<void> {
@@ -132,34 +132,34 @@ export class WalletsState implements WalletBalance {
     );
   }
 
-  getDepositTotal(): Observable<TransactionSummaryViewModel> {
+  getDepositSummary(): Observable<TransactionSummaryViewModel> {
     return combineLatest([
       this._walletsState$,
-      this.dashboardFilters.getFilters(),
+      this.dashboardFiltersState.getFilters(),
     ]).pipe(
       map(
         ([state, filters]: [WalletStateModel, DashboardFiltersStateModel]) => {
           const total: number = state.wallets.reduce(
-            (total: number, wallet: WalletModel) => {
+            (walletsTotal: number, wallet: WalletModel) => {
               if (wallet.id !== filters.walletId && !!filters.walletId) {
-                return total;
+                return walletsTotal;
               }
 
               const walletDepositTotal: number = wallet.deposits.reduce(
-                (walletTotal: number, deposit: WalletDepositModel) => {
+                (depositsTotal: number, deposit: WalletDepositModel) => {
                   if (
                     deposit.createdAt >= filters.startDate &&
                     deposit.createdAt <= filters.endDate
                   ) {
-                    return walletTotal + deposit.value;
+                    return depositsTotal + deposit.value;
                   }
 
-                  return walletTotal;
+                  return depositsTotal;
                 },
                 0
               );
 
-              return total + walletDepositTotal;
+              return walletsTotal + walletDepositTotal;
             },
             0
           );
@@ -167,7 +167,7 @@ export class WalletsState implements WalletBalance {
           return {
             total,
             currency: 'PLN',
-            // TODO handle diff
+            // TODO obsłużyć różnicę
             diffSinceLastRangeInPercentage: 0,
           };
         }

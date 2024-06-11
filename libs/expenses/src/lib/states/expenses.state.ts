@@ -18,6 +18,11 @@ import { ExpensesStateModel } from '../models/expenses-state.model';
 import { SortModel } from '../models/sort.model';
 import { ExpensesService } from '../services/expenses.service';
 import { SortListViewModel } from '../view-models/sort-list.view-model';
+import {
+  DashboardFiltersState,
+  DashboardFiltersStateModel,
+  TransactionSummaryViewModel,
+} from '@budget-app/shared';
 
 const initialState: ExpensesStateModel = {
   expenses: [],
@@ -47,7 +52,8 @@ export class ExpensesState {
     private readonly _expensesService: ExpensesService,
     @Inject(USER_CONTEXT) private readonly _userContext: UserContext,
     @Inject(WALLET_BALANCE)
-    private readonly _walletBalance: WalletBalance
+    private readonly _walletBalance: WalletBalance,
+    private readonly dashboardFiltersState: DashboardFiltersState
   ) {}
 
   loadExpenses(): Observable<void> {
@@ -220,6 +226,41 @@ export class ExpensesState {
         })
       ),
       map(() => void 0)
+    );
+  }
+
+  getExpenseSummary(): Observable<TransactionSummaryViewModel> {
+    return combineLatest([
+      this._expensesState$,
+      this.dashboardFiltersState.getFilters(),
+    ]).pipe(
+      map(
+        ([state, filters]: [
+          ExpensesStateModel,
+          DashboardFiltersStateModel
+        ]) => {
+          const total: number = state.expenses.reduce(
+            (expensesTotal: number, expense: ExpenseModel) => {
+              if (
+                expense.createdAt >= filters.startDate &&
+                expense.createdAt <= filters.endDate
+              ) {
+                return expensesTotal + expense.totalPrice;
+              }
+
+              return expensesTotal;
+            },
+            0
+          );
+
+          return {
+            total,
+            currency: 'PLN',
+            // TODO obsłużyć różnicę
+            diffSinceLastRangeInPercentage: 0,
+          };
+        }
+      )
     );
   }
 
