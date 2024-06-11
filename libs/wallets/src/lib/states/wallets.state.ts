@@ -21,6 +21,7 @@ import {
   DashboardFiltersStateModel,
   TransactionSummaryViewModel,
 } from '@budget-app/shared';
+import { CurrentBalanceViewModel } from '../view-models/current-balance.view-model';
 
 const initialState: WalletStateModel = {
   wallets: [],
@@ -169,6 +170,33 @@ export class WalletsState implements WalletBalance {
             currency: 'PLN',
             // TODO obsłużyć różnicę
             diffSinceLastRangeInPercentage: 0,
+          };
+        }
+      )
+    );
+  }
+
+  getCurrentBalance(): Observable<CurrentBalanceViewModel> {
+    return combineLatest([
+      this._walletsState$,
+      this.dashboardFiltersState.getFilters(),
+    ]).pipe(
+      map(
+        ([state, filters]: [WalletStateModel, DashboardFiltersStateModel]) => {
+          const total: number = state.wallets.reduce(
+            (walletsTotal: number, wallet: WalletModel) => {
+              if (wallet.id !== filters.walletId && !!filters.walletId) {
+                return walletsTotal;
+              }
+
+              return walletsTotal + wallet.balance;
+            },
+            0
+          );
+
+          return {
+            value: total,
+            currency: 'PLN',
           };
         }
       )
