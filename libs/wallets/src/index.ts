@@ -10,4 +10,4 @@ export * from './lib/resolvers/load-wallets.resolver';
 // View Models
 export * from './lib/view-models/wallet-select-list-item.view-model';
 // Providers
-export * from './lib/providers/decrease-wallet-balance.provider';
+export * from './lib/providers/wallet-balance.provider';
