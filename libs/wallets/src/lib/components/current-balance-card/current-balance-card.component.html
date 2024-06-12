@@ -1,4 +1,4 @@
-<div class="bg-white rounded-lg p-6 flex flex-col gap-4 h-full" *ngIf="currentBalance$ | async as currentBalance">
+<div class="bg-white rounded-lg p-6 flex flex-col gap-4 h-full shadow-xl" *ngIf="currentBalance$ | async as currentBalance">
   <p class="text-primary text-2xl font-semibold">Current Balance</p>
   <p class="text-blue-600 text-xl">{{ currentBalance.value | currency: currentBalance.currency }}</p>
 </div>

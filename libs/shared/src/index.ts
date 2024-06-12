@@ -18,5 +18,7 @@ export * from './lib/view-models/transaction-summary.view-model';
 export * from './lib/utils/rxjs';
 // Directives
 export * from './lib/directives/on-click-outside-the-element.directive';
+// Tokens
+export * from './lib/tokens/wallet-balance';
 // DashboardFilters
 export * from './lib/dashboard-filters';

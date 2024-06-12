@@ -9,7 +9,5 @@ export * from './lib/components/current-balance-card/current-balance-card.compon
 export * from './lib/resolvers/load-wallets.resolver';
 // View Models
 export * from './lib/view-models/wallet-select-list-item.view-model';
-// Tokens
-export * from './lib/tokens/wallet-balance';
 // Providers
 export * from './lib/providers/decrease-wallet-balance.provider';

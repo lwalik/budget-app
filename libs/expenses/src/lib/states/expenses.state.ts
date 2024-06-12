@@ -1,11 +1,17 @@
 import { Inject, Injectable } from '@angular/core';
 import { USER_CONTEXT, UserContext } from '@budget-app/core';
-import { WALLET_BALANCE, WalletBalance } from '@budget-app/wallets';
+import {
+  DashboardFiltersState,
+  DashboardFiltersStateModel,
+  TransactionSummaryViewModel,
+  WALLET_BALANCE,
+  WalletBalance,
+} from '@budget-app/shared';
 import {
   BehaviorSubject,
-  Observable,
   combineLatest,
   map,
+  Observable,
   of,
   switchMap,
   take,
@@ -18,11 +24,6 @@ import { ExpensesStateModel } from '../models/expenses-state.model';
 import { SortModel } from '../models/sort.model';
 import { ExpensesService } from '../services/expenses.service';
 import { SortListViewModel } from '../view-models/sort-list.view-model';
-import {
-  DashboardFiltersState,
-  DashboardFiltersStateModel,
-  TransactionSummaryViewModel,
-} from '@budget-app/shared';
 
 const initialState: ExpensesStateModel = {
   expenses: [],

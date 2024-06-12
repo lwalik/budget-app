@@ -2,9 +2,9 @@ import { Inject, Injectable } from '@angular/core';
 import { USER_CONTEXT, UserContext } from '@budget-app/core';
 import {
   BehaviorSubject,
-  Observable,
   combineLatest,
   map,
+  Observable,
   of,
   switchMap,
   take,
@@ -15,11 +15,11 @@ import { WalletDepositModel } from '../models/wallet-deposit.model';
 import { WalletStateModel } from '../models/wallet-state.model';
 import { CreateWalletModel, WalletModel } from '../models/wallet.model';
 import { WalletsService } from '../services/wallets.service';
-import { WalletBalance } from '../tokens/wallet-balance';
 import {
   DashboardFiltersState,
   DashboardFiltersStateModel,
   TransactionSummaryViewModel,
+  WalletBalance,
 } from '@budget-app/shared';
 import { CurrentBalanceViewModel } from '../view-models/current-balance.view-model';
 
