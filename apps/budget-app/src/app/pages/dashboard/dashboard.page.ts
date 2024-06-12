@@ -27,7 +27,7 @@ import {
 })
 export class DashboardPage {
   readonly emptyArray: number[] = new Array(
-    new Date(2024, 6, 0).getDate()
+    Math.ceil(new Date(2024, 6, 0).getDate() / 7)
   ).fill(0);
   readonly xAxis: string[] = this.emptyArray.map((_, idx) => `${idx + 1}`);
 

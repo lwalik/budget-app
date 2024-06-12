@@ -1,12 +1,10 @@
-<div class="h-full">
-  <div class="grid grid-cols-3 gap-6">
+<div class="h-full flex flex-col md:grid md:grid-cols-6 gap-6">
+  <div class="grid grid-cols-1 gap-6 col-span-2">
     <lib-current-balance-card class="h-full"></lib-current-balance-card>
     <lib-incomes-summary-card></lib-incomes-summary-card>
     <lib-expenses-summary-card></lib-expenses-summary-card>
   </div>
-  <div class="grid grid-cols-3 mt-6">
-    <div class="bg-white rounded-lg p-6 col-span-2">
-      <lib-bar-chart [xAxis]="xAxis" [datasets]="datasets"></lib-bar-chart>
-    </div>
+  <div class="bg-white rounded-md shadow-xl p-6 col-span-4">
+    <lib-bar-chart class="h-full w-full flex items-center justify-center" [xAxis]="xAxis" [datasets]="datasets"></lib-bar-chart>
   </div>
 </div>
