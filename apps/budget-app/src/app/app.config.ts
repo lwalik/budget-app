@@ -11,12 +11,15 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { provideRouter } from '@angular/router';
 import { userContextProvider } from '@budget-app/auth';
 import { ENV_CONFIG } from '@budget-app/core';
-import { decreaseWalletBalanceProvider } from '@budget-app/wallets';
+import { walletBalanceProvider } from '@budget-app/wallets';
 import { environment } from '../environments/environment';
 import { appRoutes } from './app.routes';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { Chart } from 'chart.js';
+import * as ChartDataLabels from 'chartjs-plugin-datalabels';
 
 registerLocaleData(localePl);
+Chart.register(ChartDataLabels);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,7 +30,7 @@ export const appConfig: ApplicationConfig = {
       AngularFireModule.initializeApp(environment.firebaseConfig),
     ]),
     userContextProvider(),
-    decreaseWalletBalanceProvider(),
+    walletBalanceProvider(),
     provideCharts(withDefaultRegisterables()),
     {
       provide: LOCALE_ID,
