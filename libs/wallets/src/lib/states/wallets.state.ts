@@ -146,44 +146,77 @@ export class WalletsState implements WalletBalance, IncomesData {
     ]).pipe(
       map(
         ([state, filters]: [WalletStateModel, DashboardFiltersStateModel]) => {
-          const total: number = state.wallets.reduce(
-            (walletsTotal: number, wallet: WalletModel) => {
+          const dateDiff: number =
+            filters.endDate.getTime() - filters.startDate.getTime();
+          const prevStartDate: Date = new Date(
+            filters.startDate.getTime() - dateDiff
+          );
+          const prevEndDate: Date = new Date(
+            filters.startDate.getTime() - 24 * 60 * 60 * 1000
+          );
+
+          const { total, prevTotal } = state.wallets.reduce(
+            (
+              acc: { total: number; prevTotal: number },
+              wallet: WalletModel
+            ) => {
               if (wallet.id !== filters.wallet.id && !!filters.wallet.id) {
-                return walletsTotal;
+                return acc;
               }
 
-              const walletDepositTotal: number = wallet.deposits.reduce(
-                (depositsTotal: number, deposit: WalletDepositModel) => {
+              const walletDepositTotals = wallet.deposits.reduce(
+                (
+                  depositAcc: { total: number; prevTotal: number },
+                  deposit: WalletDepositModel
+                ) => {
                   if (
-                    compareDatesWithoutTime(
+                    !compareDatesWithoutTime(
                       deposit.createdAt,
                       filters.startDate,
                       isBeforeDate
-                    ) ||
-                    compareDatesWithoutTime(
+                    ) &&
+                    !compareDatesWithoutTime(
                       deposit.createdAt,
                       filters.endDate,
                       isAfterDate
                     )
                   ) {
-                    return depositsTotal;
+                    depositAcc.total += deposit.value;
                   }
 
-                  return depositsTotal + deposit.value;
+                  if (
+                    !compareDatesWithoutTime(
+                      deposit.createdAt,
+                      prevStartDate,
+                      isBeforeDate
+                    ) &&
+                    !compareDatesWithoutTime(
+                      deposit.createdAt,
+                      prevEndDate,
+                      isAfterDate
+                    )
+                  ) {
+                    depositAcc.prevTotal += deposit.value;
+                  }
+
+                  return depositAcc;
                 },
-                0
+                { total: 0, prevTotal: 0 }
               );
 
-              return walletsTotal + walletDepositTotal;
+              acc.total += walletDepositTotals.total;
+              acc.prevTotal += walletDepositTotals.prevTotal;
+
+              return acc;
             },
-            0
+            { total: 0, prevTotal: 0 }
           );
 
           return {
             total,
             currency: 'PLN',
-            // TODO obsłużyć różnicę
-            diffSinceLastRangeInPercentage: 0,
+            diffSinceLastRange: total - prevTotal,
+            diffDaysCount: dateDiff / (1000 * 60 * 60 * 24),
           };
         }
       )

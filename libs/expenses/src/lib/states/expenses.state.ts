@@ -245,34 +245,62 @@ export class ExpensesState {
           ExpensesStateModel,
           DashboardFiltersStateModel
         ]) => {
-          const total: number = state.expenses.reduce(
-            (expensesTotal: number, expense: ExpenseModel) => {
+          const dateDiff: number =
+            filters.endDate.getTime() - filters.startDate.getTime();
+          const prevStartDate: Date = new Date(
+            filters.startDate.getTime() - dateDiff
+          );
+          const prevEndDate: Date = new Date(
+            filters.startDate.getTime() - 24 * 60 * 60 * 1000
+          );
+
+          const { total, prevTotal } = state.expenses.reduce(
+            (
+              acc: { total: number; prevTotal: number },
+              expense: ExpenseModel
+            ) => {
               if (
-                compareDatesWithoutTime(
+                !compareDatesWithoutTime(
                   expense.createdAt,
                   filters.startDate,
                   isBeforeDate
-                ) ||
-                compareDatesWithoutTime(
+                ) &&
+                !compareDatesWithoutTime(
                   expense.createdAt,
                   filters.endDate,
                   isAfterDate
-                ) ||
-                (filters.wallet.id && expense.walletId !== filters.wallet.id)
+                ) &&
+                (!filters.wallet.id || expense.walletId === filters.wallet.id)
               ) {
-                return expensesTotal;
+                acc.total += expense.totalPrice;
               }
 
-              return expensesTotal + expense.totalPrice;
+              if (
+                !compareDatesWithoutTime(
+                  expense.createdAt,
+                  prevStartDate,
+                  isBeforeDate
+                ) &&
+                !compareDatesWithoutTime(
+                  expense.createdAt,
+                  prevEndDate,
+                  isAfterDate
+                ) &&
+                (!filters.wallet.id || expense.walletId === filters.wallet.id)
+              ) {
+                acc.prevTotal += expense.totalPrice;
+              }
+
+              return acc;
             },
-            0
+            { total: 0, prevTotal: 0 }
           );
 
           return {
             total,
             currency: 'PLN',
-            // TODO obsłużyć różnicę
-            diffSinceLastRangeInPercentage: 0,
+            diffSinceLastRange: total - prevTotal,
+            diffDaysCount: dateDiff / (1000 * 60 * 60 * 24),
           };
         }
       )

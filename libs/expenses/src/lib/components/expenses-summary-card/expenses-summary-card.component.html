@@ -7,10 +7,18 @@
     <p class="text-red-600 text-xl">
       {{ expensesSummary.total | currency : expensesSummary.currency }}
     </p>
-    <span class="text-xs"
-      >{{ expensesSummary.diffSinceLastRangeInPercentage }}%
-      <span class="text-gray-400">Since last Month</span></span
-    >
+    <span
+      class="text-xs"
+      [ngClass]="{
+        'text-red-600': expensesSummary.diffSinceLastRange > 0,
+        'text-green-600': expensesSummary.diffSinceLastRange < 0
+      }"
+      >{{ expensesSummary.diffSinceLastRange > 0 ? '+' : ''
+      }}{{
+        expensesSummary.diffSinceLastRange | currency : expensesSummary.currency
+      }}
+      <span class="text-gray-400">Since last {{ expensesSummary.diffDaysCount }} Days</span>
+    </span>
   </div>
 
   <svg class="h-16 w-16 fill-red-600" viewBox="0 0 512 512">
