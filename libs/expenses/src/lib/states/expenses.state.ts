@@ -4,6 +4,7 @@ import {
   compareDatesWithoutTime,
   DashboardFiltersState,
   DashboardFiltersStateModel,
+  getDayWithMonthAsString,
   isAfterDate,
   isBeforeDate,
   TransactionSummaryViewModel,
@@ -309,19 +310,13 @@ export class ExpensesState {
                   return acc;
                 }
 
-                const dayMoth = `${String(expense.createdAt.getDate()).padStart(
-                  2,
-                  '0'
-                )}.${String(expense.createdAt.getMonth() + 1).padStart(
-                  2,
-                  '0'
-                )}`;
+                const dayWithMonth = getDayWithMonthAsString(expense.createdAt);
 
-                if (!acc[dayMoth]) {
-                  acc[dayMoth] = 0;
+                if (!acc[dayWithMonth]) {
+                  acc[dayWithMonth] = 0;
                 }
 
-                acc[dayMoth] += expense.totalPrice;
+                acc[dayWithMonth] += expense.totalPrice;
 
                 return acc;
               },

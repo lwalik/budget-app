@@ -19,6 +19,7 @@ import {
   compareDatesWithoutTime,
   DashboardFiltersState,
   DashboardFiltersStateModel,
+  getDayWithMonthAsString,
   IncomesData,
   IncomesDataViewModel,
   isAfterDate,
@@ -276,18 +277,12 @@ export class WalletsState implements WalletBalance, IncomesData {
                   return acc;
                 }
 
-                const dayMoth = `${String(deposit.createdAt.getDate()).padStart(
-                  2,
-                  '0'
-                )}.${String(deposit.createdAt.getMonth() + 1).padStart(
-                  2,
-                  '0'
-                )}`;
+                const dayWithMonth = getDayWithMonthAsString(deposit.createdAt);
 
-                if (!acc[dayMoth]) {
-                  acc[dayMoth] = 0;
+                if (!acc[dayWithMonth]) {
+                  acc[dayWithMonth] = 0;
                 }
-                acc[dayMoth] += deposit.value;
+                acc[dayWithMonth] += deposit.value;
 
                 return acc;
               },

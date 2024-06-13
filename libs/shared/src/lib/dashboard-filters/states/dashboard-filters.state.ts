@@ -4,6 +4,8 @@ import {
   DashboardFiltersStateModel,
   DashboardFiltersWalletStateModel,
 } from '../models/dashboard-filters-state.model';
+import { DashboardFiltersSelectedDatesViewModel } from '../view-models/dashboard-filters-selected-dates.view-model';
+import { getDayWithMonthAsString } from '../../utils/dates';
 
 const initialState: DashboardFiltersStateModel = {
   wallet: {
@@ -31,6 +33,15 @@ export class DashboardFiltersState {
     );
   }
 
+  getSelectedDates(): Observable<DashboardFiltersSelectedDatesViewModel> {
+    return this.dashboardFiltersState$.pipe(
+      map((filters: DashboardFiltersStateModel) => ({
+        startDate: filters.startDate,
+        endDate: filters.endDate,
+      }))
+    );
+  }
+
   setSelectedWallet(
     wallet: DashboardFiltersWalletStateModel
   ): Observable<void> {
@@ -46,6 +57,23 @@ export class DashboardFiltersState {
     );
   }
 
+  setSelectedDates(startDate: Date, endDate: Date): Observable<void> {
+    if (isNaN(startDate.getTime())) {
+      console.log('tak');
+    }
+    return this.dashboardFiltersState$.pipe(
+      take(1),
+      tap((filters: DashboardFiltersStateModel) =>
+        this._dashboardFiltersStateSubject.next({
+          ...filters,
+          startDate: !isNaN(startDate.getTime()) ? startDate : new Date(0),
+          endDate: !isNaN(endDate.getTime()) ? endDate : new Date(),
+        })
+      ),
+      map(() => void 0)
+    );
+  }
+
   createEmptyDateRangeObject(): Observable<Record<string, number>> {
     return this.dashboardFiltersState$.pipe(
       map((filters: DashboardFiltersStateModel) => {
@@ -55,10 +83,8 @@ export class DashboardFiltersState {
           d <= filters.endDate;
           d.setDate(d.getDate() + 1)
         ) {
-          const dayMonth = `${String(d.getDate()).padStart(2, '0')}.${String(
-            d.getMonth() + 1
-          ).padStart(2, '0')}`;
-          dates[dayMonth] = 0;
+          const dayWithMonth = getDayWithMonthAsString(d);
+          dates[dayWithMonth] = 0;
         }
         return dates;
       })
