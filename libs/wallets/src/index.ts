@@ -11,3 +11,4 @@ export * from './lib/resolvers/load-wallets.resolver';
 export * from './lib/view-models/wallet-select-list-item.view-model';
 // Providers
 export * from './lib/providers/wallet-balance.provider';
+export * from './lib/providers/incomes-data.provider';

@@ -17,6 +17,7 @@ import { appRoutes } from './app.routes';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { Chart } from 'chart.js';
 import * as ChartDataLabels from 'chartjs-plugin-datalabels';
+import { incomesDataProvider } from '@budget-app/wallets';
 
 registerLocaleData(localePl);
 Chart.register(ChartDataLabels);
@@ -31,6 +32,7 @@ export const appConfig: ApplicationConfig = {
     ]),
     userContextProvider(),
     walletBalanceProvider(),
+    incomesDataProvider(),
     provideCharts(withDefaultRegisterables()),
     {
       provide: LOCALE_ID,

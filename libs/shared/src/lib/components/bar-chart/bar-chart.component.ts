@@ -28,29 +28,19 @@ export class BarChartComponent {
     .asObservable()
     .pipe(shareReplay(1));
 
-  public barChartOptions: ChartConfiguration<'bar'>['options'] = {
+  private readonly _chartOptionsSubject: BehaviorSubject<
+    ChartConfiguration<'bar'>['options']
+  > = new BehaviorSubject<ChartConfiguration<'bar'>['options']>({
     scales: {
-      x: {
-        title: {
-          display: true,
-          text: 'Weeks',
-        },
-      },
+      x: {},
       y: {
         min: 10,
-        title: {
-          display: true,
-          text: 'Amount',
-        },
-      },
-    },
-    plugins: {
-      legend: {
-        display: true,
       },
     },
     responsive: true,
-  };
+  });
+  readonly chartOptions$: Observable<ChartConfiguration<'bar'>['options']> =
+    this._chartOptionsSubject.asObservable().pipe(shareReplay(1));
 
   @Input() set xAxis(value: string[]) {
     this.chartData$
@@ -74,6 +64,52 @@ export class BarChartComponent {
           this._chartDataSubject.next({
             ...subject,
             datasets: value,
+          })
+        )
+      )
+      .subscribe();
+  }
+
+  @Input() set xAxisText(text: string) {
+    this.chartOptions$
+      .pipe(
+        take(1),
+        tap((subject: ChartConfiguration<'bar'>['options']) =>
+          this._chartOptionsSubject.next({
+            ...subject,
+            scales: {
+              ...subject?.scales,
+              x: {
+                ...subject?.scales?.['x'],
+                title: {
+                  display: true,
+                  text,
+                },
+              },
+            },
+          })
+        )
+      )
+      .subscribe();
+  }
+
+  @Input() set yAxisText(text: string) {
+    this.chartOptions$
+      .pipe(
+        take(1),
+        tap((subject: ChartConfiguration<'bar'>['options']) =>
+          this._chartOptionsSubject.next({
+            ...subject,
+            scales: {
+              ...subject?.scales,
+              y: {
+                ...subject?.scales?.['y'],
+                title: {
+                  display: true,
+                  text,
+                },
+              },
+            },
           })
         )
       )

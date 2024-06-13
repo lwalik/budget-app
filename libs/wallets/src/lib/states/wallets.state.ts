@@ -18,6 +18,8 @@ import { WalletsService } from '../services/wallets.service';
 import {
   DashboardFiltersState,
   DashboardFiltersStateModel,
+  IncomesData,
+  IncomesDataViewModel,
   TransactionSummaryViewModel,
   WalletBalance,
 } from '@budget-app/shared';
@@ -28,7 +30,7 @@ const initialState: WalletStateModel = {
 };
 
 @Injectable({ providedIn: 'root' })
-export class WalletsState implements WalletBalance {
+export class WalletsState implements WalletBalance, IncomesData {
   private readonly _walletsStateSubject: BehaviorSubject<WalletStateModel> =
     new BehaviorSubject<WalletStateModel>(initialState);
   private readonly _walletsState$: Observable<WalletStateModel> =
@@ -225,6 +227,57 @@ export class WalletsState implements WalletBalance {
       walletId,
       value,
       WALLET_BALANCE_OPERATION_TYPE.EXPENSE
+    );
+  }
+
+  getIncomesData(): Observable<IncomesDataViewModel> {
+    return combineLatest([
+      this._walletsState$,
+      this.dashboardFiltersState.getFilters(),
+      this.dashboardFiltersState.createEmptyDateRangeObject(),
+    ]).pipe(
+      map(
+        ([state, filters, datesObject]: [
+          WalletStateModel,
+          DashboardFiltersStateModel,
+          Record<string, number>
+        ]) => {
+          const monthlyIncomesMap: Record<string, number> = state.wallets
+            .flatMap((wallet: WalletModel) => wallet.deposits)
+            .reduce(
+              (acc: Record<string, number>, deposit: WalletDepositModel) => {
+                if (
+                  deposit.createdAt < filters.startDate ||
+                  deposit.createdAt > filters.endDate
+                ) {
+                  return acc;
+                }
+
+                const dayMoth = `${String(deposit.createdAt.getDate()).padStart(
+                  2,
+                  '0'
+                )}.${String(deposit.createdAt.getMonth() + 1).padStart(
+                  2,
+                  '0'
+                )}`;
+
+                if (!acc[dayMoth]) {
+                  acc[dayMoth] = 0;
+                }
+
+                acc[dayMoth] += deposit.value;
+
+                return acc;
+              },
+              datesObject
+            );
+
+          return {
+            incomes: Object.values(monthlyIncomesMap),
+            dates: Object.keys(monthlyIncomesMap),
+          };
+        }
+      )
     );
   }
 

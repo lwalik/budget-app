@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { DashboardFiltersStateModel } from '../models/dashboard-filters-state.model';
 
 const initialState: DashboardFiltersStateModel = {
@@ -17,5 +17,24 @@ export class DashboardFiltersState {
 
   getFilters(): Observable<DashboardFiltersStateModel> {
     return this.dashboardFiltersState$;
+  }
+
+  createEmptyDateRangeObject(): Observable<Record<string, number>> {
+    return this.dashboardFiltersState$.pipe(
+      map((filters: DashboardFiltersStateModel) => {
+        const dates: Record<string, number> = {};
+        for (
+          let d = new Date(filters.startDate);
+          d <= filters.endDate;
+          d.setDate(d.getDate() + 1)
+        ) {
+          const dayMonth = `${String(d.getDate()).padStart(2, '0')}.${String(
+            d.getMonth() + 1
+          ).padStart(2, '0')}`;
+          dates[dayMonth] = 0;
+        }
+        return dates;
+      })
+    );
   }
 }

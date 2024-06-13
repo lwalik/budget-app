@@ -24,6 +24,7 @@ import { ExpensesStateModel } from '../models/expenses-state.model';
 import { SortModel } from '../models/sort.model';
 import { ExpensesService } from '../services/expenses.service';
 import { SortListViewModel } from '../view-models/sort-list.view-model';
+import { ExpensesDataViewModel } from '../view-models/expenses-data.view-model';
 
 const initialState: ExpensesStateModel = {
   expenses: [],
@@ -259,6 +260,56 @@ export class ExpensesState {
             currency: 'PLN',
             // TODO obsłużyć różnicę
             diffSinceLastRangeInPercentage: 0,
+          };
+        }
+      )
+    );
+  }
+
+  getExpensesData(): Observable<ExpensesDataViewModel> {
+    return combineLatest([
+      this._expensesState$,
+      this.dashboardFiltersState.getFilters(),
+      this.dashboardFiltersState.createEmptyDateRangeObject(),
+    ]).pipe(
+      map(
+        ([state, filters, datesObject]: [
+          ExpensesStateModel,
+          DashboardFiltersStateModel,
+          Record<string, number>
+        ]) => {
+          const monthlyExpensesMap: Record<string, number> =
+            state.expenses.reduce(
+              (acc: Record<string, number>, expense: ExpenseModel) => {
+                if (
+                  expense.createdAt < filters.startDate ||
+                  expense.createdAt > filters.endDate
+                ) {
+                  return acc;
+                }
+
+                const dayMoth = `${String(expense.createdAt.getDate()).padStart(
+                  2,
+                  '0'
+                )}.${String(expense.createdAt.getMonth() + 1).padStart(
+                  2,
+                  '0'
+                )}`;
+
+                if (!acc[dayMoth]) {
+                  acc[dayMoth] = 0;
+                }
+
+                acc[dayMoth] += expense.totalPrice;
+
+                return acc;
+              },
+              datesObject
+            );
+
+          return {
+            expenses: Object.values(monthlyExpensesMap),
+            dates: Object.keys(monthlyExpensesMap),
           };
         }
       )

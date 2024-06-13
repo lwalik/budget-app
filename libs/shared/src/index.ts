@@ -20,5 +20,6 @@ export * from './lib/utils/rxjs';
 export * from './lib/directives/on-click-outside-the-element.directive';
 // Tokens
 export * from './lib/tokens/wallet-balance';
+export * from './lib/tokens/incomes-data';
 // DashboardFilters
 export * from './lib/dashboard-filters';
