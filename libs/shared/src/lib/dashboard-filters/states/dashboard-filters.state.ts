@@ -1,9 +1,15 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
-import { DashboardFiltersStateModel } from '../models/dashboard-filters-state.model';
+import { BehaviorSubject, map, Observable, take, tap } from 'rxjs';
+import {
+  DashboardFiltersStateModel,
+  DashboardFiltersWalletStateModel,
+} from '../models/dashboard-filters-state.model';
 
 const initialState: DashboardFiltersStateModel = {
-  walletId: null,
+  wallet: {
+    id: undefined,
+    name: 'All',
+  },
   startDate: new Date(new Date().setMonth(new Date().getMonth() - 1)),
   endDate: new Date(),
 };
@@ -17,6 +23,27 @@ export class DashboardFiltersState {
 
   getFilters(): Observable<DashboardFiltersStateModel> {
     return this.dashboardFiltersState$;
+  }
+
+  getSelectedWallet(): Observable<DashboardFiltersWalletStateModel> {
+    return this.dashboardFiltersState$.pipe(
+      map((filters: DashboardFiltersStateModel) => filters.wallet)
+    );
+  }
+
+  setSelectedWallet(
+    wallet: DashboardFiltersWalletStateModel
+  ): Observable<void> {
+    return this.dashboardFiltersState$.pipe(
+      take(1),
+      tap((filters: DashboardFiltersStateModel) =>
+        this._dashboardFiltersStateSubject.next({
+          ...filters,
+          wallet,
+        })
+      ),
+      map(() => void 0)
+    );
   }
 
   createEmptyDateRangeObject(): Observable<Record<string, number>> {

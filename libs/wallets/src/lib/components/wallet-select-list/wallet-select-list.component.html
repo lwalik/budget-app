@@ -1,7 +1,7 @@
 <lib-simple-select-list
   *ngIf="walletsName$ | async as walletsName"
   [options]="walletsName"
-  label="Wallet"
+  [label]="label"
   [selectedOption]="selectedOption$ | async"
   (optionSelected)="onOptionSelected($event)"
 ></lib-simple-select-list>

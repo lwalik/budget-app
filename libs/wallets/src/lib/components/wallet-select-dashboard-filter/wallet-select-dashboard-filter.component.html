@@ -1,0 +1,10 @@
+<div class="flex  items-center justify-center gap-2">
+  <p class="text-primary">Wallet</p>
+  <lib-wallet-select-list
+    class="w-full"
+    *ngIf="selectedWallet$ | async as selectedWallet"
+    [selectedOption]="selectedWallet.name"
+    [allOptionAvailable]="true"
+    (optionSelected)="onWalletSelected($event)"
+  ></lib-wallet-select-list>
+</div>

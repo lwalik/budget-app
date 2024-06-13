@@ -7,11 +7,23 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { SimpleSelectListComponent } from '@budget-app/shared';
-import { BehaviorSubject, Observable, map, shareReplay, take, tap } from 'rxjs';
+import {
+  SimpleSelectListComponent,
+  WalletSelectListItemViewModel,
+} from '@budget-app/shared';
+import {
+  BehaviorSubject,
+  Observable,
+  map,
+  shareReplay,
+  take,
+  tap,
+  combineLatest,
+  switchMap,
+  ReplaySubject,
+} from 'rxjs';
 import { WalletModel } from '../../models/wallet.model';
 import { WalletsState } from '../../states/wallets.state';
-import { WalletSelectListItemViewModel } from '../../view-models/wallet-select-list-item.view-model';
 
 @Component({
   selector: 'lib-wallet-select-list',
@@ -22,6 +34,10 @@ import { WalletSelectListItemViewModel } from '../../view-models/wallet-select-l
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletSelectListComponent {
+  @Input() label = '';
+  @Input() set allOptionAvailable(value: boolean) {
+    this._allOptionAvailableSubject.next(value);
+  }
   @Input() set initialValueId(id: string | undefined) {
     if (!id) {
       return;
@@ -59,14 +75,29 @@ export class WalletSelectListComponent {
     new BehaviorSubject<string | null>(null);
   readonly selectedOption$: Observable<string | null> =
     this._selectedOptionSubject.asObservable();
+  private readonly _allOptionAvailableSubject: ReplaySubject<boolean> =
+    new ReplaySubject<boolean>(1);
+  readonly allOptionAvailable$: Observable<boolean> =
+    this._allOptionAvailableSubject.asObservable().pipe(shareReplay(1));
 
   readonly wallets$: Observable<WalletModel[]> = this._walletsState
     .getAllWallets()
     .pipe(shareReplay(1));
-  readonly walletsName$: Observable<string[]> = this.wallets$.pipe(
-    map((wallets: WalletModel[]) =>
-      wallets.map((wallet: WalletModel) => wallet.name)
-    )
+  readonly walletsName$: Observable<string[]> = combineLatest([
+    this.wallets$,
+    this.allOptionAvailable$,
+  ]).pipe(
+    map(([wallets, allOptionAvailable]: [WalletModel[], boolean]) => {
+      const walletsName: string[] = wallets.map(
+        (wallet: WalletModel) => wallet.name
+      );
+
+      if (allOptionAvailable) {
+        return ['All', ...walletsName];
+      }
+
+      return walletsName;
+    })
   );
 
   constructor(private readonly _walletsState: WalletsState) {}
@@ -78,18 +109,32 @@ export class WalletSelectListComponent {
         map((wallets: WalletModel[]) =>
           wallets.find((wallet: WalletModel) => wallet.name === event)
         ),
-        tap((selectedWallet: WalletModel | undefined) => {
-          if (!selectedWallet) {
-            return;
-          }
+        switchMap((selectedWallet: WalletModel | undefined) =>
+          this.allOptionAvailable$.pipe(
+            take(1),
+            tap((allOptionAvailable: boolean) => {
+              if (selectedWallet) {
+                this.optionSelected.emit({
+                  name: selectedWallet.name,
+                  id: selectedWallet.id,
+                  currency: selectedWallet.currency,
+                  balance: selectedWallet.balance,
+                });
+                return;
+              }
 
-          this.optionSelected.emit({
-            name: selectedWallet.name,
-            id: selectedWallet.id,
-            currency: selectedWallet.currency,
-            balance: selectedWallet.balance,
-          });
-        })
+              if (allOptionAvailable) {
+                this.optionSelected.emit({
+                  name: event,
+                  id: undefined,
+                  currency: 'PLN',
+                  balance: 0,
+                });
+                return;
+              }
+            })
+          )
+        )
       )
       .subscribe();
   }

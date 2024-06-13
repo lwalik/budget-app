@@ -16,10 +16,13 @@ import { WalletStateModel } from '../models/wallet-state.model';
 import { CreateWalletModel, WalletModel } from '../models/wallet.model';
 import { WalletsService } from '../services/wallets.service';
 import {
+  compareDatesWithoutTime,
   DashboardFiltersState,
   DashboardFiltersStateModel,
   IncomesData,
   IncomesDataViewModel,
+  isAfterDate,
+  isBeforeDate,
   TransactionSummaryViewModel,
   WalletBalance,
 } from '@budget-app/shared';
@@ -144,20 +147,28 @@ export class WalletsState implements WalletBalance, IncomesData {
         ([state, filters]: [WalletStateModel, DashboardFiltersStateModel]) => {
           const total: number = state.wallets.reduce(
             (walletsTotal: number, wallet: WalletModel) => {
-              if (wallet.id !== filters.walletId && !!filters.walletId) {
+              if (wallet.id !== filters.wallet.id && !!filters.wallet.id) {
                 return walletsTotal;
               }
 
               const walletDepositTotal: number = wallet.deposits.reduce(
                 (depositsTotal: number, deposit: WalletDepositModel) => {
                   if (
-                    deposit.createdAt >= filters.startDate &&
-                    deposit.createdAt <= filters.endDate
+                    compareDatesWithoutTime(
+                      deposit.createdAt,
+                      filters.startDate,
+                      isBeforeDate
+                    ) ||
+                    compareDatesWithoutTime(
+                      deposit.createdAt,
+                      filters.endDate,
+                      isAfterDate
+                    )
                   ) {
-                    return depositsTotal + deposit.value;
+                    return depositsTotal;
                   }
 
-                  return depositsTotal;
+                  return depositsTotal + deposit.value;
                 },
                 0
               );
@@ -187,7 +198,7 @@ export class WalletsState implements WalletBalance, IncomesData {
         ([state, filters]: [WalletStateModel, DashboardFiltersStateModel]) => {
           const total: number = state.wallets.reduce(
             (walletsTotal: number, wallet: WalletModel) => {
-              if (wallet.id !== filters.walletId && !!filters.walletId) {
+              if (wallet.id !== filters.wallet.id && !!filters.wallet.id) {
                 return walletsTotal;
               }
 
@@ -243,12 +254,24 @@ export class WalletsState implements WalletBalance, IncomesData {
           Record<string, number>
         ]) => {
           const monthlyIncomesMap: Record<string, number> = state.wallets
+            .filter(
+              (wallet: WalletModel) =>
+                !filters.wallet.id || wallet.id === filters.wallet.id
+            )
             .flatMap((wallet: WalletModel) => wallet.deposits)
             .reduce(
               (acc: Record<string, number>, deposit: WalletDepositModel) => {
                 if (
-                  deposit.createdAt < filters.startDate ||
-                  deposit.createdAt > filters.endDate
+                  compareDatesWithoutTime(
+                    deposit.createdAt,
+                    filters.startDate,
+                    isBeforeDate
+                  ) ||
+                  compareDatesWithoutTime(
+                    deposit.createdAt,
+                    filters.endDate,
+                    isAfterDate
+                  )
                 ) {
                   return acc;
                 }
@@ -264,7 +287,6 @@ export class WalletsState implements WalletBalance, IncomesData {
                 if (!acc[dayMoth]) {
                   acc[dayMoth] = 0;
                 }
-
                 acc[dayMoth] += deposit.value;
 
                 return acc;

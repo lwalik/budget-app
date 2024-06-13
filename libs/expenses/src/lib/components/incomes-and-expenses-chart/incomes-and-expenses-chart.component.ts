@@ -26,7 +26,7 @@ import { CommonModule } from '@angular/common';
 })
 export class IncomesAndExpensesChartComponent {
   private readonly _expensesData$: Observable<ExpensesDataViewModel> =
-    this._expensesState.getExpensesData().pipe(shareReplay(1));
+    this._expensesState.getExpensesData().pipe();
   private readonly _incomesData$: Observable<IncomesDataViewModel> =
     this._incomesData.getIncomesData().pipe(shareReplay(1));
 

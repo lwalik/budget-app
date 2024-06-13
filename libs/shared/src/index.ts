@@ -14,8 +14,10 @@ export * from './lib/view-models/pagination.view-model';
 export * from './lib/view-models/simple-pagination.view-model';
 export * from './lib/view-models/two-option-confirmation.view-model';
 export * from './lib/view-models/transaction-summary.view-model';
+export * from './lib/view-models/wallet-select-list-item.view-model';
 // Utils
 export * from './lib/utils/rxjs';
+export * from './lib/utils/dates';
 // Directives
 export * from './lib/directives/on-click-outside-the-element.directive';
 // Tokens

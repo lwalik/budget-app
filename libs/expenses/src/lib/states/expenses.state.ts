@@ -1,8 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
 import { USER_CONTEXT, UserContext } from '@budget-app/core';
 import {
+  compareDatesWithoutTime,
   DashboardFiltersState,
   DashboardFiltersStateModel,
+  isAfterDate,
+  isBeforeDate,
   TransactionSummaryViewModel,
   WALLET_BALANCE,
   WalletBalance,
@@ -244,13 +247,22 @@ export class ExpensesState {
           const total: number = state.expenses.reduce(
             (expensesTotal: number, expense: ExpenseModel) => {
               if (
-                expense.createdAt >= filters.startDate &&
-                expense.createdAt <= filters.endDate
+                compareDatesWithoutTime(
+                  expense.createdAt,
+                  filters.startDate,
+                  isBeforeDate
+                ) ||
+                compareDatesWithoutTime(
+                  expense.createdAt,
+                  filters.endDate,
+                  isAfterDate
+                ) ||
+                (filters.wallet.id && expense.walletId !== filters.wallet.id)
               ) {
-                return expensesTotal + expense.totalPrice;
+                return expensesTotal;
               }
 
-              return expensesTotal;
+              return expensesTotal + expense.totalPrice;
             },
             0
           );
@@ -282,8 +294,17 @@ export class ExpensesState {
             state.expenses.reduce(
               (acc: Record<string, number>, expense: ExpenseModel) => {
                 if (
-                  expense.createdAt < filters.startDate ||
-                  expense.createdAt > filters.endDate
+                  compareDatesWithoutTime(
+                    expense.createdAt,
+                    filters.startDate,
+                    isBeforeDate
+                  ) ||
+                  compareDatesWithoutTime(
+                    expense.createdAt,
+                    filters.endDate,
+                    isAfterDate
+                  ) ||
+                  (filters.wallet.id && expense.walletId !== filters.wallet.id)
                 ) {
                   return acc;
                 }

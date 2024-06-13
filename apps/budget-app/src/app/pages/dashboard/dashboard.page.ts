@@ -6,6 +6,8 @@ import {
 import {
   CurrentBalanceCardComponent,
   IncomesSummaryCardComponent,
+  WalletSelectDashboardFilterComponent,
+  WalletSelectListComponent,
 } from '@budget-app/wallets';
 import {
   ExpensesSummaryCardComponent,
@@ -19,6 +21,7 @@ import {
     ExpensesSummaryCardComponent,
     CurrentBalanceCardComponent,
     IncomesAndExpensesChartComponent,
+    WalletSelectDashboardFilterComponent,
   ],
   templateUrl: './dashboard.page.html',
   encapsulation: ViewEncapsulation.None,

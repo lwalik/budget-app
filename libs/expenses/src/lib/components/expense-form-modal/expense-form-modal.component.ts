@@ -23,11 +23,9 @@ import {
   SimpleModalComponent,
   SimplePaginationViewModel,
   SimpleSelectListComponent,
-} from '@budget-app/shared';
-import {
-  WalletSelectListComponent,
   WalletSelectListItemViewModel,
-} from '@budget-app/wallets';
+} from '@budget-app/shared';
+import { WalletSelectListComponent } from '@budget-app/wallets';
 import { BehaviorSubject, Observable, map, of, take, tap } from 'rxjs';
 import { EXPENSE_PRODUCT_PRIORITY } from '../../enums/expense-product-priority.enum';
 import { ExpenseProductModel } from '../../models/expense-product.model';
