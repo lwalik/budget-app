@@ -25,6 +25,6 @@ export class LogoutComponent {
     this._authState
       .logout()
       .pipe(take(1))
-      .subscribe(() => this._router.navigateByUrl('/dashboard'));
+      .subscribe(() => this._router.navigateByUrl('/login'));
   }
 }
