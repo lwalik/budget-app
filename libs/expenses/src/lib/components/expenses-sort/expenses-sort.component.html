@@ -1,5 +1,6 @@
-<div class="flex gap-2 items-center mt-6" *ngIf="sortList$ | async as sortList">
-    <lib-simple-select-list class="w-full"
+<div class="grid grid-cols-10 gap-1 place-items-center mt-6" *ngIf="sortList$ | async as sortList">
+  <p class="col-span-2">Sort By</p>
+    <lib-simple-select-list class="col-span-7 w-full"
                             [options]="sortList.items"
                             [selectedOption]="sortList.selectedItem"
                             (optionSelected)="onOptionSelected($event)">
@@ -9,7 +10,7 @@
        fill="none"
        viewBox="0 0 24 24"
        stroke-width="1.5"
-       class="w-5 h-5 cursor-pointer hover:text-warn ">
+       class="w-5 h-5 cursor-pointer hover:text-warn col-span-1">
     <path [ngClass]="{'stroke-emerald-600': sortList.selectedDirection === 'asc'}"
           stroke-linecap="round"
           stroke-linejoin="round"
