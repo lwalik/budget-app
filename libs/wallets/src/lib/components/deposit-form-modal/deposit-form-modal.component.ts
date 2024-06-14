@@ -18,6 +18,7 @@ import {
 import { take } from 'rxjs';
 import { WalletsState } from '../../states/wallets.state';
 import { WalletOperationDialogDataViewModel } from '../../view-models/wallet-operation-dialog-data.view-model';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'lib-deposit-form-modal',
@@ -26,6 +27,7 @@ import { WalletOperationDialogDataViewModel } from '../../view-models/wallet-ope
     SimpleModalComponent,
     SimpleInputFormComponent,
     ReactiveFormsModule,
+    NgIf,
   ],
   templateUrl: './deposit-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -36,6 +38,10 @@ export class DepositFormModalComponent {
     amount: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required, Validators.min(0.01)],
+    }),
+    createdAt: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required],
     }),
   });
 
@@ -51,8 +57,11 @@ export class DepositFormModalComponent {
       return;
     }
 
+    const amount: number = +form.get('amount')?.value;
+    const createdAt: Date = new Date(form.get('createdAt')?.value);
+
     this._walletsState
-      .deposit(this._dialogData.walletId, +form.get('amount')?.value)
+      .deposit(this._dialogData.walletId, amount, createdAt)
       .pipe(take(1))
       .subscribe(() => this._dialogRef.close());
   }

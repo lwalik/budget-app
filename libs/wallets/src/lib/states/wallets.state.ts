@@ -250,12 +250,13 @@ export class WalletsState implements WalletBalance, IncomesData {
     );
   }
 
-  deposit(walletId: string, value: number): Observable<void> {
+  deposit(walletId: string, value: number, createdAt: Date): Observable<void> {
     // TODO Obsłużyć ręczny wybór daty
     return this._updateWalletBalance(
       walletId,
       value,
-      WALLET_BALANCE_OPERATION_TYPE.DEPOSIT
+      WALLET_BALANCE_OPERATION_TYPE.DEPOSIT,
+      createdAt
     );
   }
 
@@ -334,7 +335,8 @@ export class WalletsState implements WalletBalance, IncomesData {
   private _updateWalletBalance(
     walletId: string,
     value: number,
-    operation: WALLET_BALANCE_OPERATION_TYPE
+    operation: WALLET_BALANCE_OPERATION_TYPE,
+    createdAt?: Date
   ): Observable<void> {
     return this._walletsState$.pipe(
       take(1),
@@ -351,7 +353,7 @@ export class WalletsState implements WalletBalance, IncomesData {
           operation === WALLET_BALANCE_OPERATION_TYPE.DEPOSIT
             ? {
                 value,
-                createdAt: new Date(),
+                createdAt: createdAt || new Date(),
               }
             : undefined;
         const newBalance: number =
