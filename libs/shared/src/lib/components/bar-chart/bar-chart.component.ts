@@ -38,11 +38,7 @@ export class BarChartComponent {
     responsive: true,
     plugins: {
       datalabels: {
-        anchor: 'end',
-        align: 'end',
-        formatter: (value: number) => {
-          return value > 0 ? value.toString() : '';
-        },
+        display: false,
       },
     },
   });
