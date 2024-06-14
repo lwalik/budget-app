@@ -18,7 +18,7 @@ import {
 import { take } from 'rxjs';
 import { WalletsState } from '../../states/wallets.state';
 import { WalletOperationDialogDataViewModel } from '../../view-models/wallet-operation-dialog-data.view-model';
-import { NgIf } from '@angular/common';
+import { CommonModule, NgIf } from '@angular/common';
 
 @Component({
   selector: 'lib-deposit-form-modal',
@@ -27,7 +27,7 @@ import { NgIf } from '@angular/common';
     SimpleModalComponent,
     SimpleInputFormComponent,
     ReactiveFormsModule,
-    NgIf,
+    CommonModule,
   ],
   templateUrl: './deposit-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,

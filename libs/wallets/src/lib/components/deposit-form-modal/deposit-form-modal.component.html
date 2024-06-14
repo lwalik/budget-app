@@ -17,6 +17,7 @@
           type="date"
           formControlName="createdAt"
           class="w-full border-0 rounded-md bg-white py-1.5 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-warn sm:text-sm sm:leading-6"
+          [ngClass]="{'ring-red-500': !depositForm.get('createdAt')?.valid && depositForm.get('createdAt')?.touched}"
         />
         <div
           *ngIf="
