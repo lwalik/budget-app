@@ -3,12 +3,7 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  CurrentBalanceCardComponent,
-  IncomesSummaryCardComponent,
-  WalletSelectDashboardFilterComponent,
-  WalletSelectListComponent,
-} from '@budget-app/wallets';
+import { FormControl, Validators } from '@angular/forms';
 import {
   ExpensesSummaryCardComponent,
   IncomesAndExpensesChartComponent,
@@ -17,7 +12,11 @@ import {
   DatesFilterComponent,
   SimpleInputFormComponent,
 } from '@budget-app/shared';
-import { FormControl, Validators } from '@angular/forms';
+import {
+  CurrentBalanceCardComponent,
+  IncomesSummaryCardComponent,
+  WalletSelectDashboardFilterComponent,
+} from '@budget-app/wallets';
 
 @Component({
   standalone: true,

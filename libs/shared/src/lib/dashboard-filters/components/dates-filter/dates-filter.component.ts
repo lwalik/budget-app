@@ -1,8 +1,6 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  OnDestroy,
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
@@ -12,31 +10,35 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, switchMap, take, takeUntil, tap } from 'rxjs';
+import { take, tap } from 'rxjs';
 import { DashboardFiltersState } from '../../states/dashboard-filters.state';
 import { DashboardFiltersSelectedDatesViewModel } from '../../view-models/dashboard-filters-selected-dates.view-model';
 import { formatDateToString } from '../../../utils/dates';
+import { fromToDatesValidator } from '../../validators/from-to-dates.validator';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lib-dates-filter',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './dates-filter.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatesFilterComponent implements OnInit, AfterViewInit, OnDestroy {
-  private readonly _onDestroySubject: Subject<void> = new Subject<void>();
-  readonly dateForm: FormGroup = new FormGroup({
-    startDate: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    endDate: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-  });
+export class DatesFilterComponent implements OnInit {
+  readonly dateForm: FormGroup = new FormGroup(
+    {
+      fromDate: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+      toDate: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
+    },
+    fromToDatesValidator
+  );
 
   constructor(private readonly _dashboardFiltersState: DashboardFiltersState) {}
 
@@ -47,28 +49,21 @@ export class DatesFilterComponent implements OnInit, AfterViewInit, OnDestroy {
         take(1),
         tap((dates: DashboardFiltersSelectedDatesViewModel) => {
           this.dateForm.patchValue({
-            startDate: formatDateToString(dates.startDate),
-            endDate: formatDateToString(dates.endDate),
+            fromDate: formatDateToString(dates.fromDate),
+            toDate: formatDateToString(dates.toDate),
           });
         })
       )
       .subscribe();
   }
 
-  ngAfterViewInit(): void {
-    this.dateForm.valueChanges
-      .pipe(
-        takeUntil(this._onDestroySubject.asObservable()),
-        switchMap((form: { startDate: string; endDate: string }) =>
-          this._dashboardFiltersState
-            .setSelectedDates(new Date(form.startDate), new Date(form.endDate))
-            .pipe(take(1))
-        )
+  onDateFormSubmitted(form: FormGroup): void {
+    this._dashboardFiltersState
+      .setSelectedDates(
+        new Date(form.get('fromDate')?.value),
+        new Date(form.get('toDate')?.value)
       )
+      .pipe(take(1))
       .subscribe();
-  }
-
-  ngOnDestroy(): void {
-    this._onDestroySubject.next();
   }
 }

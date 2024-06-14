@@ -147,12 +147,12 @@ export class WalletsState implements WalletBalance, IncomesData {
       map(
         ([state, filters]: [WalletStateModel, DashboardFiltersStateModel]) => {
           const dateDiff: number =
-            filters.endDate.getTime() - filters.startDate.getTime();
-          const prevStartDate: Date = new Date(
-            filters.startDate.getTime() - dateDiff
+            filters.toDate.getTime() - filters.fromDate.getTime();
+          const prevFromDate: Date = new Date(
+            filters.fromDate.getTime() - dateDiff
           );
-          const prevEndDate: Date = new Date(
-            filters.startDate.getTime() - 24 * 60 * 60 * 1000
+          const prevToDate: Date = new Date(
+            filters.fromDate.getTime() - 24 * 60 * 60 * 1000
           );
 
           const { total, prevTotal } = state.wallets.reduce(
@@ -172,12 +172,12 @@ export class WalletsState implements WalletBalance, IncomesData {
                   if (
                     !compareDatesWithoutTime(
                       deposit.createdAt,
-                      filters.startDate,
+                      filters.fromDate,
                       isBeforeDate
                     ) &&
                     !compareDatesWithoutTime(
                       deposit.createdAt,
-                      filters.endDate,
+                      filters.toDate,
                       isAfterDate
                     )
                   ) {
@@ -187,12 +187,12 @@ export class WalletsState implements WalletBalance, IncomesData {
                   if (
                     !compareDatesWithoutTime(
                       deposit.createdAt,
-                      prevStartDate,
+                      prevFromDate,
                       isBeforeDate
                     ) &&
                     !compareDatesWithoutTime(
                       deposit.createdAt,
-                      prevEndDate,
+                      prevToDate,
                       isAfterDate
                     )
                   ) {
@@ -298,12 +298,12 @@ export class WalletsState implements WalletBalance, IncomesData {
                 if (
                   compareDatesWithoutTime(
                     deposit.createdAt,
-                    filters.startDate,
+                    filters.fromDate,
                     isBeforeDate
                   ) ||
                   compareDatesWithoutTime(
                     deposit.createdAt,
-                    filters.endDate,
+                    filters.toDate,
                     isAfterDate
                   )
                 ) {

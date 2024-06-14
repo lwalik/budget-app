@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,9 +7,8 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { BehaviorSubject, map, Observable, shareReplay, take, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, shareReplay, take, tap } from 'rxjs';
 import { AutocompleteOptionsViewModel } from '../../view-models/autocomplete-options.view-model';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lib-select-autocomplete-list',

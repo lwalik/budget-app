@@ -12,8 +12,8 @@ const initialState: DashboardFiltersStateModel = {
     id: undefined,
     name: 'All',
   },
-  startDate: new Date(new Date().setMonth(new Date().getMonth() - 1)),
-  endDate: new Date(),
+  fromDate: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+  toDate: new Date(),
 };
 
 @Injectable({ providedIn: 'root' })
@@ -36,8 +36,8 @@ export class DashboardFiltersState {
   getSelectedDates(): Observable<DashboardFiltersSelectedDatesViewModel> {
     return this.dashboardFiltersState$.pipe(
       map((filters: DashboardFiltersStateModel) => ({
-        startDate: filters.startDate,
-        endDate: filters.endDate,
+        fromDate: filters.fromDate,
+        toDate: filters.toDate,
       }))
     );
   }
@@ -57,8 +57,8 @@ export class DashboardFiltersState {
     );
   }
 
-  setSelectedDates(startDate: Date, endDate: Date): Observable<void> {
-    if (isNaN(startDate.getTime())) {
+  setSelectedDates(fromDate: Date, toDate: Date): Observable<void> {
+    if (isNaN(fromDate.getTime())) {
       console.log('tak');
     }
     return this.dashboardFiltersState$.pipe(
@@ -66,8 +66,8 @@ export class DashboardFiltersState {
       tap((filters: DashboardFiltersStateModel) =>
         this._dashboardFiltersStateSubject.next({
           ...filters,
-          startDate: !isNaN(startDate.getTime()) ? startDate : new Date(0),
-          endDate: !isNaN(endDate.getTime()) ? endDate : new Date(),
+          fromDate: !isNaN(fromDate.getTime()) ? fromDate : new Date(0),
+          toDate: !isNaN(toDate.getTime()) ? toDate : new Date(),
         })
       ),
       map(() => void 0)
@@ -79,8 +79,8 @@ export class DashboardFiltersState {
       map((filters: DashboardFiltersStateModel) => {
         const dates: Record<string, number> = {};
         for (
-          let d = new Date(filters.startDate);
-          d <= filters.endDate;
+          let d = new Date(filters.fromDate);
+          d <= filters.toDate;
           d.setDate(d.getDate() + 1)
         ) {
           const dayWithMonth = getDayWithMonthAsString(d);

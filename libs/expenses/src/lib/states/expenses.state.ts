@@ -246,12 +246,12 @@ export class ExpensesState {
           DashboardFiltersStateModel
         ]) => {
           const dateDiff: number =
-            filters.endDate.getTime() - filters.startDate.getTime();
-          const prevStartDate: Date = new Date(
-            filters.startDate.getTime() - dateDiff
+            filters.toDate.getTime() - filters.fromDate.getTime();
+          const prevFromDate: Date = new Date(
+            filters.fromDate.getTime() - dateDiff
           );
-          const prevEndDate: Date = new Date(
-            filters.startDate.getTime() - 24 * 60 * 60 * 1000
+          const prevToDate: Date = new Date(
+            filters.fromDate.getTime() - 24 * 60 * 60 * 1000
           );
 
           const { total, prevTotal } = state.expenses.reduce(
@@ -262,12 +262,12 @@ export class ExpensesState {
               if (
                 !compareDatesWithoutTime(
                   expense.createdAt,
-                  filters.startDate,
+                  filters.fromDate,
                   isBeforeDate
                 ) &&
                 !compareDatesWithoutTime(
                   expense.createdAt,
-                  filters.endDate,
+                  filters.toDate,
                   isAfterDate
                 ) &&
                 (!filters.wallet.id || expense.walletId === filters.wallet.id)
@@ -278,12 +278,12 @@ export class ExpensesState {
               if (
                 !compareDatesWithoutTime(
                   expense.createdAt,
-                  prevStartDate,
+                  prevFromDate,
                   isBeforeDate
                 ) &&
                 !compareDatesWithoutTime(
                   expense.createdAt,
-                  prevEndDate,
+                  prevToDate,
                   isAfterDate
                 ) &&
                 (!filters.wallet.id || expense.walletId === filters.wallet.id)
@@ -325,12 +325,12 @@ export class ExpensesState {
                 if (
                   compareDatesWithoutTime(
                     expense.createdAt,
-                    filters.startDate,
+                    filters.fromDate,
                     isBeforeDate
                   ) ||
                   compareDatesWithoutTime(
                     expense.createdAt,
-                    filters.endDate,
+                    filters.toDate,
                     isAfterDate
                   ) ||
                   (filters.wallet.id && expense.walletId !== filters.wallet.id)

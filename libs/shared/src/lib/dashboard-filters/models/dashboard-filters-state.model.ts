@@ -1,7 +1,7 @@
 export interface DashboardFiltersStateModel {
   readonly wallet: DashboardFiltersWalletStateModel;
-  readonly startDate: Date;
-  readonly endDate: Date;
+  readonly fromDate: Date;
+  readonly toDate: Date;
 }
 
 export interface DashboardFiltersWalletStateModel {

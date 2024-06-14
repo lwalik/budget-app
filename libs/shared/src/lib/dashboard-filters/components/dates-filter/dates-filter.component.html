@@ -1,6 +1,27 @@
-<form class="flex items-center justify-center gap-2 text-primary" [formGroup]="dateForm">
+<form
+  class="flex items-center justify-center gap-2 text-primary"
+  [formGroup]="dateForm"
+  (ngSubmit)="onDateFormSubmitted(dateForm)"
+>
   <p>From</p>
-  <input formControlName="startDate" class="border-0 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-warn" type="date">
+  <input
+    type="date"
+    formControlName="fromDate"
+    class="border-0 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-warn"
+    [ngClass]="{'ring-red-600': dateForm.hasError('wrongDateRange')}"
+  />
   <p>To</p>
-  <input formControlName="endDate" class="border-0 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-warn" type="date">
+  <input
+    type="date"
+    formControlName="toDate"
+    class="border-0 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-warn"
+    [ngClass]="{'ring-red-600': dateForm.hasError('wrongDateRange')}"
+  />
+  <button
+    type="submit"
+    class="btn-warn"
+    [disabled]="!dateForm.valid || !dateForm.dirty"
+  >
+    Save
+  </button>
 </form>
