@@ -3,18 +3,20 @@
   [formGroup]="dateForm"
   (ngSubmit)="onDateFormSubmitted(dateForm)"
 >
-  <p>From</p>
+  <label for="from">From</label>
   <input
+    id="from"
     type="date"
     formControlName="fromDate"
-    class="border-0 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-warn"
+    class="simple-datepicker-input"
     [ngClass]="{'ring-red-600': dateForm.hasError('wrongDateRange')}"
   />
-  <p>To</p>
+  <label for="to">To</label>
   <input
+    id="to"
     type="date"
     formControlName="toDate"
-    class="border-0 rounded-md ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-warn"
+    class="simple-datepicker-input"
     [ngClass]="{'ring-red-600': dateForm.hasError('wrongDateRange')}"
   />
   <button

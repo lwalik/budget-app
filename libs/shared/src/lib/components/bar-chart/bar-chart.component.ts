@@ -33,9 +33,7 @@ export class BarChartComponent {
   > = new BehaviorSubject<ChartConfiguration<'bar'>['options']>({
     scales: {
       x: {},
-      y: {
-        min: 10,
-      },
+      y: {},
     },
     responsive: true,
   });

@@ -37,7 +37,7 @@ export class ExpensesService {
   }
 
   add(
-    expense: Omit<ExpenseModel, 'id' | 'createdAt' | 'expenseId'>,
+    expense: Omit<ExpenseModel, 'id' | 'expenseId'>,
     userId: string
   ): Observable<ExpenseModel> {
     const expenseId: string = this._client.createId();
@@ -50,7 +50,6 @@ export class ExpensesService {
         const newExpense: ExpenseModel = {
           ...expense,
           expenseId,
-          createdAt: new Date(),
         };
 
         if (!data) {

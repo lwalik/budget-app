@@ -1,118 +1,172 @@
 <lib-simple-modal [header]="header">
-  <form class="flex flex-col gap-2"
-        [formGroup]="expenseForm"
-        (ngSubmit)="onExpenseFormSubmitted()">
-    <div *ngIf="pagination$ | async as pagination"
-         class="flex flex-col justify-center items-center gap-2 border-4 border-primary-light py-2 px-4 rounded">
+  <form
+    class="flex flex-col gap-2"
+    [formGroup]="expenseForm"
+    (ngSubmit)="onExpenseFormSubmitted()"
+  >
+    <div
+      *ngIf="pagination$ | async as pagination"
+      class="flex flex-col justify-center items-center gap-2 border-4 border-primary-light py-2 px-4 rounded"
+    >
       <p class="text-white text-xl">Products</p>
       <div class="flex justify-center items-center gap-2">
-        <button class="btn-success"
-                type="button"
-                (click)="addProductControl()">
-          <svg xmlns="http://www.w3.org/2000/svg"
-               fill="none"
-               viewBox="0 0 24 24"
-               stroke-width="1.5"
-               stroke="currentColor"
-               class="w-6 h-6 text-white">
-            <path stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15" />
+        <button class="btn-success" type="button" (click)="addProductControl()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6 text-white"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
           </svg>
         </button>
         <div
-             class="bg-secondary flex items-center justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm">
+          class="bg-secondary flex items-center justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm"
+        >
           Total: {{ pagination.lastPageIdx + 1 }}
         </div>
-        <button class="btn-error"
-                type="button"
-                (click)="removeProductControl()"
-                [disabled]="pagination.currentIdx === 0">
-          <svg xmlns="http://www.w3.org/2000/svg"
-               fill="none"
-               viewBox="0 0 24 24"
-               stroke-width="1.5"
-               stroke="currentColor"
-               class="w-6 h-6 text-white">
-            <path stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M5 12h14" />
+        <button
+          class="btn-error"
+          type="button"
+          (click)="removeProductControl()"
+          [disabled]="pagination.currentIdx === 0"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6 text-white"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
           </svg>
         </button>
       </div>
 
-      <div class="flex flex-col gap-2"
-           *ngIf="getProductControl(pagination.currentIdx) as control">
-        <lib-products-select-list [selectedOption]="control.get('name')?.value"
-                                       (optionSelected)="onProductOptionSelected($event, control)"></lib-products-select-list>
+      <div
+        class="flex flex-col gap-2"
+        *ngIf="getProductControl(pagination.currentIdx) as control"
+      >
+        <lib-products-select-list
+          [selectedOption]="control.get('name')?.value"
+          (optionSelected)="onProductOptionSelected($event, control)"
+        ></lib-products-select-list>
 
         <div class="grid grid-cols-3 gap-2">
-          <lib-simple-input-form [control]="control.get('price')"
-                                 [label]="'Price'"
-                                 [errorMsg]="'Price is required'"
-                                 [type]="'number'"></lib-simple-input-form>
-          <lib-simple-input-form [control]="control.get('quantity')"
-                                 [label]="'Quantity'"
-                                 [errorMsg]="'Quantity is required'"
-                                 [type]="'number'"></lib-simple-input-form>
-          <lib-simple-select-list *ngIf="priorityList$ | async as priorityList"
-                                  label="Priority"
-                                  [options]="priorityList"
-                                  [selectedOption]="control.get('priority')?.value"
-                                  (optionSelected)="onPriorityOptionSelected($event, control)"></lib-simple-select-list>
+          <lib-simple-input-form
+            [control]="control.get('price')"
+            [label]="'Price'"
+            [errorMsg]="'Price is required'"
+            [type]="'number'"
+          ></lib-simple-input-form>
+          <lib-simple-input-form
+            [control]="control.get('quantity')"
+            [label]="'Quantity'"
+            [errorMsg]="'Quantity is required'"
+            [type]="'number'"
+          ></lib-simple-input-form>
+          <lib-simple-select-list
+            *ngIf="priorityList$ | async as priorityList"
+            label="Priority"
+            [options]="priorityList"
+            [selectedOption]="control.get('priority')?.value"
+            (optionSelected)="onPriorityOptionSelected($event, control)"
+          ></lib-simple-select-list>
         </div>
       </div>
 
       <div class="flex justify-center items-center gap-2">
-        <button class="btn-secondary flex items-center"
-                type="button"
-                (click)="onPrevBtnClicked()"
-                [disabled]="pagination.currentIdx === 0">
-          <svg class="mr-1 h-5 w-5 text-primary"
-               viewBox="0 0 20 20"
-               fill="currentColor"
-               aria-hidden="true">
-            <path fill-rule="evenodd"
-                  d="M18 10a.75.75 0 01-.75.75H4.66l2.1 1.95a.75.75 0 11-1.02 1.1l-3.5-3.25a.75.75 0 010-1.1l3.5-3.25a.75.75 0 111.02 1.1l-2.1 1.95h12.59A.75.75 0 0118 10z"
-                  clip-rule="evenodd" />
+        <button
+          class="btn-secondary flex items-center"
+          type="button"
+          (click)="onPrevBtnClicked()"
+          [disabled]="pagination.currentIdx === 0"
+        >
+          <svg
+            class="mr-1 h-5 w-5 text-primary"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a.75.75 0 01-.75.75H4.66l2.1 1.95a.75.75 0 11-1.02 1.1l-3.5-3.25a.75.75 0 010-1.1l3.5-3.25a.75.75 0 111.02 1.1l-2.1 1.95h12.59A.75.75 0 0118 10z"
+              clip-rule="evenodd"
+            />
           </svg>
           Prev
         </button>
         <div
-             class="bg-secondary flex items-center justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm">
+          class="bg-secondary flex items-center justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm"
+        >
           {{ pagination.currentIdx + 1 }}
         </div>
-        <button class="btn-secondary flex items-center"
-                type="button"
-                (click)="onNextBtnClicked()"
-                [disabled]="pagination.lastPageIdx === pagination.currentIdx">
+        <button
+          class="btn-secondary flex items-center"
+          type="button"
+          (click)="onNextBtnClicked()"
+          [disabled]="pagination.lastPageIdx === pagination.currentIdx"
+        >
           Next
-          <svg class="ml-1 h-5 w-5 text-primary"
-               viewBox="0 0 20 20"
-               fill="currentColor"
-               aria-hidden="true">
-            <path fill-rule="evenodd"
-                  d="M2 10a.75.75 0 01.75-.75h12.59l-2.1-1.95a.75.75 0 111.02-1.1l3.5 3.25a.75.75 0 010 1.1l-3.5 3.25a.75.75 0 11-1.02-1.1l2.1-1.95H2.75A.75.75 0 012 10z"
-                  clip-rule="evenodd" />
+          <svg
+            class="ml-1 h-5 w-5 text-primary"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M2 10a.75.75 0 01.75-.75h12.59l-2.1-1.95a.75.75 0 111.02-1.1l3.5 3.25a.75.75 0 010 1.1l-3.5 3.25a.75.75 0 11-1.02-1.1l2.1-1.95H2.75A.75.75 0 012 10z"
+              clip-rule="evenodd"
+            />
           </svg>
         </button>
       </div>
     </div>
 
-    <lib-wallet-select-list [initialValueId]="dialogData.expense?.walletId"
-                            [selectedOption]="walletNameFormControl.value"
-                            [label]="'Wallet'"
-                            (optionSelected)="onWalletOptionSelected($event)"
-    [allOptionAvailable]="false"></lib-wallet-select-list>
-    <div class="h-4">
-      <p *ngIf="expenseForm.hasError('insufficientBalance')"
-         class="text-sm text-red-600"
-         id="error">Insufficient Balance</p>
+    <div class="grid grid-cols-1 md:grid-cols-6 gap-2">
+      <div class="col-span-2">
+        <label
+          class="block text-sm font-medium leading-6 text-secondary mb-2"
+          for="createdAt"
+          >Created At</label
+        >
+
+        <input
+          id="createdAt"
+          type="date"
+          formControlName="createdAt"
+          class="w-full border-0 rounded-md bg-white py-1.5 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-warn sm:text-sm sm:leading-6"
+        />
+      </div>
+
+      <div class="col-span-3">
+        <lib-wallet-select-list
+          [initialValueId]="dialogData.expense?.walletId"
+          [selectedOption]="walletNameFormControl.value"
+          [label]="'Wallet'"
+          (optionSelected)="onWalletOptionSelected($event)"
+          [allOptionAvailable]="false"
+        ></lib-wallet-select-list>
+        <div class="h-4">
+          <p
+            *ngIf="expenseForm.hasError('insufficientBalance')"
+            class="text-sm text-red-600"
+          >
+            Insufficient Balance
+          </p>
+        </div>
+      </div>
     </div>
 
-    <button type="submit"
-            [disabled]="!expenseForm.valid"
-            class="btn-warn">
+    <button type="submit" [disabled]="!expenseForm.valid" class="btn-warn">
       Save
     </button>
   </form>

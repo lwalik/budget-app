@@ -19,6 +19,7 @@ import {
   ProductsSelectListComponent,
 } from '@budget-app/products';
 import {
+  formatDateToString,
   SimpleInputFormComponent,
   SimpleModalComponent,
   SimplePaginationViewModel,
@@ -91,6 +92,10 @@ export class ExpenseFormModalComponent implements OnInit {
         }),
       }),
       products: new FormArray([]),
+      createdAt: new FormControl('', {
+        nonNullable: true,
+        validators: [Validators.required],
+      }),
     },
     availableBalanceValidator
   );
@@ -110,6 +115,10 @@ export class ExpenseFormModalComponent implements OnInit {
 
     const expense: ExpenseModel = this.dialogData.expense;
 
+    const createdAtFormControl: FormControl = this.expenseForm.get(
+      'createdAt'
+    ) as FormControl;
+    createdAtFormControl.patchValue(formatDateToString(expense.createdAt));
     expense.products.forEach((product) => this._addProductControl(product));
     this._changePaginationPagesCount(expense.products.length - 1).subscribe();
   }
@@ -196,8 +205,8 @@ export class ExpenseFormModalComponent implements OnInit {
   }
 
   onWalletOptionSelected(event: WalletSelectListItemViewModel): void {
-    const walletFormControl: FormGroup = this._getWalletFormGroup();
-    walletFormControl.patchValue({
+    const walletFormGroup: FormGroup = this._getWalletFormGroup();
+    walletFormGroup.patchValue({
       name: event.name,
       id: event.id,
       currency: event.currency,
@@ -225,6 +234,7 @@ export class ExpenseFormModalComponent implements OnInit {
             0
           ),
           currency: this._getWalletFormGroup().get('currency')?.value,
+          createdAt: new Date(this.expenseForm.get('createdAt')?.value),
         })
         .pipe(take(1))
         .subscribe(() => this._dialogRef.close());
@@ -234,7 +244,7 @@ export class ExpenseFormModalComponent implements OnInit {
     this._expenseState
       .updateExpense({
         expenseId: this.dialogData.expense.expenseId,
-        createdAt: this.dialogData.expense.createdAt,
+        createdAt: new Date(this.expenseForm.get('createdAt')?.value),
         walletId: this._getWalletFormGroup().get('id')?.value,
         products: products,
         totalPrice: products.reduce(
