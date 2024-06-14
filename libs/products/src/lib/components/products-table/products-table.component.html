@@ -31,7 +31,7 @@
                 <tr *ngFor="let product of products$ | async">
                     <td
                         class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
-                        <span class="lg:hidden text-gray-700">Name:</span> {{ product.name }}
+                        <span class="lg:hidden text-gray-700">Name:</span> {{ product.name | titlecase }}
                         <dl class="font-normal lg:hidden">
                             <dd class="mt-1 truncate text-gray-700">Category: {{ product.category | titlecase }}</dd>
                         </dl>
