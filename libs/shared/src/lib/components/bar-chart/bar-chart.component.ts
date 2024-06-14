@@ -36,6 +36,15 @@ export class BarChartComponent {
       y: {},
     },
     responsive: true,
+    plugins: {
+      datalabels: {
+        anchor: 'end',
+        align: 'end',
+        formatter: (value: number) => {
+          return value > 0 ? value.toString() : '';
+        },
+      },
+    },
   });
   readonly chartOptions$: Observable<ChartConfiguration<'bar'>['options']> =
     this._chartOptionsSubject.asObservable().pipe(shareReplay(1));
