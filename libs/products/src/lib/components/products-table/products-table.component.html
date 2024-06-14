@@ -10,8 +10,8 @@
                     (click)="onAddProductBtnClicked()">Add Product</button>
         </div>
     </div>
-    <div class="-mx-4 mt-8 sm:-mx-0">
-        <table class="min-w-full divide-y divide-gray-300">
+    <div class="-mx-4 mt-8 sm:-mx-0" *ngIf="products$ | async as products">
+        <table class="min-w-full divide-y divide-gray-300" *ngIf="products.length > 0; else emptyState">
             <thead>
                 <tr>
                     <th scope="col"
@@ -28,7 +28,7 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-                <tr *ngFor="let product of products$ | async">
+                <tr *ngFor="let product of products">
                     <td
                         class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
                         <span class="lg:hidden text-gray-700">Name:</span> {{ product.name | titlecase }}
@@ -73,5 +73,10 @@
 
             </tbody>
         </table>
+      <ng-template #emptyState>
+        <div class="pb-4">
+          <p class="font-semibold text-gray-900">Any Products to display. Add First Product</p>
+        </div>
+      </ng-template>
     </div>
 </div>
