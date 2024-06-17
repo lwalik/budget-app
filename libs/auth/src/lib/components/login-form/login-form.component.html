@@ -13,41 +13,35 @@
         <div>
           <form [formGroup]="loginForm"
                 (ngSubmit)="onSignInBtnClicked(loginForm)"
-                class="space-y-6">
-            <div>
-              <label for="email"
-                     class="simple-input-label">Email address</label>
-              <div class="mt-2">
-                <input formControlName="email"
-                       id="email"
-                       name="email"
-                       type="email"
-                       autocomplete="email"
-                       required
-                       class="simple-input">
-              </div>
+                class="">
+
+            <lib-simple-input-form [control]="loginForm.get('email')"
+                                   [label]="'Email'"
+                                   [errorMsg]="'Wrong format'"
+                                   [isRequired]="true"
+                                   [type]="'text'"></lib-simple-input-form>
+
+            <lib-simple-input-form [control]="loginForm.get('password')"
+                                   [label]="'Password'"
+                                   [isRequired]="true"
+                                   [type]="'password'"></lib-simple-input-form>
+
+            <button type="submit"
+                    [disabled]="!loginForm.valid"
+                    class="btn-warn mt-2">Sign
+              in</button>
+
+            <div class="h-2 mt-2">
+              <p class="text-sm text-red-600"
+                 *ngIf="loginForm.hasError('invalidCredentials')">Invalid Credentials</p>
+
+              <p class="text-sm text-red-600"
+                 *ngIf="loginForm.hasError('tooManyRequests')">Too Many Request. Try again later</p>
+
+              <p class="text-sm text-red-600"
+                 *ngIf="loginForm.hasError('somethingWentWrong')">Something went wrong. Try again later</p>
             </div>
 
-            <div>
-              <label for="password"
-                     class="simple-input-label">Password</label>
-              <div class="mt-2">
-                <input formControlName="password"
-                       id="password"
-                       name="password"
-                       type="password"
-                       autocomplete="current-password"
-                       required
-                       class="simple-input">
-              </div>
-            </div>
-
-            <div>
-              <button type="submit"
-                      [disabled]="!loginForm.valid"
-                      class="btn-warn">Sign
-                in</button>
-            </div>
           </form>
         </div>
       </div>

@@ -5,14 +5,14 @@
     <div class="h-24">
       <lib-simple-input-form [control]="productForm.get('name')"
                              [label]="'Name'"
-                             [errorMsg]="'Name is required'"
+                             [isRequired]="true"
                              [type]="'text'"></lib-simple-input-form>
     </div>
 
     <div class="relative">
       <lib-simple-input-form [control]="productForm.get('category')"
                              [label]="'Category'"
-                             [errorMsg]="'Category is required'"
+                             [isRequired]="true"
                              [type]="'text'"></lib-simple-input-form>
       <div class="absolute top-3/4 left-0 w-full z-10"
            *ngIf="categoryList$ | async as categoryList">

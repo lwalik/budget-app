@@ -11,7 +11,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 
-type simpleInputType = 'text' | 'number';
+type simpleInputType = 'text' | 'number' | 'password';
 
 @Component({
   selector: 'lib-simple-input-form',
@@ -24,6 +24,7 @@ type simpleInputType = 'text' | 'number';
 export class SimpleInputFormComponent {
   @Input({ required: true }) control: AbstractControl | null = null;
   @Input() label = '';
+  @Input() isRequired = false;
   @Input() errorMsg = '';
   @Input() type: simpleInputType = 'text';
 

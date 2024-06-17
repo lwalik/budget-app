@@ -24,7 +24,10 @@
                      </svg>
               </div>
        </div>
-       <p *ngIf="!formControl.valid && formControl.touched && !!errorMsg"
+       <p *ngIf="formControl.touched && isRequired && formControl.value === ''"
+          class="mt-2 text-sm text-red-600"
+          id="error">{{ label }} is required</p>
+       <p *ngIf="!formControl.valid && formControl.touched && !!errorMsg && formControl.value !== ''"
           class="mt-2 text-sm text-red-600"
           id="error">{{ errorMsg }}</p>
 </div>
