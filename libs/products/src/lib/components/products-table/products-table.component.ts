@@ -23,6 +23,7 @@ import {
   ConfirmationModalComponent,
   ConfirmationModalViewModel,
   PaginationComponent,
+  PaginationUiService,
   PaginationViewModel,
 } from '@budget-app/shared';
 
@@ -35,19 +36,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsTableComponent {
-  readonly initialPaginationState: PaginationViewModel = {
-    first: 1,
-    last: 1,
-    current: 1,
-    limit: 5,
-    totalItems: 1,
-  };
-  private readonly _paginationSubject: ReplaySubject<PaginationViewModel> =
-    new ReplaySubject<PaginationViewModel>(1);
   private readonly _pagination$: Observable<PaginationViewModel> =
-    this._paginationSubject
-      .asObservable()
-      .pipe(startWith(this.initialPaginationState));
+    this._paginationUiService.getPagination();
 
   readonly allProducts$: Observable<ProductModel[]> = this._productsState
     .getAllProducts()
@@ -69,7 +59,8 @@ export class ProductsTableComponent {
 
   constructor(
     private readonly _productsState: ProductsState,
-    private readonly _dialog: Dialog
+    private readonly _dialog: Dialog,
+    private readonly _paginationUiService: PaginationUiService
   ) {}
 
   onAddProductBtnClicked(): void {
@@ -116,9 +107,5 @@ export class ProductsTableComponent {
         )
       )
       .subscribe();
-  }
-
-  onPaginationChanged(pagination: PaginationViewModel): void {
-    this._paginationSubject.next(pagination);
   }
 }

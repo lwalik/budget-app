@@ -38,7 +38,6 @@
       <ng-container *ngIf="options.length > 0; else emptyState">
         <li class="text-gray-900 relative cursor-pointer select-none py-2 pl-3 pr-9 hover:bg-warn"
             (click)="onOptionSelected(option)"
-            id="listbox-option-0"
             role="option"
             *ngFor="let option of options">
           <span class="font-normal block truncate">{{ option }}</span>

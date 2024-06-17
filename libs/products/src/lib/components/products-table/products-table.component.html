@@ -119,8 +119,6 @@
       </div>
       <lib-pagination
         *ngIf="products.length > 0"
-        [initValue]="initialPaginationState"
-        (paginationChanged)="onPaginationChanged($event)"
         [totalItems]="allProducts.length"
       ></lib-pagination>
     </ng-container>

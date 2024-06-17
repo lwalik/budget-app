@@ -58,9 +58,6 @@ export class DashboardFiltersState {
   }
 
   setSelectedDates(fromDate: Date, toDate: Date): Observable<void> {
-    if (isNaN(fromDate.getTime())) {
-      console.log('tak');
-    }
     return this.dashboardFiltersState$.pipe(
       take(1),
       tap((filters: DashboardFiltersStateModel) =>

@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import {
   PaginationComponent,
+  PaginationUiService,
   PaginationViewModel,
   SimpleSelectListComponent,
   TwoOptionConfirmationModalComponent,
@@ -23,6 +24,7 @@ import {
   startWith,
   switchMap,
   take,
+  tap,
 } from 'rxjs';
 import { ExpenseModel } from '../../models/expense.model';
 import { ExpensesState } from '../../states/expenses.state';
@@ -44,19 +46,8 @@ import { ExpensesSortComponent } from '../expenses-sort/expenses-sort.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpensesTableComponent {
-  readonly initialPaginationState: PaginationViewModel = {
-    first: 1,
-    last: 1,
-    current: 1,
-    limit: 5,
-    totalItems: 1,
-  };
-  private readonly _paginationSubject: ReplaySubject<PaginationViewModel> =
-    new ReplaySubject<PaginationViewModel>(1);
   private readonly _pagination$: Observable<PaginationViewModel> =
-    this._paginationSubject
-      .asObservable()
-      .pipe(startWith(this.initialPaginationState));
+    this._paginationUiService.getPagination();
   readonly allExpenses$: Observable<ExpenseModel[]> = this._expensesState
     .getExpenses()
     .pipe(shareReplay(1));
@@ -76,7 +67,8 @@ export class ExpensesTableComponent {
 
   constructor(
     private readonly _expensesState: ExpensesState,
-    private readonly _dialog: Dialog
+    private readonly _dialog: Dialog,
+    private readonly _paginationUiService: PaginationUiService
   ) {}
 
   onAddExpenseBtnClicked(): void {
@@ -130,9 +122,5 @@ export class ExpensesTableComponent {
         })
       )
       .subscribe();
-  }
-
-  onPaginationChanged(pagination: PaginationViewModel): void {
-    this._paginationSubject.next(pagination);
   }
 }

@@ -126,8 +126,6 @@
         </ng-template>
       </div>
       <lib-pagination *ngIf="expenses.length > 0"
-                      [initValue]="initialPaginationState"
-                      (paginationChanged)="onPaginationChanged($event)"
                       [totalItems]="allExpenses.length"></lib-pagination>
     </ng-container>
   </ng-container>
