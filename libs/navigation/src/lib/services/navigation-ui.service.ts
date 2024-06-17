@@ -1,20 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   BehaviorSubject,
   Observable,
   ReplaySubject,
+  Subject,
   combineLatest,
   filter,
   map,
   of,
-  startWith,
+  takeUntil,
   tap,
 } from 'rxjs';
 import { NavLinkModel } from '../models/nav-link.model';
 
 @Injectable({ providedIn: 'root' })
-export class NavigationUiService {
+export class NavigationUiService implements OnDestroy {
+  private readonly _destroySubject: Subject<void> = new Subject<void>();
   private readonly _navLinksSubject: BehaviorSubject<NavLinkModel[]> =
     new BehaviorSubject<NavLinkModel[]>([
       {
@@ -42,18 +44,15 @@ export class NavigationUiService {
         isActive: false,
       },
     ]);
+  private readonly urlStateSubject: BehaviorSubject<string> =
+    new BehaviorSubject<string>(this._router.url);
 
   private readonly _isMobileNavVisible: ReplaySubject<boolean> =
     new ReplaySubject<boolean>(1);
 
-  private readonly urlState$: Observable<string> = this._router.events.pipe(
-    filter((event) => event instanceof NavigationEnd),
-    map((event) => (event as NavigationEnd).url)
-  );
-
   private readonly navLinks$: Observable<NavLinkModel[]> = combineLatest([
     this._navLinksSubject.asObservable(),
-    this.urlState$.pipe(startWith(this._router.url)),
+    this.urlStateSubject.asObservable(),
   ]).pipe(
     map(([navLinks, url]: [NavLinkModel[], string]) => {
       return navLinks.map((navLink: NavLinkModel) => ({
@@ -64,7 +63,21 @@ export class NavigationUiService {
     tap(() => this._isMobileNavVisible.next(false))
   );
 
-  constructor(private readonly _router: Router) {}
+  constructor(private readonly _router: Router) {
+    this._router.events
+      .pipe(
+        takeUntil(this._destroySubject.asObservable()),
+        filter((event) => event instanceof NavigationEnd),
+        map((event) => (event as NavigationEnd).url),
+        tap((url: string) => this.urlStateSubject.next(url))
+      )
+      .subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this._destroySubject.next();
+    this._destroySubject.complete();
+  }
 
   getAll(): Observable<NavLinkModel[]> {
     return this.navLinks$;
