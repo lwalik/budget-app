@@ -6,24 +6,6 @@
          class="flex flex-col justify-center items-center gap-2 border-4 border-primary-light py-2 px-4 rounded">
       <p class="text-white text-xl">Products</p>
       <div class="flex justify-center items-center gap-2">
-        <button class="btn-success"
-                type="button"
-                (click)="addProductControl()">
-          <svg xmlns="http://www.w3.org/2000/svg"
-               fill="none"
-               viewBox="0 0 24 24"
-               stroke-width="1.5"
-               stroke="currentColor"
-               class="w-6 h-6 text-white">
-            <path stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-        </button>
-        <div
-             class="bg-secondary flex items-center justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm">
-          Total: {{ pagination.lastPageIdx + 1 }}
-        </div>
         <button class="btn-error"
                 type="button"
                 (click)="removeProductControl()"
@@ -39,6 +21,25 @@
                   d="M5 12h14" />
           </svg>
         </button>
+        <div
+             class="bg-secondary flex items-center justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 shadow-sm">
+          Total: {{ pagination.lastPageIdx + 1 }}
+        </div>
+        <button class="btn-success"
+                type="button"
+                (click)="addProductControl()">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke-width="1.5"
+               stroke="currentColor"
+               class="w-6 h-6 text-white">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </button>
+
       </div>
 
       <div class="flex flex-col gap-2"

@@ -40,11 +40,6 @@ export class WalletsState implements WalletBalance, IncomesData {
   private readonly _walletsState$: Observable<WalletStateModel> =
     this._walletsStateSubject.asObservable();
 
-  private readonly _isInitializedSubject: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
-  readonly isInitialized$: Observable<boolean> =
-    this._isInitializedSubject.asObservable();
-
   constructor(
     @Inject(USER_CONTEXT) private readonly _userContext: UserContext,
     private readonly _walletsService: WalletsService,
@@ -67,7 +62,6 @@ export class WalletsState implements WalletBalance, IncomesData {
           )
         )
       ),
-      tap(() => this._isInitializedSubject.next(true)),
       map(() => void 0)
     );
   }

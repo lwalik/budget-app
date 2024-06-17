@@ -36,11 +36,6 @@ const initialState: ExpensesStateModel = {
 
 @Injectable({ providedIn: 'root' })
 export class ExpensesState {
-  private readonly _isInitializedSubject: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
-  readonly isInitialized$: Observable<boolean> =
-    this._isInitializedSubject.asObservable();
-
   private readonly _expensesStateSubject: BehaviorSubject<ExpensesStateModel> =
     new BehaviorSubject<ExpensesStateModel>(initialState);
   private readonly _expensesState$: Observable<ExpensesStateModel> =
@@ -49,7 +44,7 @@ export class ExpensesState {
   private readonly _sortStateSubject: BehaviorSubject<SortModel> =
     new BehaviorSubject<SortModel>({
       sortBy: SORT_TYPE.CREATED_AT,
-      direction: SORT_DIRECTION.ASC,
+      direction: SORT_DIRECTION.DESC,
     });
   private readonly _sortState$: Observable<SortModel> =
     this._sortStateSubject.asObservable();
@@ -76,7 +71,6 @@ export class ExpensesState {
               expenses,
             })
           ),
-          tap(() => this._isInitializedSubject.next(true)),
           map(() => void 0)
         )
       )
@@ -94,7 +88,6 @@ export class ExpensesState {
   addExpense(
     expense: Omit<ExpenseModel, 'id' | 'ownerId' | 'expenseId'>
   ): Observable<void> {
-    // TODO Obsłużyć ręczny wybór daty
     return combineLatest([
       this._userContext.getUserId(),
       this._expensesState$,

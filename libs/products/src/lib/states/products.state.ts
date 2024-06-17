@@ -26,11 +26,6 @@ export class ProductsState {
   private readonly _productsState$: Observable<ProductsStateModel> =
     this._productsStateSubject.asObservable();
 
-  private readonly _isInitializedSubject: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
-  readonly isInitialized$: Observable<boolean> =
-    this._isInitializedSubject.asObservable();
-
   constructor(
     private readonly _productsService: ProductsService,
     private readonly _productsCategoryService: ProductsCategoryService,
@@ -51,7 +46,6 @@ export class ProductsState {
               products,
             })
           ),
-          tap(() => this._isInitializedSubject.next(true)),
           map(() => void 0)
         )
       )
