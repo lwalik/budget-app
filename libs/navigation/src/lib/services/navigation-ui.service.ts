@@ -43,6 +43,12 @@ export class NavigationUiService implements OnDestroy {
         url: '/expenses',
         isActive: false,
       },
+      {
+        id: 5,
+        name: 'Summary',
+        url: '/summary',
+        isActive: false,
+      },
     ]);
   private readonly urlStateSubject: BehaviorSubject<string> =
     new BehaviorSubject<string>(this._router.url);
