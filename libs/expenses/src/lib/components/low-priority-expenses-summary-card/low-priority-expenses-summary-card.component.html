@@ -1,0 +1,20 @@
+<div class="p-6 text-primary bg-orange-500/80 rounded-md shadow-xl flex flex-col gap-6 justify-start items-start"
+     *ngIf="summary$ | async as summary">
+     <p class="text-xl font-semibold">Priority</p>
+     <p>In the last month,
+          <span class="text-secondary font-semibold">{{ summary.totalCost | currency: 'PLN' }}</span>
+          was spent on low-priority products.
+          <span *ngIf="summary.highestExpenseProduct.name.length > 0">The most was spent on the product
+               <span class="text-secondary font-semibold">{{ summary.highestExpenseProduct.name }}</span>
+               and spent
+               <span class="text-secondary font-semibold">{{ summary.highestExpenseProduct.price | currency :
+                    'PLN'}}</span>.</span>
+          The total spending on low-priority products is
+          <span class="text-secondary font-semibold">{{ summary.lastMonthDiff > 0 ? 'higher' :
+               'lower' }}</span>
+          by
+          <span class="text-secondary font-semibold">{{ summary.lastMonthDiff | positiveNumber | currency : 'PLN'
+               }}</span>
+          than in the previous month.
+     </p>
+</div>

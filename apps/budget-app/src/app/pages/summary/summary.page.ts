@@ -3,10 +3,11 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
+import { LowPriorityExpensesSummaryCardComponent } from '@budget-app/expenses';
 
 @Component({
   standalone: true,
-  imports: [],
+  imports: [LowPriorityExpensesSummaryCardComponent],
   templateUrl: './summary.page.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

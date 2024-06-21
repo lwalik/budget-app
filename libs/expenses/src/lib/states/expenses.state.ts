@@ -1,34 +1,40 @@
 import { Inject, Injectable } from '@angular/core';
 import { USER_CONTEXT, UserContext } from '@budget-app/core';
 import {
-  compareDatesWithoutTime,
   DashboardFiltersState,
   DashboardFiltersStateModel,
-  getDayWithMonthAsString,
-  isAfterDate,
-  isBeforeDate,
   TransactionSummaryViewModel,
   WALLET_BALANCE,
   WalletBalance,
+  compareDatesWithoutTime,
+  getDayWithMonthAsString,
+  isAfterDate,
+  isBeforeDate,
 } from '@budget-app/shared';
 import {
   BehaviorSubject,
+  Observable,
   combineLatest,
   map,
-  Observable,
   of,
   switchMap,
   take,
   tap,
 } from 'rxjs';
+import { EXPENSE_PRODUCT_PRIORITY } from '../enums/expense-product-priority.enum';
 import { SORT_DIRECTION } from '../enums/sort-direction.enum';
 import { SORT_TYPE } from '../enums/sort-type.enum';
+import { ExpenseProductModel } from '../models/expense-product.model';
 import { ExpenseModel } from '../models/expense.model';
 import { ExpensesStateModel } from '../models/expenses-state.model';
 import { SortModel } from '../models/sort.model';
 import { ExpensesService } from '../services/expenses.service';
-import { SortListViewModel } from '../view-models/sort-list.view-model';
 import { ExpensesDataViewModel } from '../view-models/expenses-data.view-model';
+import {
+  HighestExpenseProductViewModel,
+  PrioritySummaryViewModel,
+} from '../view-models/priority-summary.view-model';
+import { SortListViewModel } from '../view-models/sort-list.view-model';
 
 const initialState: ExpensesStateModel = {
   expenses: [],
@@ -350,6 +356,90 @@ export class ExpensesState {
           };
         }
       )
+    );
+  }
+
+  getLowPriorityExpensesSummary(
+    priority: EXPENSE_PRODUCT_PRIORITY
+  ): Observable<PrioritySummaryViewModel> {
+    return this._expensesState$.pipe(
+      map((state: ExpensesStateModel) => {
+        const now: Date = new Date();
+        const lastMonth: Date = new Date(
+          now.getFullYear(),
+          now.getMonth() - 1,
+          now.getDate()
+        );
+        const twoMonthsAgo: Date = new Date(
+          now.getFullYear(),
+          now.getMonth() - 2,
+          now.getDate()
+        );
+
+        const productsInCurrentMonth: ExpenseProductModel[] =
+          state.expenses.reduce(
+            (acc: ExpenseProductModel[], cur: ExpenseModel) => {
+              if (cur.createdAt >= lastMonth && cur.createdAt <= now) {
+                const products: ExpenseProductModel[] = cur.products.filter(
+                  (p) => p.priority === priority
+                );
+                return [...acc, ...products];
+              }
+
+              return acc;
+            },
+            []
+          );
+
+        const productsInLastMonth: ExpenseProductModel[] =
+          state.expenses.reduce(
+            (acc: ExpenseProductModel[], cur: ExpenseModel) => {
+              if (cur.createdAt >= twoMonthsAgo && cur.createdAt < lastMonth) {
+                const products: ExpenseProductModel[] = cur.products.filter(
+                  (p) => p.priority === priority
+                );
+                return [...acc, ...products];
+              }
+
+              return acc;
+            },
+            []
+          );
+
+        const productsTotalPriceMapInCurrentMonth: Record<string, number> =
+          productsInCurrentMonth.reduce(
+            (acc: Record<string, number>, cur: ExpenseProductModel) => {
+              acc[cur.name] = (acc[cur.name] || 0) + cur.price * cur.quantity;
+
+              return acc;
+            },
+            {}
+          );
+
+        const highestExpenseProduct: HighestExpenseProductViewModel =
+          Object.entries(productsTotalPriceMapInCurrentMonth).reduce(
+            (acc, [name, price]) => (acc.price < price ? { name, price } : acc),
+            { name: '', price: 0 }
+          );
+
+        const totalCostInCurrentMonth: number = productsInCurrentMonth.reduce(
+          (total: number, cur: ExpenseProductModel) =>
+            total + cur.price * cur.quantity,
+          0
+        );
+
+        const totalCostInLastMonth: number = productsInLastMonth.reduce(
+          (total: number, cur: ExpenseProductModel) =>
+            total + cur.price * cur.quantity,
+          0
+        );
+
+        return {
+          totalCost: totalCostInCurrentMonth,
+          highestExpenseProduct,
+          lastMonthDiff: totalCostInCurrentMonth - totalCostInLastMonth,
+        };
+      })
     );
   }
 

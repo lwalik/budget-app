@@ -9,17 +9,19 @@ export * from './lib/components/two-option-confirmation-modal/two-option-confirm
 // View Models
 export * from './lib/view-models/bar-chart-dataset.view-model';
 export * from './lib/view-models/confirmation-modal.view-model';
-export * from './lib/view-models/two-option-confirmation.view-model';
 export * from './lib/view-models/transaction-summary.view-model';
+export * from './lib/view-models/two-option-confirmation.view-model';
 export * from './lib/view-models/wallet-select-list-item.view-model';
 // Utils
-export * from './lib/utils/rxjs';
 export * from './lib/utils/dates';
+export * from './lib/utils/rxjs';
 // Directives
 export * from './lib/directives/on-click-outside-the-element.directive';
 // Tokens
-export * from './lib/tokens/wallet-balance';
 export * from './lib/tokens/incomes-data';
+export * from './lib/tokens/wallet-balance';
+// Pipes
+export * from './lib/pipes/positive-number.pipe';
 // DashboardFilters
 export * from './lib/dashboard-filters';
 // Pagination
