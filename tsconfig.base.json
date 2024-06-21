@@ -18,9 +18,10 @@
       "@budget-app/auth": ["libs/auth/src/index.ts"],
       "@budget-app/core": ["libs/core/src/index.ts"],
       "@budget-app/expenses": ["libs/expenses/src/index.ts"],
+      "@budget-app/i18n": ["libs/i18n/src/index.ts"],
       "@budget-app/navigation": ["libs/navigation/src/index.ts"],
-      "@budget-app/shared": ["libs/shared/src/index.ts"],
       "@budget-app/products": ["libs/products/src/index.ts"],
+      "@budget-app/shared": ["libs/shared/src/index.ts"],
       "@budget-app/wallets": ["libs/wallets/src/index.ts"]
     }
   },
