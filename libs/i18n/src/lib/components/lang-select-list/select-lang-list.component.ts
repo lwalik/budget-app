@@ -1,28 +1,26 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { TranslationService } from '../../services/translation.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BehaviorSubject, Observable, take, tap } from 'rxjs';
 import {
   OnClickOutsideTheElementDirective,
-  SimpleSelectListComponent,
+  TranslationPipe,
 } from '@budget-app/shared';
+import { TranslationService } from '../../services/translation.service';
 import { LanguageOptionViewModel } from '../../view-models/language-option.view-model';
-import { BehaviorSubject, Observable, take, tap } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { TranslationPipe } from '../../pipes/translation.pipe';
-import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'lib-select-lang-list',
   standalone: true,
   imports: [
-    SimpleSelectListComponent,
     CommonModule,
     ReactiveFormsModule,
-    OnClickOutsideTheElementDirective,
     TranslationPipe,
+    OnClickOutsideTheElementDirective,
   ],
   templateUrl: './select-lang-list.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -42,7 +40,7 @@ export class SelectLangListComponent {
   constructor(private readonly _translationService: TranslationService) {}
 
   onOptionSelected(selectedOption: LanguageOptionViewModel): void {
-    this._translationService.selectLanguage(selectedOption);
+    this._translationService.setCurrentLanguage(selectedOption);
     this._isDropdownVisibleSubject.next(false);
   }
 

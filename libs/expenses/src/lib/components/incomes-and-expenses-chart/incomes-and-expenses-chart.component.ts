@@ -1,25 +1,28 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   Inject,
   ViewEncapsulation,
 } from '@angular/core';
-import { ExpensesState } from '../../states/expenses.state';
 import {
   BarChartComponent,
   BarChartDatasetViewModel,
+  GET_TRANSLATION,
+  GetTranslation,
   INCOMES_DATA,
   IncomesData,
   IncomesDataViewModel,
+  TranslationPipe,
 } from '@budget-app/shared';
-import { Observable, shareReplay, combineLatest, map } from 'rxjs';
+import { Observable, combineLatest, map, shareReplay, switchMap } from 'rxjs';
+import { ExpensesState } from '../../states/expenses.state';
 import { ExpensesDataViewModel } from '../../view-models/expenses-data.view-model';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lib-incomes-and-expenses-chart',
   standalone: true,
-  imports: [BarChartComponent, CommonModule],
+  imports: [BarChartComponent, CommonModule, TranslationPipe],
   templateUrl: './incomes-and-expenses-chart.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,24 +37,27 @@ export class IncomesAndExpensesChartComponent {
     this._expensesData$,
     this._incomesData$,
   ]).pipe(
-    map(
+    switchMap(
       ([expensesData, incomesData]: [
         ExpensesDataViewModel,
         IncomesDataViewModel
-      ]) => {
-        return [
-          {
-            label: 'Income',
-            backgroundColor: 'rgba(0, 128, 0, 0.6)',
-            data: incomesData.incomes,
-          },
-          {
-            label: 'Expense',
-            backgroundColor: 'rgba(255, 0, 0, 0.6)',
-            data: expensesData.expenses,
-          },
-        ];
-      }
+      ]) =>
+        this._getTranslation.getAllTranslations(['Incomes', 'Expenses']).pipe(
+          map(([incomesText, expensesText]: string[]) => {
+            return [
+              {
+                label: incomesText,
+                backgroundColor: 'rgba(0, 128, 0, 0.6)',
+                data: incomesData.incomes,
+              },
+              {
+                label: expensesText,
+                backgroundColor: 'rgba(255, 0, 0, 0.6)',
+                data: expensesData.expenses,
+              },
+            ];
+          })
+        )
     )
   );
 
@@ -61,6 +67,8 @@ export class IncomesAndExpensesChartComponent {
 
   constructor(
     private readonly _expensesState: ExpensesState,
-    @Inject(INCOMES_DATA) private readonly _incomesData: IncomesData
+    @Inject(INCOMES_DATA) private readonly _incomesData: IncomesData,
+    @Inject(GET_TRANSLATION)
+    private readonly _getTranslation: GetTranslation
   ) {}
 }

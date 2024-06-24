@@ -29,10 +29,10 @@
             class="text-base font-semibold leading-6 text-gray-900"
             id="modal-title"
           >
-            {{ dialogData.header }}
+            {{ dialogData.header | i18n | async }}
           </h3>
           <div class="mt-2">
-            <p class="text-sm text-gray-500">{{ dialogData.text }}</p>
+            <p class="text-sm text-gray-500">{{ dialogData.text | i18n | async }}</p>
           </div>
         </div>
       </div>
@@ -42,21 +42,21 @@
           type="button"
           class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
         >
-          {{ dialogData.firstOptionText }}
+          {{ dialogData.firstOptionText | i18n | async }}
         </button>
         <button
           (click)="onSecondConfirmBtnClicked()"
           type="button"
           class="inline-flex w-full justify-center rounded-md bg-yellow-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-400 sm:ml-3 sm:w-auto"
         >
-          {{ dialogData.secondOptionText }}
+          {{ dialogData.secondOptionText | i18n | async }}
         </button>
         <button
           (click)="onCancelBtnClicked()"
           type="button"
           class="inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
         >
-          Cancel
+          {{ 'Cancel' | i18n | async }}
         </button>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,16 +12,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { take, tap } from 'rxjs';
-import { DashboardFiltersState } from '../../states/dashboard-filters.state';
-import { DashboardFiltersSelectedDatesViewModel } from '../../view-models/dashboard-filters-selected-dates.view-model';
 import { formatDateToString } from '../../../utils/dates';
+import { DashboardFiltersState } from '../../states/dashboard-filters.state';
 import { fromToDatesValidator } from '../../validators/from-to-dates.validator';
-import { CommonModule } from '@angular/common';
+import { DashboardFiltersSelectedDatesViewModel } from '../../view-models/dashboard-filters-selected-dates.view-model';
+import { TranslationPipe } from '../../../pipes/translation.pipe';
 
 @Component({
   selector: 'lib-dates-filter',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, TranslationPipe],
   templateUrl: './dates-filter.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,6 +12,7 @@ import {
 import {
   DatesFilterComponent,
   SimpleInputFormComponent,
+  TranslationPipe,
 } from '@budget-app/shared';
 import {
   CurrentBalanceCardComponent,
@@ -28,6 +30,8 @@ import {
     WalletSelectDashboardFilterComponent,
     DatesFilterComponent,
     SimpleInputFormComponent,
+    TranslationPipe,
+    AsyncPipe,
   ],
   templateUrl: './dashboard.page.html',
   encapsulation: ViewEncapsulation.None,

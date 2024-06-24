@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of } from 'rxjs';
+import { GetTranslation } from '@budget-app/shared';
 import { translations } from '../translations/translations';
 import { LanguageOptionViewModel } from '../view-models/language-option.view-model';
 
 @Injectable({ providedIn: 'root' })
-export class TranslationService {
+export class TranslationService implements GetTranslation {
   private readonly availableLanguages: LanguageOptionViewModel[] = [
     { value: 'pl', icon: '/assets/icons/pl-flag.svg' },
     { value: 'en', icon: '/assets/icons/gb-flag.svg' },
@@ -20,6 +21,18 @@ export class TranslationService {
     return this._selectedLangSubject.asObservable();
   }
 
+  getAllTranslations(keys: string[]): Observable<string[]> {
+    return this._selectedLangSubject
+      .asObservable()
+      .pipe(
+        map((selectedLang: LanguageOptionViewModel) =>
+          keys.map((key: string) =>
+            translations[key] ? translations[key][selectedLang.value] : key
+          )
+        )
+      );
+  }
+
   getTranslation(key: string): Observable<string> {
     return this._selectedLangSubject
       .asObservable()
@@ -30,7 +43,7 @@ export class TranslationService {
       );
   }
 
-  selectLanguage(language: LanguageOptionViewModel): void {
-    this._selectedLangSubject.next(language);
+  setCurrentLanguage(lang: LanguageOptionViewModel): void {
+    this._selectedLangSubject.next(lang);
   }
 }

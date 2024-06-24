@@ -1,129 +1,92 @@
-<div
-  *ngIf="pagination$ | async as pagination"
-  class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6"
->
+<div *ngIf="pagination$ | async as pagination"
+     class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
   <div class="flex flex-1 justify-between sm:hidden">
-    <button
-      (click)="onPrevPageClicked()"
-      [disabled]="pagination.current === pagination.first"
-      class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:bg-gray-300"
-    >
-      Previous
+    <button (click)="onPrevPageClicked()"
+            [disabled]="pagination.current === pagination.first"
+            class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:bg-gray-300">
+      {{ 'Previous' | i18n | async }}
     </button>
-    <button
-      (click)="onNextPageClicked()"
-      [disabled]="pagination.current === pagination.last"
-      class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:bg-gray-300"
-    >
-      Next
+    <button (click)="onNextPageClicked()"
+            [disabled]="pagination.current === pagination.last"
+            class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:bg-gray-300">
+      {{ 'Next' | i18n | async }}
     </button>
   </div>
   <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-    <div
-      *ngIf="limitOptions$ | async as limitOptions"
-      class="flex justify-start items-center gap-2 w-2/12"
-    >
-      <span>Show</span>
-      <lib-simple-select-list
-        class="w-1/2"
-        [options]="limitOptions"
-        selectedOption="{{ pagination.limit }}"
-        (optionSelected)="onLimitOptionSelected($event)"
-      ></lib-simple-select-list>
+    <div *ngIf="limitOptions$ | async as limitOptions"
+         class="flex justify-start items-center gap-2 w-2/12">
+      <span>{{ 'Show' | i18n | async }}</span>
+      <lib-simple-select-list class="w-1/2"
+                              [options]="limitOptions"
+                              selectedOption="{{ pagination.limit }}"
+                              (optionSelected)="onLimitOptionSelected($event)"></lib-simple-select-list>
     </div>
     <div>
-      <nav
-        class="isolate inline-flex -space-x-px rounded-md shadow-sm"
-        aria-label="Pagination"
-      >
-        <button
-          (click)="onFirstPageClicked()"
-          [disabled]="pagination.current === pagination.first"
-          class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:bg-gray-300"
-        >
-          <span class="sr-only">First</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
-            />
+      <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm"
+           aria-label="Pagination">
+        <button (click)="onFirstPageClicked()"
+                [disabled]="pagination.current === pagination.first"
+                class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:bg-gray-300">
+          <span class="sr-only">{{ 'First' | i18n | async }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke-width="1.5"
+               stroke="currentColor"
+               class="size-6">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
           </svg>
         </button>
-        <button
-          (click)="onPrevPageClicked()"
-          [disabled]="pagination.current === pagination.first"
-          class="relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:bg-gray-300"
-        >
-          <span class="sr-only">Previous</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15.75 19.5 8.25 12l7.5-7.5"
-            />
+        <button (click)="onPrevPageClicked()"
+                [disabled]="pagination.current === pagination.first"
+                class="relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:bg-gray-300">
+          <span class="sr-only">{{ 'Previous' | i18n | async }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke-width="1.5"
+               stroke="currentColor"
+               class="size-6">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15.75 19.5 8.25 12l7.5-7.5" />
           </svg>
         </button>
 
         <span
-          class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0 bg-warn"
-          >{{ pagination.current }}</span
-        >
+              class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0 bg-warn">{{
+          pagination.current }}</span>
 
-        <button
-          (click)="onNextPageClicked()"
-          [disabled]="pagination.current === pagination.last"
-          class="relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:bg-gray-300"
-        >
-          <span class="sr-only">Next</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m8.25 4.5 7.5 7.5-7.5 7.5"
-            />
+        <button (click)="onNextPageClicked()"
+                [disabled]="pagination.current === pagination.last"
+                class="relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:bg-gray-300">
+          <span class="sr-only">{{ 'Next' | i18n | async }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke-width="1.5"
+               stroke="currentColor"
+               class="size-6">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m8.25 4.5 7.5 7.5-7.5 7.5" />
           </svg>
         </button>
-        <button
-          (click)="onLastPageClicked()"
-          [disabled]="pagination.current === pagination.last"
-          class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:bg-gray-300"
-        >
-          <span class="sr-only">Last</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
-            />
+        <button (click)="onLastPageClicked()"
+                [disabled]="pagination.current === pagination.last"
+                class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:bg-gray-300">
+          <span class="sr-only">{{ 'Last' | i18n | async }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke-width="1.5"
+               stroke="currentColor"
+               class="size-6">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
           </svg>
         </button>
       </nav>

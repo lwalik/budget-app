@@ -1,6 +1,6 @@
 <div class="p-6 text-primary bg-orange-500/80 rounded-md shadow-xl flex flex-col gap-6 justify-start items-start"
      *ngIf="summary$ | async as summary">
-     <p class="text-xl font-semibold">Priority</p>
+     <p class="text-xl font-semibold">{{ 'Priority' | i18n | async }}</p>
      <p>In the last month,
           <span class="text-secondary font-semibold">{{ summary.totalCost | currency: 'PLN' }}</span>
           was spent on low-priority products.

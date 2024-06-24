@@ -4,7 +4,7 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { SimpleSelectListComponent } from '@budget-app/shared';
+import { SimpleSelectListComponent, TranslationPipe } from '@budget-app/shared';
 import { Observable, shareReplay, take } from 'rxjs';
 import { SORT_TYPE } from '../../enums/sort-type.enum';
 import { ExpensesState } from '../../states/expenses.state';
@@ -13,7 +13,7 @@ import { SortListViewModel } from '../../view-models/sort-list.view-model';
 @Component({
   selector: 'lib-expenses-sort',
   standalone: true,
-  imports: [CommonModule, SimpleSelectListComponent],
+  imports: [CommonModule, SimpleSelectListComponent, TranslationPipe],
   templateUrl: './expenses-sort.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

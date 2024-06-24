@@ -6,31 +6,30 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {
-  Observable,
-  of,
-  ReplaySubject,
-  shareReplay,
-  startWith,
-  switchMap,
-  take,
-  combineLatest,
-  map,
-} from 'rxjs';
-import { ProductModel } from '../../models/product.model';
-import { ProductsState } from '../../states/products.state';
-import { ProductFormModalComponent } from '../product-form-modal/product-form-modal.component';
-import {
   ConfirmationModalComponent,
   ConfirmationModalViewModel,
   PaginationComponent,
   PaginationUiService,
   PaginationViewModel,
+  TranslationPipe,
 } from '@budget-app/shared';
+import {
+  Observable,
+  combineLatest,
+  map,
+  of,
+  shareReplay,
+  switchMap,
+  take,
+} from 'rxjs';
+import { ProductModel } from '../../models/product.model';
+import { ProductsState } from '../../states/products.state';
+import { ProductFormModalComponent } from '../product-form-modal/product-form-modal.component';
 
 @Component({
   selector: 'lib-products-table',
   standalone: true,
-  imports: [CommonModule, PaginationComponent],
+  imports: [CommonModule, PaginationComponent, TranslationPipe],
   templateUrl: './products-table.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

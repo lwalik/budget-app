@@ -8,8 +8,7 @@ import { RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { NavLinkModel } from '../../models/nav-link.model';
 import { NavigationUiService } from '../../services/navigation-ui.service';
-import { TranslationPipe } from '@budget-app/i18n';
-import { SimpleSelectListComponent } from '@budget-app/shared';
+import { SimpleSelectListComponent, TranslationPipe } from '@budget-app/shared';
 
 @Component({
   selector: 'lib-sidebar-nav',

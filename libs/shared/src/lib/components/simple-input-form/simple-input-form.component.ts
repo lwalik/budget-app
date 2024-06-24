@@ -10,13 +10,14 @@ import {
   FormControl,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { TranslationPipe } from '../../pipes/translation.pipe';
 
 type simpleInputType = 'text' | 'number' | 'password';
 
 @Component({
   selector: 'lib-simple-input-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslationPipe],
   templateUrl: './simple-input-form.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

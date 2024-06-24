@@ -12,6 +12,6 @@
                            [type]="'number'"></lib-simple-input-form>
     <button type="submit"
             [disabled]="!walletForm.valid"
-            class="btn-warn">Save</button>
+            class="btn-warn">{{ 'Save' | i18n | async }}</button>
   </form>
 </lib-simple-modal>

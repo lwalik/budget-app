@@ -24,6 +24,7 @@ import {
   SimpleModalComponent,
   SimplePaginationViewModel,
   SimpleSelectListComponent,
+  TranslationPipe,
   WalletSelectListItemViewModel,
 } from '@budget-app/shared';
 import { WalletSelectListComponent } from '@budget-app/wallets';
@@ -49,6 +50,7 @@ interface ExpenseFormDialogData {
     ProductsSelectListComponent,
     WalletSelectListComponent,
     SimpleSelectListComponent,
+    TranslationPipe,
   ],
   templateUrl: './expense-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -268,7 +270,7 @@ export class ExpenseFormModalComponent implements OnInit {
       }),
       price: new FormControl((!!product && product.price) || 0, {
         nonNullable: true,
-        validators: [Validators.required, Validators.min(0)],
+        validators: [Validators.required, Validators.min(0.01)],
       }),
       category: new FormControl((!!product && product.category) || '', {
         nonNullable: true,
@@ -276,7 +278,7 @@ export class ExpenseFormModalComponent implements OnInit {
       }),
       quantity: new FormControl((!!product && product.quantity) || 1, {
         nonNullable: true,
-        validators: [Validators.required, Validators.min(0)],
+        validators: [Validators.required, Validators.min(0.01)],
       }),
       priority: new FormControl((!!product && product.priority) || '', {
         nonNullable: true,

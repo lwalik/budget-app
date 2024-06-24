@@ -6,12 +6,12 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { LogoutComponent } from '@budget-app/auth';
+import { SelectLangListComponent } from '@budget-app/i18n';
 import {
   NavLayoutComponent,
   SidebarNavComponent,
 } from '@budget-app/navigation';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { SelectLangListComponent } from '@budget-app/i18n';
 
 @Component({
   standalone: true,

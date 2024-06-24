@@ -3,28 +3,29 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  Inject,
   ViewEncapsulation,
 } from '@angular/core';
 import {
+  GET_TRANSLATION,
+  GetTranslation,
   PaginationComponent,
   PaginationUiService,
   PaginationViewModel,
   SimpleSelectListComponent,
+  TranslationPipe,
   TwoOptionConfirmationModalComponent,
   TwoOptionConfirmationViewModel,
 } from '@budget-app/shared';
 import { WalletNameComponent } from '@budget-app/wallets';
 import {
+  Observable,
   combineLatest,
   map,
-  Observable,
   of,
-  ReplaySubject,
   shareReplay,
-  startWith,
   switchMap,
   take,
-  tap,
 } from 'rxjs';
 import { ExpenseModel } from '../../models/expense.model';
 import { ExpensesState } from '../../states/expenses.state';
@@ -40,6 +41,7 @@ import { ExpensesSortComponent } from '../expenses-sort/expenses-sort.component'
     ExpensesSortComponent,
     PaginationComponent,
     SimpleSelectListComponent,
+    TranslationPipe,
   ],
   templateUrl: './expenses-table.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -68,7 +70,8 @@ export class ExpensesTableComponent {
   constructor(
     private readonly _expensesState: ExpensesState,
     private readonly _dialog: Dialog,
-    private readonly _paginationUiService: PaginationUiService
+    private readonly _paginationUiService: PaginationUiService,
+    @Inject(GET_TRANSLATION) private readonly _getTranslation: GetTranslation
   ) {}
 
   onAddExpenseBtnClicked(): void {
@@ -91,35 +94,55 @@ export class ExpensesTableComponent {
   }
 
   onDeleteExpenseBtnClicked(expense: ExpenseModel): void {
-    const createdAt = `${expense.createdAt.toDateString()}`;
-    const dialogData: TwoOptionConfirmationViewModel = {
-      header: 'Confirm',
-      text: `Are you sure you want to remove expense from ${createdAt} ?`,
-      firstOptionText: 'Remove and Revert Balance',
-      secondOptionText: 'Only Remove',
-    };
-    const dialogRef: DialogRef<number | undefined> = this._dialog.open<
-      number | undefined
-    >(TwoOptionConfirmationModalComponent, {
-      hasBackdrop: true,
-      data: dialogData,
-    });
-    dialogRef.closed
+    const createdAt = `${expense.createdAt
+      .getDate()
+      .toString()
+      .padStart(2, '0')}/${(expense.createdAt.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}/${expense.createdAt.getFullYear()}`;
+    this._getTranslation
+      .getAllTranslations([
+        'Are you sure you want to remove expense from',
+        `${createdAt}`,
+        '?',
+      ])
       .pipe(
         take(1),
-        switchMap((result: number | undefined) => {
-          if (result === 0) {
-            return of(void 0);
-          }
-          return this._expensesState.deleteExpense(expense.expenseId).pipe(
+        map((translations: string[]) => {
+          const dialogData: TwoOptionConfirmationViewModel = {
+            header: 'Confirm',
+            text: translations.join(' '),
+            firstOptionText: 'Remove and Revert Balance',
+            secondOptionText: 'Only Remove',
+          };
+
+          const dialogRef: DialogRef<number | undefined> = this._dialog.open<
+            number | undefined
+          >(TwoOptionConfirmationModalComponent, {
+            hasBackdrop: true,
+            data: dialogData,
+          });
+
+          return dialogRef;
+        }),
+        switchMap((dialogRef: DialogRef<number | undefined>) =>
+          dialogRef.closed.pipe(
             take(1),
-            switchMap(() =>
-              result === 1
-                ? this._expensesState.revertWalletBalance(expense)
-                : of(void 0)
-            )
-          );
-        })
+            switchMap((result: number | undefined) => {
+              if (result === 0) {
+                return of(void 0);
+              }
+              return this._expensesState.deleteExpense(expense.expenseId).pipe(
+                take(1),
+                switchMap(() =>
+                  result === 1
+                    ? this._expensesState.revertWalletBalance(expense)
+                    : of(void 0)
+                )
+              );
+            })
+          )
+        )
       )
       .subscribe();
   }

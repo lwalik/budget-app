@@ -10,6 +10,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, Observable, shareReplay, take, tap } from 'rxjs';
 import { OnClickOutsideTheElementDirective } from '../../directives/on-click-outside-the-element.directive';
+import { TranslationPipe } from '../../pipes/translation.pipe';
 
 @Component({
   selector: 'lib-simple-select-list',
@@ -18,6 +19,7 @@ import { OnClickOutsideTheElementDirective } from '../../directives/on-click-out
     CommonModule,
     ReactiveFormsModule,
     OnClickOutsideTheElementDirective,
+    TranslationPipe,
   ],
   templateUrl: './simple-select-list.component.html',
   encapsulation: ViewEncapsulation.None,
