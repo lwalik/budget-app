@@ -1,20 +1,36 @@
 import { Injectable } from '@angular/core';
-
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { translations } from '../translations/translations';
-import { LanguageType } from '../types/language.type';
+import { LanguageOptionViewModel } from '../view-models/language-option.view-model';
 
 @Injectable({ providedIn: 'root' })
 export class TranslationService {
-  private readonly _selectedLangSubject: BehaviorSubject<LanguageType> =
-    new BehaviorSubject<LanguageType>('pl');
+  private readonly availableLanguages: LanguageOptionViewModel[] = [
+    { value: 'pl', icon: '/assets/icons/pl-flag.svg' },
+    { value: 'en', icon: '/assets/icons/gb-flag.svg' },
+  ];
+  private readonly _selectedLangSubject: BehaviorSubject<LanguageOptionViewModel> =
+    new BehaviorSubject<LanguageOptionViewModel>(this.availableLanguages[0]);
 
-  getTranslation(key: string): string {
-    console.log('key: ', key);
-    const lang: LanguageType = this._selectedLangSubject.getValue();
-    console.log('lang: ', lang);
-    console.log('translation: ', translations);
+  getLangOptions(): Observable<LanguageOptionViewModel[]> {
+    return of(this.availableLanguages);
+  }
 
-    return translations[key] ? translations[key][lang] : key;
+  getSelectedOption(): Observable<LanguageOptionViewModel> {
+    return this._selectedLangSubject.asObservable();
+  }
+
+  getTranslation(key: string): Observable<string> {
+    return this._selectedLangSubject
+      .asObservable()
+      .pipe(
+        map((selectedLang: LanguageOptionViewModel) =>
+          translations[key] ? translations[key][selectedLang.value] : key
+        )
+      );
+  }
+
+  selectLanguage(language: LanguageOptionViewModel): void {
+    this._selectedLangSubject.next(language);
   }
 }

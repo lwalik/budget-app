@@ -11,6 +11,7 @@ import {
   SidebarNavComponent,
 } from '@budget-app/navigation';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { SelectLangListComponent } from '@budget-app/i18n';
 
 @Component({
   standalone: true,
@@ -20,6 +21,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
     LogoutComponent,
     NavLayoutComponent,
     CommonModule,
+    SelectLangListComponent,
   ],
   templateUrl: './logged-in.page.html',
   encapsulation: ViewEncapsulation.None,

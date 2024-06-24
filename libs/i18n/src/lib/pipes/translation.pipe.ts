@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { TranslationService } from '../services/translation.service';
+import { Observable } from 'rxjs';
 
 @Pipe({
   standalone: true,
@@ -8,7 +9,7 @@ import { TranslationService } from '../services/translation.service';
 })
 export class TranslationPipe implements PipeTransform {
   constructor(private readonly _translationService: TranslationService) {}
-  transform(value: string): string {
+  transform(value: string): Observable<string> {
     return this._translationService.getTranslation(value);
   }
 }

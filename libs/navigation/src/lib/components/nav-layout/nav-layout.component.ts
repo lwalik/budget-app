@@ -17,12 +17,6 @@ import { NavigationUiService } from '../../services/navigation-ui.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavLayoutComponent {
-  // private readonly _isMobileNavVisible: ReplaySubject<boolean> =
-  //   new ReplaySubject<boolean>(1);
-  // readonly isMobileNavVisible$: Observable<boolean> = this._isMobileNavVisible
-  //   .asObservable()
-  //   .pipe(shareReplay(1));
-
   readonly isMobileNavVisible$: Observable<boolean> =
     this._navigationUiService.getMobileNavVisibility();
 
@@ -33,7 +27,6 @@ export class NavLayoutComponent {
       .setMobileNavVisibility(true)
       .pipe(take(1))
       .subscribe();
-    // this._isMobileNavVisible.next(true);
   }
 
   closeMobileNav(): void {
@@ -41,6 +34,5 @@ export class NavLayoutComponent {
       .setMobileNavVisibility(false)
       .pipe(take(1))
       .subscribe();
-    // this._isMobileNavVisible.next(false);
   }
 }

@@ -1,11 +1,17 @@
 <lib-nav-layout>
   <lib-sidebar-nav desktop-nav
                    class="grow">
-    <lib-logout></lib-logout>
+    <div class="flex flex-col gap-4">
+      <lib-select-lang-list></lib-select-lang-list>
+      <lib-logout></lib-logout>
+    </div>
   </lib-sidebar-nav>
   <lib-sidebar-nav mobile-nav
                    class="grow">
-    <lib-logout></lib-logout>
+    <div class="flex flex-col gap-4">
+      <lib-select-lang-list></lib-select-lang-list>
+      <lib-logout></lib-logout>
+    </div>
   </lib-sidebar-nav>
   <router-outlet content></router-outlet>
 </lib-nav-layout>
