@@ -1,29 +1,21 @@
-<form
-  class="flex items-center justify-center gap-2 text-primary"
-  [formGroup]="dateForm"
-  (ngSubmit)="onDateFormSubmitted(dateForm)"
->
-  <label for="from">From</label>
-  <input
-    id="from"
-    type="date"
-    formControlName="fromDate"
-    class="simple-datepicker-input"
-    [ngClass]="{'ring-red-600': dateForm.hasError('wrongDateRange')}"
-  />
-  <label for="to">To</label>
-  <input
-    id="to"
-    type="date"
-    formControlName="toDate"
-    class="simple-datepicker-input"
-    [ngClass]="{'ring-red-600': dateForm.hasError('wrongDateRange')}"
-  />
-  <button
-    type="submit"
-    class="btn-warn"
-    [disabled]="!dateForm.valid || !dateForm.dirty"
-  >
-    Save
+<form class="flex items-center justify-center gap-2 text-primary"
+      [formGroup]="dateForm"
+      (ngSubmit)="onDateFormSubmitted(dateForm)">
+  <label for="from">{{'From' | i18n | async}}</label>
+  <input id="from"
+         type="date"
+         formControlName="fromDate"
+         class="simple-datepicker-input"
+         [ngClass]="{'ring-red-600': dateForm.hasError('wrongDateRange')}" />
+  <label for="to">{{'To' | i18n | async}}</label>
+  <input id="to"
+         type="date"
+         formControlName="toDate"
+         class="simple-datepicker-input"
+         [ngClass]="{'ring-red-600': dateForm.hasError('wrongDateRange')}" />
+  <button type="submit"
+          class="btn-warn"
+          [disabled]="!dateForm.valid || !dateForm.dirty">
+    {{'Save' | i18n | async}}
   </button>
 </form>

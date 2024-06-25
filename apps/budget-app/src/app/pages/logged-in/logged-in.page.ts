@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { LogoutComponent } from '@budget-app/auth';
+import { SelectLangListComponent } from '@budget-app/i18n';
 import {
   NavLayoutComponent,
   SidebarNavComponent,
@@ -20,6 +21,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
     LogoutComponent,
     NavLayoutComponent,
     CommonModule,
+    SelectLangListComponent,
   ],
   templateUrl: './logged-in.page.html',
   encapsulation: ViewEncapsulation.None,

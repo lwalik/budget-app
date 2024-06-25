@@ -6,11 +6,13 @@ import {
 import { AuthState } from '../../state/auth.state';
 import { take } from 'rxjs';
 import { Router } from '@angular/router';
+import { TranslationPipe } from '@budget-app/shared';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'lib-logout',
   standalone: true,
-  imports: [],
+  imports: [TranslationPipe, AsyncPipe],
   templateUrl: './logout.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

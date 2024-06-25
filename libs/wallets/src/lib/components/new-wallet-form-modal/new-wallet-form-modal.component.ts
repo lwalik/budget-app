@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  Inject,
   ViewEncapsulation,
 } from '@angular/core';
 import {
@@ -12,10 +11,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { USER_CONTEXT, UserContext } from '@budget-app/core';
 import {
   SimpleInputFormComponent,
   SimpleModalComponent,
+  TranslationPipe,
+  whitespaceValidator,
 } from '@budget-app/shared';
 import { take } from 'rxjs';
 import { WalletsState } from '../../states/wallets.state';
@@ -28,6 +28,7 @@ import { WalletsState } from '../../states/wallets.state';
     ReactiveFormsModule,
     SimpleInputFormComponent,
     SimpleModalComponent,
+    TranslationPipe,
   ],
   templateUrl: './new-wallet-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -36,7 +37,7 @@ import { WalletsState } from '../../states/wallets.state';
 export class NewWalletFormModalComponent {
   readonly walletForm: FormGroup = new FormGroup({
     name: new FormControl('', {
-      validators: [Validators.required],
+      validators: [Validators.required, whitespaceValidator],
       nonNullable: true,
     }),
     balance: new FormControl('', {
@@ -47,8 +48,7 @@ export class NewWalletFormModalComponent {
 
   constructor(
     private readonly _dialogRef: DialogRef,
-    private readonly _walletsState: WalletsState,
-    @Inject(USER_CONTEXT) private readonly _userContext: UserContext
+    private readonly _walletsState: WalletsState
   ) {}
 
   onWalletFormSubmitted(form: FormGroup): void {

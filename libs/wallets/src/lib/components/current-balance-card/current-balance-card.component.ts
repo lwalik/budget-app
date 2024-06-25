@@ -1,17 +1,18 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { WalletsState } from '../../states/wallets.state';
 import { Observable } from 'rxjs';
+import { WalletsState } from '../../states/wallets.state';
 import { CurrentBalanceViewModel } from '../../view-models/current-balance.view-model';
-import { CommonModule } from '@angular/common';
+import { TranslationPipe } from '@budget-app/shared';
 
 @Component({
   selector: 'lib-current-balance-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslationPipe],
   templateUrl: './current-balance-card.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

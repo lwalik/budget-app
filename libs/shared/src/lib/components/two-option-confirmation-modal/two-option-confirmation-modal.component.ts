@@ -6,11 +6,13 @@ import {
 } from '@angular/core';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { TwoOptionConfirmationViewModel } from '../../view-models/two-option-confirmation.view-model';
+import { TranslationPipe } from '../../pipes/translation.pipe';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'lib-two-option-confirmation-modal',
   standalone: true,
-  imports: [],
+  imports: [TranslationPipe, AsyncPipe],
   templateUrl: './two-option-confirmation-modal.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

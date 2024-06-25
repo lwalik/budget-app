@@ -12,6 +12,6 @@
           d="M6 18 18 6M6 6l12 12" />
   </svg>
 
-  <p class="text-2xl text-center pb-6 font-bold text-secondary">{{ header }}</p>
+  <p class="text-2xl text-center pb-6 font-bold text-secondary">{{ header | i18n | async }}</p>
   <ng-content></ng-content>
 </div>

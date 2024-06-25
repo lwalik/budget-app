@@ -20,8 +20,12 @@ export * from './lib/directives/on-click-outside-the-element.directive';
 // Tokens
 export * from './lib/tokens/incomes-data';
 export * from './lib/tokens/wallet-balance';
+export * from './lib/tokens/get-translation.token';
 // Pipes
 export * from './lib/pipes/positive-number.pipe';
+export * from './lib/pipes/translation.pipe';
+// Validators
+export * from './lib/validators/whitespace.validator';
 // DashboardFilters
 export * from './lib/dashboard-filters';
 // Pagination

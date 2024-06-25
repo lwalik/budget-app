@@ -4,14 +4,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Inject,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
 import {
   ConfirmationModalComponent,
   ConfirmationModalViewModel,
+  GET_TRANSLATION,
+  GetTranslation,
+  TranslationPipe,
 } from '@budget-app/shared';
-import { Observable, of, switchMap, take, tap } from 'rxjs';
+import { map, Observable, of, switchMap, take, tap } from 'rxjs';
 import { WalletModel } from '../../models/wallet.model';
 import { WalletsState } from '../../states/wallets.state';
 import { DepositFormModalComponent } from '../deposit-form-modal/deposit-form-modal.component';
@@ -20,7 +24,7 @@ import { NewWalletFormModalComponent } from '../new-wallet-form-modal/new-wallet
 @Component({
   selector: 'lib-wallets-list',
   standalone: true,
-  imports: [CommonModule, DialogModule],
+  imports: [CommonModule, DialogModule, TranslationPipe],
   templateUrl: './wallets-list.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,7 +37,8 @@ export class WalletsListComponent {
 
   constructor(
     private readonly _walletsState: WalletsState,
-    private readonly _dialog: Dialog
+    private readonly _dialog: Dialog,
+    @Inject(GET_TRANSLATION) private readonly _getTranslation: GetTranslation
   ) {}
 
   onNewWalletBtnClicked(): void {
@@ -52,27 +57,44 @@ export class WalletsListComponent {
   }
 
   onRemoveWalletBtnClicked(wallet: WalletModel): void {
-    const dialogData: ConfirmationModalViewModel = {
-      header: 'Confirm',
-      text: `Are you sure you want to remove "${wallet.name}" Wallet?\nThis will remove all expenses associated with this Wallet.`,
-    };
-    const dialogRef: DialogRef<boolean | undefined> = this._dialog.open<
-      boolean | undefined
-    >(ConfirmationModalComponent, {
-      hasBackdrop: true,
-      data: dialogData,
-    });
-
-    dialogRef.closed
+    this._getTranslation
+      .getAllTranslations([
+        'Are you sure you want to remove',
+        `"${wallet.name}"`,
+        'Wallet',
+        '?',
+        '\n',
+        'This will remove all expenses associated with this Wallet.',
+      ])
       .pipe(
         take(1),
-        switchMap((isConfirmed: boolean | undefined) =>
-          isConfirmed
-            ? this._walletsState.deleteWallet(wallet.id).pipe(
-                take(1),
-                tap(() => this.walletRemoved.emit(wallet.id))
-              )
-            : of(void 0)
+        map((translations: string[]) => {
+          const dialogData: ConfirmationModalViewModel = {
+            header: 'Confirm',
+            text: translations.join(' '),
+          };
+
+          const dialogRef: DialogRef<boolean | undefined> = this._dialog.open<
+            boolean | undefined
+          >(ConfirmationModalComponent, {
+            hasBackdrop: true,
+            data: dialogData,
+          });
+
+          return dialogRef;
+        }),
+        switchMap((dialogRef: DialogRef<boolean | undefined>) =>
+          dialogRef.closed.pipe(
+            take(1),
+            switchMap((isConfirmed: boolean | undefined) =>
+              isConfirmed
+                ? this._walletsState.deleteWallet(wallet.id).pipe(
+                    take(1),
+                    tap(() => this.walletRemoved.emit(wallet.id))
+                  )
+                : of(void 0)
+            )
+          )
         )
       )
       .subscribe();

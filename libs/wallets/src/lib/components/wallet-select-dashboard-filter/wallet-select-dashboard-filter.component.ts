@@ -1,21 +1,22 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { WalletSelectListComponent } from '../wallet-select-list/wallet-select-list.component';
 import {
   DashboardFiltersState,
   DashboardFiltersWalletStateModel,
+  TranslationPipe,
   WalletSelectListItemViewModel,
 } from '@budget-app/shared';
 import { Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { WalletSelectListComponent } from '../wallet-select-list/wallet-select-list.component';
 
 @Component({
   selector: 'lib-wallet-select-dashboard-filter',
   standalone: true,
-  imports: [WalletSelectListComponent, CommonModule],
+  imports: [WalletSelectListComponent, CommonModule, TranslationPipe],
   templateUrl: './wallet-select-dashboard-filter.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

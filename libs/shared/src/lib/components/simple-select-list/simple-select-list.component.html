@@ -1,7 +1,7 @@
 <div>
   <label *ngIf="label.length > 0"
          id="listbox-label"
-         class="block text-sm font-medium leading-6 text-secondary mb-2">{{ label }}</label>
+         class="block text-sm font-medium leading-6 text-secondary mb-2">{{ label | i18n | async }}</label>
   <div class="relative"
        #selectList
        (libOnClickOutsideTheElement)="hideDropdown()"
@@ -14,9 +14,9 @@
             aria-labelledby="listbox-label">
       <span class="block h-6">
         <span class="block truncate"
-              *ngIf="selectedOption$ | async as selectedOption; else emptyOptionState">{{ selectedOption }}</span>
+              *ngIf="selectedOption$ | async as selectedOption; else emptyOptionState">{{ selectedOption | i18n | async }}</span>
         <ng-template #emptyOptionState>
-          <span class="block truncate text-gray-400">Select Option</span>
+          <span class="block truncate text-gray-400">{{ 'Select Option' | i18n | async }}</span>
         </ng-template>
       </span>
       <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -40,7 +40,7 @@
             (click)="onOptionSelected(option)"
             role="option"
             *ngFor="let option of options">
-          <span class="font-normal block truncate">{{ option }}</span>
+          <span class="font-normal block truncate">{{ option | i18n | async }}</span>
 
           <span *ngIf="(selectedOption$ | async) === option"
                 class="text-primary absolute inset-y-0 right-0 flex items-center pr-4">
@@ -59,7 +59,7 @@
         <li class="text-gray-900 relative select-none py-2 pl-3 pr-9"
             id="listbox-option-0"
             role="option">
-          <span class="font-normal block truncate">No options available</span>
+          <span class="font-normal block truncate">{{ 'No options available' | i18n | async }}</span>
         </li>
       </ng-template>
     </ul>

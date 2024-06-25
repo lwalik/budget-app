@@ -14,11 +14,12 @@ import {
 import {
   SimpleInputFormComponent,
   SimpleModalComponent,
+  TranslationPipe,
 } from '@budget-app/shared';
 import { take } from 'rxjs';
 import { WalletsState } from '../../states/wallets.state';
 import { WalletOperationDialogDataViewModel } from '../../view-models/wallet-operation-dialog-data.view-model';
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lib-deposit-form-modal',
@@ -28,6 +29,7 @@ import { CommonModule, NgIf } from '@angular/common';
     SimpleInputFormComponent,
     ReactiveFormsModule,
     CommonModule,
+    TranslationPipe,
   ],
   templateUrl: './deposit-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,

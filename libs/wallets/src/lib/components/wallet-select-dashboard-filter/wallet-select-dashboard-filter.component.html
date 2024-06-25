@@ -1,5 +1,5 @@
 <div class="flex items-center justify-center gap-2">
-  <p class="text-primary">Wallet</p>
+  <p class="text-primary">{{ 'Wallet' | i18n | async}}</p>
   <lib-wallet-select-list
     class="w-full"
     *ngIf="selectedWallet$ | async as selectedWallet"

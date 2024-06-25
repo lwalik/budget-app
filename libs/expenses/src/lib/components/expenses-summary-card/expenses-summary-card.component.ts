@@ -1,17 +1,20 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ExpensesState } from '../../states/expenses.state';
+import {
+  TransactionSummaryViewModel,
+  TranslationPipe,
+} from '@budget-app/shared';
 import { Observable } from 'rxjs';
-import { TransactionSummaryViewModel } from '@budget-app/shared';
+import { ExpensesState } from '../../states/expenses.state';
 
 @Component({
   selector: 'lib-expenses-summary-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslationPipe],
   templateUrl: './expenses-summary-card.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

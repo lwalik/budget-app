@@ -1,6 +1,8 @@
-<div class="flex flex-col md:grid md:grid-cols-11 mb-6 bg-white border border-warn rounded-md shadow-xl divide-y md:divide-x divide-gray-200">
-  <div class="col-span-2 rounded-t-md md:rounded-t-none md:rounded-tl-md md:rounded-bl-md bg-warn flex items-center justify-center">
-    <p class="text-primary font-semibold text-xl">Filters</p>
+<div
+     class="flex flex-col md:grid md:grid-cols-11 mb-6 bg-white border border-warn rounded-md shadow-xl divide-y md:divide-x divide-gray-200">
+  <div
+       class="col-span-2 rounded-t-md md:rounded-t-none md:rounded-tl-md md:rounded-bl-md bg-warn flex items-center justify-center">
+    <p class="text-primary font-semibold text-xl">{{'Filters' | i18n | async}}</p>
   </div>
   <lib-wallet-select-dashboard-filter class="col-span-3 p-2"></lib-wallet-select-dashboard-filter>
   <lib-dates-filter class="col-span-6 p-2"></lib-dates-filter>
@@ -14,4 +16,3 @@
   </div>
   <lib-incomes-and-expenses-chart class="col-span-4"></lib-incomes-and-expenses-chart>
 </div>
-
