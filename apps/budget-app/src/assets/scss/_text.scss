@@ -1,0 +1,13 @@
+@layer components {
+  .positive-text {
+    @apply text-green-500;
+  }
+
+  .negative-text {
+    @apply text-red-500;
+  }
+
+  .warning-text {
+    @apply text-amber-500;
+  }
+}

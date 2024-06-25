@@ -299,4 +299,48 @@ export const translations: TranslationType = {
     pl: 'Wyloguj',
     en: 'Log out',
   },
+  'In the last month': {
+    pl: 'W ostatnim miesiącu',
+    en: 'In the last month',
+  },
+  'was spent on low-priority products': {
+    pl: 'wydano na produkty o niskim priorytecie',
+    en: 'was spent on low-priority products',
+  },
+  'The most was spent on the product': {
+    pl: 'Najwięcej wydano na produkt',
+    en: 'The most was spent on the product',
+  },
+  'and spent': {
+    pl: 'i kosztowało to',
+    en: 'and spent',
+  },
+  'The total spending on low-priority products is': {
+    pl: 'Całkowite wydatki na produkty o niskim priorytecie są',
+    en: 'The total spending on low-priority products is',
+  },
+  by: {
+    pl: 'o',
+    en: 'by',
+  },
+  'than in the': {
+    pl: 'niż w',
+    en: 'than in the',
+  },
+  'the same as the': {
+    pl: 'takie same co w',
+    en: 'the same as the',
+  },
+  'previous month': {
+    pl: 'poprzednim miesiącu',
+    en: 'previous month',
+  },
+  higher: {
+    pl: 'wyższe',
+    en: 'higher',
+  },
+  lower: {
+    pl: 'niższe',
+    en: 'lower',
+  },
 };
