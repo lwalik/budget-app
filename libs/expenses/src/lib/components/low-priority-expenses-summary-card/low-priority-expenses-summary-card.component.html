@@ -5,27 +5,16 @@
     <p>
       {{ 'In the last month' | i18n | async }},
       <span class="font-semibold"
-            [ngClass]="{
-          'positive-text': summary.lastMonthDiff > 0,
-          'negative-text': summary.lastMonthDiff < 0,
-          'warning-text': summary.lastMonthDiff === 0
-        }">{{ summary.totalCost | currency : 'PLN' }}</span>
+            [libEmotionTextDirective]="summary.lastMonthDiff">{{ summary.totalCost | currency : 'PLN' }}</span>
       {{ 'was spent on low-priority products' | i18n | async }}.
       <span *ngIf="summary.highestExpenseProduct.name.length > 0">{{ 'The most was spent on the product' | i18n | async
         }}
         <span class="font-semibold"
-              [ngClass]="{
-            'positive-text': summary.lastMonthDiff > 0,
-            'negative-text': summary.lastMonthDiff < 0,
-            'warning-text': summary.lastMonthDiff === 0
-          }">{{ summary.highestExpenseProduct.name }}</span>
+              [libEmotionTextDirective]="summary.lastMonthDiff">{{ summary.highestExpenseProduct.name }}</span>
         {{ 'and spent' | i18n | async }}
         <span class="font-semibold"
-              [ngClass]="{
-            'positive-text': summary.lastMonthDiff > 0,
-            'negative-text': summary.lastMonthDiff < 0,
-            'warning-text': summary.lastMonthDiff === 0
-          }">{{ summary.highestExpenseProduct.price | currency : 'PLN' }}</span>.</span>
+              [libEmotionTextDirective]="summary.lastMonthDiff">{{ summary.highestExpenseProduct.price | currency :
+          'PLN' }}</span>.</span>
       {{ 'The total spending on low-priority products is' | i18n | async }}
       <span *ngIf="summary.lastMonthDiff !== 0; else sameTotal">
         <span *ngIf="summary.lastMonthDiff > 0; else lower"
@@ -39,11 +28,8 @@
         </ng-template>
         {{ 'by' | i18n | async }}
         <span class="font-semibold"
-              [ngClass]="{
-            'positive-text': summary.lastMonthDiff > 0,
-            'negative-text': summary.lastMonthDiff < 0,
-            'warning-text': summary.lastMonthDiff === 0
-          }">{{ summary.lastMonthDiff | positiveNumber | currency : 'PLN' }}</span>
+              [libEmotionTextDirective]="summary.lastMonthDiff">{{ summary.lastMonthDiff | positiveNumber | currency :
+          'PLN' }}</span>
         {{ 'than in the' | i18n | async }}
       </span>
       <ng-template #sameTotal>
@@ -75,7 +61,7 @@
     </svg>
 
     <svg *ngIf="summary.lastMonthDiff === 0"
-         class="w-36 warning-text"
+         class="w-36 neutral-text"
          fill="none"
          viewBox="0 0 24 24"
          stroke-width="1.5"

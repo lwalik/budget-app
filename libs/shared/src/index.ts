@@ -16,11 +16,12 @@ export * from './lib/view-models/wallet-select-list-item.view-model';
 export * from './lib/utils/dates';
 export * from './lib/utils/rxjs';
 // Directives
+export * from './lib/directives/emotion-text.directive';
 export * from './lib/directives/on-click-outside-the-element.directive';
 // Tokens
+export * from './lib/tokens/get-translation.token';
 export * from './lib/tokens/incomes-data';
 export * from './lib/tokens/wallet-balance';
-export * from './lib/tokens/get-translation.token';
 // Pipes
 export * from './lib/pipes/positive-number.pipe';
 export * from './lib/pipes/translation.pipe';
