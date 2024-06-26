@@ -19,13 +19,13 @@ import {
   ProductsSelectListComponent,
 } from '@budget-app/products';
 import {
-  formatDateToString,
   SimpleInputFormComponent,
   SimpleModalComponent,
   SimplePaginationViewModel,
   SimpleSelectListComponent,
   TranslationPipe,
   WalletSelectListItemViewModel,
+  formatDateToString,
 } from '@budget-app/shared';
 import { WalletSelectListComponent } from '@budget-app/wallets';
 import { BehaviorSubject, Observable, map, of, take, tap } from 'rxjs';
@@ -224,12 +224,17 @@ export class ExpenseFormModalComponent implements OnInit {
 
   onExpenseFormSubmitted(): void {
     const products: ExpenseProductModel[] = this._getProductsFormArray().value;
+    const mappedProducts: ExpenseProductModel[] = products.map((product) => ({
+      ...product,
+      price: +product.price,
+      quantity: +product.quantity,
+    }));
 
     if (!this.dialogData.isEdit || !this.dialogData.expense) {
       this._expenseState
         .addExpense({
           walletId: this._getWalletFormGroup().get('id')?.value,
-          products: products,
+          products: mappedProducts,
           totalPrice: products.reduce(
             (total: number, product: ExpenseProductModel) =>
               total + product.price * product.quantity,
@@ -248,7 +253,7 @@ export class ExpenseFormModalComponent implements OnInit {
         expenseId: this.dialogData.expense.expenseId,
         createdAt: new Date(this.expenseForm.get('createdAt')?.value),
         walletId: this._getWalletFormGroup().get('id')?.value,
-        products: products,
+        products: mappedProducts,
         totalPrice: products.reduce(
           (total: number, product: ExpenseProductModel) =>
             total + product.price * product.quantity,
@@ -264,26 +269,35 @@ export class ExpenseFormModalComponent implements OnInit {
     const productsFormArray: FormArray = this._getProductsFormArray();
 
     const productForm: FormGroup = new FormGroup({
-      name: new FormControl((!!product && product.name) || '', {
+      name: new FormControl(!!product && product.name ? product.name : '', {
         nonNullable: true,
         validators: [Validators.required],
       }),
-      price: new FormControl((!!product && product.price) || 0, {
+      price: new FormControl(!!product && product.price ? +product.price : 0, {
         nonNullable: true,
         validators: [Validators.required, Validators.min(0.01)],
       }),
-      category: new FormControl((!!product && product.category) || '', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
-      quantity: new FormControl((!!product && product.quantity) || 1, {
-        nonNullable: true,
-        validators: [Validators.required, Validators.min(0.01)],
-      }),
-      priority: new FormControl((!!product && product.priority) || '', {
-        nonNullable: true,
-        validators: [Validators.required],
-      }),
+      category: new FormControl(
+        !!product && product.category ? product.category : '',
+        {
+          nonNullable: true,
+          validators: [Validators.required],
+        }
+      ),
+      quantity: new FormControl(
+        !!product && product.quantity ? +product.quantity : 1,
+        {
+          nonNullable: true,
+          validators: [Validators.required, Validators.min(0.01)],
+        }
+      ),
+      priority: new FormControl(
+        !!product && product.priority ? product.priority : '',
+        {
+          nonNullable: true,
+          validators: [Validators.required],
+        }
+      ),
     });
 
     productsFormArray.push(productForm);

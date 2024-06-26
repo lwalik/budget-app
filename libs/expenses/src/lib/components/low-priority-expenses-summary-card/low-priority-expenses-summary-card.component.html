@@ -15,14 +15,14 @@
         <span class="font-semibold"
               [libEmotionTextDirective]="summary.lastMonthDiff">{{ summary.highestExpenseProduct.price | currency :
           'PLN' }}</span>.</span>
-      {{ 'The total spending on low-priority products is' | i18n | async }}
+      {{ 'Total spending on low-priority products is' | i18n | async }}
       <span *ngIf="summary.lastMonthDiff !== 0; else sameTotal">
-        <span *ngIf="summary.lastMonthDiff > 0; else lower"
-              class="font-semibold positive-text">
+        <span *ngIf="summary.lastMonthDiff < 0; else lower"
+              class="font-semibold negative-text">
           {{ 'higher' | i18n | async }}
         </span>
         <ng-template #lower>
-          <span class="font-semibold negative-text">
+          <span class="font-semibold positive-text">
             {{ 'lower' | i18n | async }}
           </span>
         </ng-template>

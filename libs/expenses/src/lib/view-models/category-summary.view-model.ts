@@ -1,7 +1,8 @@
 import { HighestExpenseProductViewModel } from './highest-expenses-product.view-model';
 
-export interface PrioritySummaryViewModel {
+export interface CategorySummaryViewModel {
   readonly totalCost: number;
-  readonly highestExpenseProduct: HighestExpenseProductViewModel;
+  readonly name: string;
+  readonly highestExpensesProduct: HighestExpenseProductViewModel;
   readonly lastMonthDiff: number;
 }

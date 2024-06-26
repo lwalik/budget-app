@@ -1,0 +1,75 @@
+<div class="p-6 text-primary bg-white rounded-md shadow-xl flex flex-col gap-6 justify-start items-start"
+     *ngIf="summary$ | async as summary">
+    <p class="text-2xl font-semibold">{{ 'Category' | i18n | async }}</p>
+    <div class="flex items-center justify-center">
+        <p>
+            {{ 'In the last month' | i18n | async }}, {{ 'the most was spent on the category' | i18n | async }}:
+            <span class="font-semibold"
+                  [libEmotionTextDirective]="summary.lastMonthDiff">
+                {{ summary.name }}
+            </span>. {{ 'In this category, the most was spent on product' | i18n | async }}:
+            <span class="font-semibold"
+                  [libEmotionTextDirective]="summary.lastMonthDiff"> {{ summary.highestExpensesProduct.name }}</span>
+            {{ 'and spent' | i18n | async }}
+            <span class="font-semibold"
+                  [libEmotionTextDirective]="summary.lastMonthDiff"> {{ summary.highestExpensesProduct.price | currency
+                :
+                'PLN' }}</span>.
+            {{ 'Total spending on products in this category is' | i18n | async }}
+            <span *ngIf="summary.lastMonthDiff !== 0; else sameTotal">
+                <span *ngIf="summary.lastMonthDiff < 0; else lower"
+                      class="font-semibold negative-text">
+                    {{ 'higher' | i18n | async }}
+                </span>
+                <ng-template #lower>
+                    <span class="font-semibold positive-text">
+                        {{ 'lower' | i18n | async }}
+                    </span>
+                </ng-template>
+                {{ 'by' | i18n | async }}
+                <span class="font-semibold"
+                      [libEmotionTextDirective]="summary.lastMonthDiff">{{ summary.lastMonthDiff | positiveNumber |
+                    currency :
+                    'PLN' }}</span>
+                {{ 'than in the' | i18n | async }}
+            </span>
+            <ng-template #sameTotal>
+                {{ 'the same as the' | i18n | async }}
+            </ng-template>
+            {{ 'previous month' | i18n | async }}.
+        </p>
+
+        <svg *ngIf="summary.lastMonthDiff > 0"
+             class="w-36 positive-text"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke-width="1.5"
+             stroke="currentColor">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
+        </svg>
+
+        <svg *ngIf="summary.lastMonthDiff < 0"
+             class="w-36 negative-text"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke-width="1.5"
+             stroke="currentColor">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15.182 16.318A4.486 4.486 0 0 0 12.016 15a4.486 4.486 0 0 0-3.198 1.318M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Zm-.375 0h.008v.015h-.008V9.75Z" />
+        </svg>
+
+        <svg *ngIf="summary.lastMonthDiff === 0"
+             class="w-36 neutral-text"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke-width="1.5"
+             stroke="currentColor">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+        </svg>
+    </div>
+</div>

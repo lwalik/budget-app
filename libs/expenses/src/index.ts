@@ -1,4 +1,5 @@
 // Components
+export * from './lib/components/category-expenses-summary-card/category-expenses-summary-card.component';
 export * from './lib/components/expenses-summary-card/expenses-summary-card.component';
 export * from './lib/components/expenses-table/expenses-table.component';
 export * from './lib/components/incomes-and-expenses-chart/incomes-and-expenses-chart.component';

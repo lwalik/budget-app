@@ -315,9 +315,9 @@ export const translations: TranslationType = {
     pl: 'i kosztowało to',
     en: 'and spent',
   },
-  'The total spending on low-priority products is': {
+  'Total spending on low-priority products is': {
     pl: 'Całkowite wydatki na produkty o niskim priorytecie są',
-    en: 'The total spending on low-priority products is',
+    en: 'Total spending on low-priority products is',
   },
   by: {
     pl: 'o',
@@ -342,5 +342,17 @@ export const translations: TranslationType = {
   lower: {
     pl: 'niższe',
     en: 'lower',
+  },
+  'the most was spent on the category': {
+    pl: 'najwięcej wydano na kategorię',
+    en: 'the most was spent on the category',
+  },
+  'In this category, the most was spent on product': {
+    pl: 'W tej kategorii najwięcej wydano na produkt',
+    en: 'In this category, the most was spent on product',
+  },
+  'Total spending on products in this category is': {
+    pl: 'Całkowite wydatki na produkty w tej kategorii są',
+    en: 'Total spending on products in this category is',
   },
 };

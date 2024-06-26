@@ -29,11 +29,11 @@ import { ExpenseModel } from '../models/expense.model';
 import { ExpensesStateModel } from '../models/expenses-state.model';
 import { SortModel } from '../models/sort.model';
 import { ExpensesService } from '../services/expenses.service';
+import { CategorySummaryViewModel } from '../view-models/category-summary.view-model';
 import { ExpensesDataViewModel } from '../view-models/expenses-data.view-model';
-import {
-  HighestExpenseProductViewModel,
-  PrioritySummaryViewModel,
-} from '../view-models/priority-summary.view-model';
+import { HighestExpensesCategoryViewModel } from '../view-models/highest-expenses-category.view-model';
+import { HighestExpenseProductViewModel } from '../view-models/highest-expenses-product.view-model';
+import { PrioritySummaryViewModel } from '../view-models/priority-summary.view-model';
 import { SortListViewModel } from '../view-models/sort-list.view-model';
 
 const initialState: ExpensesStateModel = {
@@ -359,7 +359,7 @@ export class ExpensesState {
     );
   }
 
-  getLowPriorityExpensesSummary(
+  getPriorityExpensesSummary(
     priority: EXPENSE_PRODUCT_PRIORITY
   ): Observable<PrioritySummaryViewModel> {
     return this._expensesState$.pipe(
@@ -377,34 +377,18 @@ export class ExpensesState {
         );
 
         const productsInCurrentMonth: ExpenseProductModel[] =
-          state.expenses.reduce(
-            (acc: ExpenseProductModel[], cur: ExpenseModel) => {
-              if (cur.createdAt >= lastMonth && cur.createdAt <= now) {
-                const products: ExpenseProductModel[] = cur.products.filter(
-                  (p) => p.priority === priority
-                );
-                return [...acc, ...products];
-              }
-
-              return acc;
-            },
-            []
-          );
+          this._getExpensesProductsInRange(
+            state.expenses,
+            now,
+            lastMonth
+          ).filter((p) => p.priority === priority);
 
         const productsInLastMonth: ExpenseProductModel[] =
-          state.expenses.reduce(
-            (acc: ExpenseProductModel[], cur: ExpenseModel) => {
-              if (cur.createdAt >= twoMonthsAgo && cur.createdAt < lastMonth) {
-                const products: ExpenseProductModel[] = cur.products.filter(
-                  (p) => p.priority === priority
-                );
-                return [...acc, ...products];
-              }
-
-              return acc;
-            },
-            []
-          );
+          this._getExpensesProductsInRange(
+            state.expenses,
+            lastMonth,
+            twoMonthsAgo
+          ).filter((p) => p.priority === priority);
 
         const productsTotalPriceMapInCurrentMonth: Record<string, number> =
           productsInCurrentMonth.reduce(
@@ -437,7 +421,148 @@ export class ExpensesState {
         return {
           totalCost: totalCostInCurrentMonth,
           highestExpenseProduct,
-          lastMonthDiff: totalCostInCurrentMonth - totalCostInLastMonth,
+          lastMonthDiff: totalCostInLastMonth - totalCostInCurrentMonth,
+        };
+      })
+    );
+  }
+
+  getCategoryExpensesSummary(): Observable<CategorySummaryViewModel> {
+    return this._expensesState$.pipe(
+      map((state: ExpensesStateModel) => {
+        const now: Date = new Date();
+        const lastMonth: Date = new Date(
+          now.getFullYear(),
+          now.getMonth() - 1,
+          now.getDate()
+        );
+        const twoMonthsAgo: Date = new Date(
+          now.getFullYear(),
+          now.getMonth() - 2,
+          now.getDate()
+        );
+
+        const productsInCurrentMonthMap: Record<string, ExpenseProductModel[]> =
+          this._getExpensesProductsInRange(
+            state.expenses,
+            now,
+            lastMonth
+          ).reduce(
+            (
+              acc: Record<string, ExpenseProductModel[]>,
+              cur: ExpenseProductModel
+            ) => {
+              if (!acc[cur.category]) {
+                acc[cur.category] = [cur];
+                return acc;
+              }
+
+              acc[cur.category] = [...acc[cur.category], cur];
+              return acc;
+            },
+            {} as Record<string, ExpenseProductModel[]>
+          );
+
+        const highestExpenseCategoryInCurrentMonth: HighestExpensesCategoryViewModel =
+          Object.entries(productsInCurrentMonthMap).reduce(
+            (acc: HighestExpensesCategoryViewModel, [category, products]) => {
+              const categoryTotalCost: number = products.reduce(
+                (total, cur) => total + cur.price * cur.quantity,
+                0
+              );
+
+              if (categoryTotalCost > acc.price) {
+                return { name: category, price: categoryTotalCost };
+              }
+              return acc;
+            },
+            {
+              name: '',
+              price: 0,
+            }
+          );
+
+        const highestExpenseCategoryProductInCurrentMonthMap: Record<
+          string,
+          number
+        > = productsInCurrentMonthMap[
+          highestExpenseCategoryInCurrentMonth.name
+        ].reduce((acc: Record<string, number>, cur) => {
+          if (!acc[cur.name]) {
+            acc[cur.name] = cur.price * cur.quantity;
+            return acc;
+          }
+
+          acc[cur.name] += cur.price * cur.quantity;
+          return acc;
+        }, {});
+
+        const highestExpensesProductInCategoryInCurrentMonth: HighestExpenseProductViewModel =
+          Object.entries(highestExpenseCategoryProductInCurrentMonthMap).reduce(
+            (acc: HighestExpenseProductViewModel, [name, price]) => {
+              if (price > acc.price) {
+                return { name, price };
+              }
+
+              return acc;
+            },
+            { name: '', price: 0 }
+          );
+
+        const productsInLastMonthMap: Record<string, ExpenseProductModel[]> =
+          this._getExpensesProductsInRange(
+            state.expenses,
+            lastMonth,
+            twoMonthsAgo
+          ).reduce(
+            (
+              acc: Record<string, ExpenseProductModel[]>,
+              cur: ExpenseProductModel
+            ) => {
+              if (!acc[cur.category]) {
+                acc[cur.category] = [cur];
+                return acc;
+              }
+
+              acc[cur.category] = [...acc[cur.category], cur];
+              return acc;
+            },
+            {} as Record<string, ExpenseProductModel[]>
+          );
+
+        const totalCostInLastMonthInHighestExpensesCategory: number =
+          productsInLastMonthMap[highestExpenseCategoryInCurrentMonth.name]
+            ? productsInLastMonthMap[
+                highestExpenseCategoryInCurrentMonth.name
+              ].reduce(
+                (total: number, cur: ExpenseProductModel) =>
+                  total + cur.price * cur.quantity,
+                0
+              )
+            : 0;
+
+        console.log(
+          '######## Tutaj: ',
+          productsInLastMonthMap[highestExpenseCategoryInCurrentMonth.name]
+        );
+
+        console.log(
+          'totalCostInLastMonthInHighestExpensesCategory: ',
+          totalCostInLastMonthInHighestExpensesCategory
+        );
+        console.log(
+          'highestExpenseCategoryInCurrentMonth.price: ',
+          highestExpenseCategoryInCurrentMonth.price
+        );
+
+        return {
+          totalCost: highestExpenseCategoryInCurrentMonth.price,
+          name: highestExpenseCategoryInCurrentMonth.name,
+          highestExpensesProduct:
+            highestExpensesProductInCategoryInCurrentMonth,
+          lastMonthDiff:
+            totalCostInLastMonthInHighestExpensesCategory -
+            highestExpenseCategoryInCurrentMonth.price,
         };
       })
     );
@@ -515,5 +640,19 @@ export class ExpensesState {
         ? a.createdAt.getTime() - b.createdAt.getTime()
         : b.createdAt.getTime() - a.createdAt.getTime()
     );
+  }
+
+  private _getExpensesProductsInRange(
+    expenses: ExpenseModel[],
+    startDate: Date,
+    endDate: Date
+  ): ExpenseProductModel[] {
+    return expenses.reduce((acc: ExpenseProductModel[], cur: ExpenseModel) => {
+      if (cur.createdAt > endDate && cur.createdAt <= startDate) {
+        return [...acc, ...cur.products];
+      }
+
+      return acc;
+    }, []);
   }
 }
