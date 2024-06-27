@@ -6,8 +6,8 @@
             {{ 'In the last month' | i18n | async }}, {{ 'the most was spent on the category' | i18n | async }}:
             <span class="font-semibold"
                   [libEmotionTextDirective]="summary.lastMonthDiff">
-                {{ summary.name }}
-            </span>. {{ 'In this category, the most was spent on product' | i18n | async }}:
+                {{ summary.name }}.
+            </span> {{ 'In this category, the most was spent on product' | i18n | async }}:
             <span class="font-semibold"
                   [libEmotionTextDirective]="summary.lastMonthDiff"> {{ summary.highestExpensesProduct.name }}</span>
             {{ 'and spent' | i18n | async }}
