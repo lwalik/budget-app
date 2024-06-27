@@ -24,10 +24,8 @@
                      </svg>
               </div>
        </div>
-       <p *ngIf="formControl.touched && isRequired && !formControl.valid"
-          class="mt-2 text-sm text-red-600"
-          >{{ label + ' is required' | i18n | async }}</p>
+       <p *ngIf="formControl.touched && isRequired && !formControl.valid && formControl.value === ''"
+          class="mt-2 text-sm text-red-600">{{ label + ' is required' | i18n | async }}</p>
        <p *ngIf="!formControl.valid && formControl.touched && !!errorMsg && formControl.value !== ''"
-          class="mt-2 text-sm text-red-600"
-          >{{ errorMsg | i18n | async }}</p>
+          class="mt-2 text-sm text-red-600">{{ errorMsg | i18n | async }}</p>
 </div>

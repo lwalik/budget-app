@@ -8,11 +8,13 @@ import { ExpensesPage } from './pages/expenses/expenses.page';
 import { LoggedInPage } from './pages/logged-in/logged-in.page';
 import { LoginPage } from './pages/login/login.page';
 import { ProductsPage } from './pages/products/products.page';
+import { RegisterPage } from './pages/register/register.page';
 import { SummaryPage } from './pages/summary/summary.page';
 import { WalletsPage } from './pages/wallets/wallets.page';
 
 export const appRoutes: Route[] = [
   { path: 'login', component: LoginPage },
+  { path: 'register', component: RegisterPage },
   {
     path: '',
     canActivate: [AuthGuard],

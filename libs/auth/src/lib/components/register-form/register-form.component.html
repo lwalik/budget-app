@@ -1,0 +1,57 @@
+<div class="flex min-h-full  bg-primary">
+    <div class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+        <div class="mx-auto w-full max-w-sm lg:w-96">
+            <div>
+                <h2 class="mt-8 text-2xl font-bold leading-9 tracking-tight text-secondary">Create your account</h2>
+            </div>
+
+            <div class="mt-10">
+                <div>
+                    <form [formGroup]="registerForm"
+                          (ngSubmit)="onCreateAccountBtnClicked(registerForm)"
+                          class="">
+
+                        <lib-simple-input-form [control]="registerForm.get('email')"
+                                               [label]="'Email'"
+                                               [errorMsg]="'Wrong format'"
+                                               [isRequired]="true"
+                                               [type]="'text'"></lib-simple-input-form>
+
+                        <lib-simple-input-form [control]="registerForm.get('password')"
+                                               [label]="'Password'"
+                                               [isRequired]="true"
+                                               [type]="'password'"></lib-simple-input-form>
+
+                        <lib-simple-input-form [control]="registerForm.get('confirmPassword')"
+                                               [label]="'Confirm Password'"
+                                               [isRequired]="true"
+                                               [type]="'password'"></lib-simple-input-form>
+
+                        <button type="submit"
+                                [disabled]="!registerForm.valid"
+                                class="btn-warn mt-2">Create Account</button>
+
+                        <div class="h-2 mt-2">
+                            <p class="text-sm text-red-600"
+                               *ngIf="registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched && registerForm.get('password')?.touched">
+                                The passwords should be the same</p>
+
+                            <p class="text-sm text-red-600"
+                               *ngIf="registerForm.hasError('tooManyRequests')">Too Many Request. Try again later</p>
+
+                            <p class="text-sm text-red-600"
+                               *ngIf="registerForm.hasError('somethingWentWrong')">Something went wrong. Try again later
+                            </p>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="relative hidden w-0 flex-1 lg:block">
+        <img class="mx-auto absolute inset-0 h-full w-full object-cover"
+             src="/assets/images/bg-auth-form.png"
+             alt="">
+    </div>
+</div>
