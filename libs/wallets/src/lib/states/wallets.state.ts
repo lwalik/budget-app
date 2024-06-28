@@ -212,7 +212,7 @@ export class WalletsState implements WalletBalance, IncomesData {
             total,
             currency: 'PLN',
             diffSinceLastRange: total - prevTotal,
-            diffDaysCount: dateDiff / (1000 * 60 * 60 * 24),
+            diffDaysCount: Math.round(dateDiff / (1000 * 60 * 60 * 24)),
           };
         }
       )
