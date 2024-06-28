@@ -6,6 +6,7 @@ export * from './lib/components/wallets-list/wallets-list.component';
 export * from './lib/components/incomes-summary-card/incomes-summary-card.component';
 export * from './lib/components/current-balance-card/current-balance-card.component';
 export * from './lib/components/wallet-select-dashboard-filter/wallet-select-dashboard-filter.component';
+export * from './lib/components/deposits-summary-card/deposits-summary-card.component';
 // Resolvers
 export * from './lib/resolvers/load-wallets.resolver';
 // Providers

@@ -1,5 +1,7 @@
+import { MostPopularWalletViewModel } from './most-popular-wallet.view-model';
+
 export interface DepositsSummaryViewModel {
-  readonly value: number;
-  readonly mostPopularWalletName: string;
+  readonly total: number;
+  readonly mostPopularWallet: MostPopularWalletViewModel;
   readonly lastMonthDiff: number;
 }

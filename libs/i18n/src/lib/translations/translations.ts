@@ -428,4 +428,20 @@ export const translations: TranslationType = {
       pl: 'Nie posiadasz żadnych wydatków w ostatnim miesiącu. Dodaj swoje wydatki aby otrzymać podsumowanie kategorii.',
       en: 'You do not have any expenses in the last month. Add your expenses to get a category summary.',
     },
+  'on all the wallets you have deposited': {
+    pl: 'na wszystkie portfele wpłaciłeś',
+    en: 'on all the wallets you have deposited',
+  },
+  'The most you have deposited into a wallet named': {
+    pl: 'Najwięcej wpłaciłeś na portfel o nazwie',
+    en: 'The most you have deposited into a wallet named',
+  },
+  'and it is': {
+    pl: 'i wynosi to',
+    en: 'and it is',
+  },
+  'The total deposits are': {
+    pl: 'Łącznie depozyty są',
+    en: 'The total deposits are',
+  },
 };

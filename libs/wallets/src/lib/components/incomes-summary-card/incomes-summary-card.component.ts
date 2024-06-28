@@ -21,7 +21,7 @@ import { WalletsState } from '../../states/wallets.state';
 })
 export class IncomesSummaryCardComponent {
   readonly depositSummary$: Observable<TransactionSummaryViewModel> =
-    this._walletsState.getDepositSummary();
+    this._walletsState.getAvailableDepositSummary();
 
   constructor(private readonly _walletsState: WalletsState) {}
 }

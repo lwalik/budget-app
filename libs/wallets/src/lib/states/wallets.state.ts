@@ -28,6 +28,8 @@ import {
   WalletBalance,
 } from '@budget-app/shared';
 import { CurrentBalanceViewModel } from '../view-models/current-balance.view-model';
+import { DepositsSummaryViewModel } from '../view-models/deposits-summary.view-model';
+import { MostPopularWalletViewModel } from '../view-models/most-popular-wallet.view-model';
 
 const initialState: WalletStateModel = {
   wallets: [],
@@ -133,7 +135,7 @@ export class WalletsState implements WalletBalance, IncomesData {
     );
   }
 
-  getDepositSummary(): Observable<TransactionSummaryViewModel> {
+  getAvailableDepositSummary(): Observable<TransactionSummaryViewModel> {
     return combineLatest([
       this._walletsState$,
       this.dashboardFiltersState.getFilters(),
@@ -326,6 +328,77 @@ export class WalletsState implements WalletBalance, IncomesData {
     );
   }
 
+  getDepositsSummary(): Observable<DepositsSummaryViewModel | null> {
+    return this._walletsState$.pipe(
+      map((state: WalletStateModel) => {
+        if (state.wallets.length === 0) {
+          return null;
+        }
+
+        const now: Date = new Date();
+        const lastMonth: Date = new Date(
+          now.getFullYear(),
+          now.getMonth() - 1,
+          now.getDate()
+        );
+        const twoMonthsAgo: Date = new Date(
+          now.getFullYear(),
+          now.getMonth() - 2,
+          now.getDate()
+        );
+
+        const walletDepositsInCurrentMonthMap: Record<string, number> =
+          this._getWalletDepositsAmountMapInRange(
+            state.wallets,
+            now,
+            lastMonth
+          );
+
+        console.log(
+          'walletDepositsInCurrentMonthMap: ',
+          walletDepositsInCurrentMonthMap
+        );
+
+        const totalDepositsAmountInCurrentMonth: number = Object.values(
+          walletDepositsInCurrentMonthMap
+        ).reduce((total: number, cur: number) => total + cur, 0);
+
+        const mostPopularWalletInCurrentMonth: MostPopularWalletViewModel =
+          Object.entries(walletDepositsInCurrentMonthMap).reduce(
+            (acc, [name, total]) => {
+              if (total > acc.total) {
+                return { name, total };
+              }
+              return acc;
+            },
+            { name: '', total: 0 }
+          );
+
+        const walletDepositsInLastMonthMap: Record<string, number> =
+          this._getWalletDepositsAmountMapInRange(
+            state.wallets,
+            lastMonth,
+            twoMonthsAgo
+          );
+        console.log(
+          'walletDepositsInLastMonthMap: ',
+          walletDepositsInLastMonthMap
+        );
+
+        const totalDepositsAmountInLastMonth: number = Object.values(
+          walletDepositsInLastMonthMap
+        ).reduce((total: number, cur: number) => total + cur, 0);
+
+        return {
+          total: totalDepositsAmountInCurrentMonth,
+          mostPopularWallet: mostPopularWalletInCurrentMonth,
+          lastMonthDiff:
+            totalDepositsAmountInCurrentMonth - totalDepositsAmountInLastMonth,
+        };
+      })
+    );
+  }
+
   private _updateWalletBalance(
     walletId: string,
     value: number,
@@ -377,5 +450,27 @@ export class WalletsState implements WalletBalance, IncomesData {
           );
       })
     );
+  }
+
+  private _getWalletDepositsAmountMapInRange(
+    wallets: WalletModel[],
+    startDate: Date,
+    endDate: Date
+  ): Record<string, number> {
+    return wallets.reduce((acc: Record<string, number>, cur: WalletModel) => {
+      const depositsAmount: number = cur.deposits.reduce(
+        (total: number, cur: WalletDepositModel) => {
+          if (cur.createdAt > endDate && cur.createdAt <= startDate) {
+            return total + cur.value;
+          }
+
+          return total;
+        },
+        0
+      );
+
+      acc[cur.name] = depositsAmount;
+      return acc;
+    }, {});
   }
 }
