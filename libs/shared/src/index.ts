@@ -12,6 +12,7 @@ export * from './lib/view-models/confirmation-modal.view-model';
 export * from './lib/view-models/transaction-summary.view-model';
 export * from './lib/view-models/two-option-confirmation.view-model';
 export * from './lib/view-models/wallet-select-list-item.view-model';
+export * from './lib/view-models/loading-state.view-model';
 // Utils
 export * from './lib/utils/dates';
 export * from './lib/utils/rxjs';
