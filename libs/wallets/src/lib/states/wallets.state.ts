@@ -247,7 +247,6 @@ export class WalletsState implements WalletBalance, IncomesData {
   }
 
   deposit(walletId: string, value: number, createdAt: Date): Observable<void> {
-    // TODO Obsłużyć ręczny wybór daty
     return this._updateWalletBalance(
       walletId,
       value,
@@ -354,11 +353,6 @@ export class WalletsState implements WalletBalance, IncomesData {
             lastMonth
           );
 
-        console.log(
-          'walletDepositsInCurrentMonthMap: ',
-          walletDepositsInCurrentMonthMap
-        );
-
         const totalDepositsAmountInCurrentMonth: number = Object.values(
           walletDepositsInCurrentMonthMap
         ).reduce((total: number, cur: number) => total + cur, 0);
@@ -380,10 +374,6 @@ export class WalletsState implements WalletBalance, IncomesData {
             lastMonth,
             twoMonthsAgo
           );
-        console.log(
-          'walletDepositsInLastMonthMap: ',
-          walletDepositsInLastMonthMap
-        );
 
         const totalDepositsAmountInLastMonth: number = Object.values(
           walletDepositsInLastMonthMap
@@ -423,10 +413,7 @@ export class WalletsState implements WalletBalance, IncomesData {
                 createdAt: createdAt || new Date(),
               }
             : undefined;
-        const newBalance: number =
-          operation === WALLET_BALANCE_OPERATION_TYPE.RETURN || !!deposit
-            ? selectedWallet.balance + value
-            : selectedWallet.balance - value;
+        const newBalance: number = selectedWallet.balance + value;
 
         return this._walletsService
           .updateBalance(walletId, newBalance, deposit)

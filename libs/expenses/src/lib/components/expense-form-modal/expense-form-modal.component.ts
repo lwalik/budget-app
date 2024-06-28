@@ -98,6 +98,9 @@ export class ExpenseFormModalComponent implements OnInit {
         nonNullable: true,
         validators: [Validators.required],
       }),
+      prevTotalPrice: new FormControl(0, {
+        nonNullable: true,
+      }),
     },
     availableBalanceValidator
   );
@@ -120,7 +123,14 @@ export class ExpenseFormModalComponent implements OnInit {
     const createdAtFormControl: FormControl = this.expenseForm.get(
       'createdAt'
     ) as FormControl;
+
     createdAtFormControl.patchValue(formatDateToString(expense.createdAt));
+
+    const prevTotalPriceControl: FormControl = this.expenseForm.get(
+      'prevTotalPrice'
+    ) as FormControl;
+    prevTotalPriceControl.patchValue(expense.totalPrice);
+
     expense.products.forEach((product) => this._addProductControl(product));
     this._changePaginationPagesCount(expense.products.length - 1).subscribe();
   }

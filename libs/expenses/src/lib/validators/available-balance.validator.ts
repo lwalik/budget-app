@@ -13,6 +13,7 @@ export const availableBalanceValidator: ValidatorFn = (
   const walletForm: FormGroup = control.get('wallet') as FormGroup;
   const productsForm: FormArray = control.get('products') as FormArray;
   const balance: number = walletForm.get('balance')?.value as number;
+  const prevTotalPrice: number = control.get('prevTotalPrice')?.value as number;
   const products: ExpenseProductModel[] = productsForm.value;
 
   if (!balance || products.length === 0) {
@@ -25,5 +26,7 @@ export const availableBalanceValidator: ValidatorFn = (
     0
   );
 
-  return allProductsCost <= balance ? null : { insufficientBalance: true };
+  return allProductsCost <= balance + prevTotalPrice
+    ? null
+    : { insufficientBalance: true };
 };
