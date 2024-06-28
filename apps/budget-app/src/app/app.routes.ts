@@ -21,6 +21,7 @@ export const appRoutes: Route[] = [
     component: LoggedInPage,
     resolve: [LoadWalletsResolver, LoadProductsResolver, LoadExpensesResolver],
     children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardPage },
       {
         path: 'wallets',

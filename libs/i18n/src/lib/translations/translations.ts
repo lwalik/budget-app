@@ -355,4 +355,77 @@ export const translations: TranslationType = {
     pl: 'Całkowite wydatki na produkty w tej kategorii są',
     en: 'Total spending on products in this category is',
   },
+  'The passwords should be the same': {
+    pl: 'Hasła powinny być takie same',
+    en: 'The passwords should be the same',
+  },
+  Password: {
+    pl: 'Hasło',
+    en: 'Password',
+  },
+  'Confirm Password': {
+    pl: 'Potwierdź Hasło',
+    en: 'Confirm Password',
+  },
+  'Too Many Request. Try again later': {
+    pl: 'Zbyt wiele zapytań. Spróbuj ponownie później',
+    en: 'Too Many Request. Try again later',
+  },
+  'Something went wrong. Try again later': {
+    pl: 'Coś poszło nie tak. Spróbuj ponownie później',
+    en: 'Something went wrong. Try again later',
+  },
+  'The email address is already in use': {
+    pl: 'Adres email jest już używany',
+    en: 'The email address is already in use',
+  },
+  'Password should be at least 6 characters long': {
+    pl: 'Hasło powinno składać się z co najmniej 6 znaków',
+    en: 'Password should be at least 6 characters long',
+  },
+  'Wrong format': {
+    pl: 'Zły format',
+    en: 'Wrong format',
+  },
+  'Create your account': {
+    pl: 'Utwórz konto',
+    en: 'Create your account',
+  },
+  'Do you already have an account?': {
+    pl: 'Czy masz już konto?',
+    en: 'Do you already have an account?',
+  },
+  'Log in': {
+    pl: 'Zaloguj się',
+    en: 'Log in',
+  },
+  'Create Account': {
+    pl: 'Stwórz konto',
+    en: 'Create Account',
+  },
+  'Sign in to your account': {
+    pl: 'Zaloguj się na swoje konto',
+    en: 'Sign in to your account',
+  },
+  'Not a member?': {
+    pl: 'Nie masz konta?',
+    en: 'Not a member?',
+  },
+  Register: {
+    pl: 'Zarejestruj się',
+    en: 'Register',
+  },
+  'Sign in': {
+    pl: 'Zaloguj się',
+    en: 'Sign in',
+  },
+  'Invalid Credentials': {
+    pl: 'Nieprawidłowe dane logowania',
+    en: 'Invalid Credentials',
+  },
+  'You do not have any expenses in the last month. Add your expenses to get a category summary.':
+    {
+      pl: 'Nie posiadasz żadnych wydatków w ostatnim miesiącu. Dodaj swoje wydatki aby otrzymać podsumowanie kategorii.',
+      en: 'You do not have any expenses in the last month. Add your expenses to get a category summary.',
+    },
 };

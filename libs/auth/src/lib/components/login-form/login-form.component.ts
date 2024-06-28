@@ -11,8 +11,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
-import { SimpleInputFormComponent } from '@budget-app/shared';
+import { Router, RouterModule } from '@angular/router';
+import { SimpleInputFormComponent, TranslationPipe } from '@budget-app/shared';
 import { FirebaseError } from 'firebase/app';
 import { take } from 'rxjs';
 import { AuthState } from '../../state/auth.state';
@@ -20,7 +20,13 @@ import { AuthState } from '../../state/auth.state';
 @Component({
   selector: 'lib-login',
   standalone: true,
-  imports: [ReactiveFormsModule, SimpleInputFormComponent, CommonModule],
+  imports: [
+    ReactiveFormsModule,
+    SimpleInputFormComponent,
+    CommonModule,
+    RouterModule,
+    TranslationPipe,
+  ],
   templateUrl: './login-form.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,

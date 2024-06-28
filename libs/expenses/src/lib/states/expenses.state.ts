@@ -128,6 +128,9 @@ export class ExpensesState {
       switchMap(([userId, state]: [string, ExpensesStateModel]) =>
         this._expensesService.update(updatedExpense, userId).pipe(
           take(1),
+          switchMap(() =>
+            this._updateWalletBalance(state.expenses, updatedExpense)
+          ),
           tap(() =>
             this._expensesStateSubject.next({
               ...state,
@@ -137,9 +140,6 @@ export class ExpensesState {
                   : expense
               ),
             })
-          ),
-          switchMap(() =>
-            this._updateWalletBalance(state.expenses, updatedExpense)
           )
         )
       )
@@ -427,9 +427,13 @@ export class ExpensesState {
     );
   }
 
-  getCategoryExpensesSummary(): Observable<CategorySummaryViewModel> {
+  getCategoryExpensesSummary(): Observable<CategorySummaryViewModel | null> {
     return this._expensesState$.pipe(
       map((state: ExpensesStateModel) => {
+        if (state.expenses.length === 0) {
+          return null;
+        }
+
         const now: Date = new Date();
         const lastMonth: Date = new Date(
           now.getFullYear(),
@@ -482,12 +486,18 @@ export class ExpensesState {
             }
           );
 
-        const highestExpenseCategoryProductInCurrentMonthMap: Record<
+        if (highestExpenseCategoryInCurrentMonth.price === 0) {
+          return null;
+        }
+
+        const highestExpenseCategoryProductsInCurrentMonthMap: Record<
           string,
           number
-        > = productsInCurrentMonthMap[
-          highestExpenseCategoryInCurrentMonth.name
-        ].reduce((acc: Record<string, number>, cur) => {
+        > = (
+          productsInCurrentMonthMap[
+            highestExpenseCategoryInCurrentMonth.name
+          ] || []
+        ).reduce((acc: Record<string, number>, cur) => {
           if (!acc[cur.name]) {
             acc[cur.name] = cur.price * cur.quantity;
             return acc;
@@ -498,7 +508,9 @@ export class ExpensesState {
         }, {});
 
         const highestExpensesProductInCategoryInCurrentMonth: HighestExpenseProductViewModel =
-          Object.entries(highestExpenseCategoryProductInCurrentMonthMap).reduce(
+          Object.entries(
+            highestExpenseCategoryProductsInCurrentMonthMap
+          ).reduce(
             (acc: HighestExpenseProductViewModel, [name, price]) => {
               if (price > acc.price) {
                 return { name, price };
@@ -540,20 +552,6 @@ export class ExpensesState {
                 0
               )
             : 0;
-
-        console.log(
-          '######## Tutaj: ',
-          productsInLastMonthMap[highestExpenseCategoryInCurrentMonth.name]
-        );
-
-        console.log(
-          'totalCostInLastMonthInHighestExpensesCategory: ',
-          totalCostInLastMonthInHighestExpensesCategory
-        );
-        console.log(
-          'highestExpenseCategoryInCurrentMonth.price: ',
-          highestExpenseCategoryInCurrentMonth.price
-        );
 
         return {
           totalCost: highestExpenseCategoryInCurrentMonth.price,

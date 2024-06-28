@@ -27,7 +27,7 @@ import { CategorySummaryViewModel } from '../../view-models/category-summary.vie
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryExpensesSummaryCardComponent {
-  readonly summary$: Observable<CategorySummaryViewModel> =
+  readonly summary$: Observable<CategorySummaryViewModel | null> =
     this._expensesState.getCategoryExpensesSummary();
 
   constructor(private readonly _expensesState: ExpensesState) {}

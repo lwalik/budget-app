@@ -2,14 +2,20 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { map, Observable, of } from 'rxjs';
 import { AuthUserModel } from '../models/auth-user.model';
-import { LoginCredentialsModel } from '../models/login-credentials.model';
+import { UserCredentialsModel } from '../models/user-credentials.model';
 import { mapPromiseToVoidObservable } from '@budget-app/shared';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   constructor(private readonly _auth: AngularFireAuth) {}
 
-  login(user: LoginCredentialsModel): Observable<void> {
+  register(user: UserCredentialsModel): Observable<void> {
+    return mapPromiseToVoidObservable(
+      this._auth.createUserWithEmailAndPassword(user.email, user.password)
+    );
+  }
+
+  login(user: UserCredentialsModel): Observable<void> {
     return mapPromiseToVoidObservable(
       this._auth.signInWithEmailAndPassword(user.email, user.password)
     );

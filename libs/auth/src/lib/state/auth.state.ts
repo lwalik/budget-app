@@ -10,7 +10,7 @@ import {
   tap,
 } from 'rxjs';
 import { AuthUserModel } from '../models/auth-user.model';
-import { LoginCredentialsModel } from '../models/login-credentials.model';
+import { UserCredentialsModel } from '../models/user-credentials.model';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
@@ -20,7 +20,7 @@ export class AuthState implements UserContext {
 
   constructor(private readonly _authService: AuthService) {}
 
-  login(user: LoginCredentialsModel): Observable<void> {
+  login(user: UserCredentialsModel): Observable<void> {
     return this._authService.login(user).pipe(
       switchMap(() => this._authService.getUser()),
       tap((user: AuthUserModel | null) => this._userSubject.next(user)),
@@ -59,5 +59,9 @@ export class AuthState implements UserContext {
     return this._userSubject
       .asObservable()
       .pipe(map((user) => (user ? user.email : '')));
+  }
+
+  createUser(user: UserCredentialsModel): Observable<void> {
+    return this._authService.register(user);
   }
 }

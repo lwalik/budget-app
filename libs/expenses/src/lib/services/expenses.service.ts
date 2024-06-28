@@ -95,7 +95,7 @@ export class ExpensesService {
               expense.expenseId === updatedExpense.expenseId
                 ? {
                     ...updatedExpense,
-                    createdAt: expense.createdAt,
+                    createdAt: Timestamp.fromDate(updatedExpense.createdAt),
                   }
                 : expense
             ),

@@ -1,11 +1,11 @@
 <div class="flex min-h-full  bg-primary">
-  <div class="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+  <div class="relative flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
     <div class="mx-auto w-full max-w-sm lg:w-96">
       <div>
-        <h2 class="mt-8 text-2xl font-bold leading-9 tracking-tight text-secondary">Sign in to your account</h2>
+        <h2 class="mt-8 text-2xl font-bold leading-9 tracking-tight text-secondary">{{ 'Sign in to your account' | i18n | async }}</h2>
         <p class="mt-2 text-sm leading-6 text-gray-500">
-          Not a member?
-          <a class="font-semibold cursor-pointer text-warn hover:text-accent">Register</a>
+          {{ 'Not a member?' | i18n | async }}
+          <a class="font-semibold cursor-pointer text-warn hover:text-accent" routerLink="/register">{{ 'Register' | i18n | async }}</a>
         </p>
       </div>
 
@@ -28,23 +28,25 @@
 
             <button type="submit"
                     [disabled]="!loginForm.valid"
-                    class="btn-warn mt-2">Sign
-              in</button>
+                    class="btn-warn mt-2">{{ 'Sign in' | i18n | async }}</button>
 
             <div class="h-2 mt-2">
               <p class="text-sm text-red-600"
-                 *ngIf="loginForm.hasError('invalidCredentials')">Invalid Credentials</p>
+                 *ngIf="loginForm.hasError('invalidCredentials')">{{ 'Invalid Credentials' | i18n | async }}</p>
 
               <p class="text-sm text-red-600"
-                 *ngIf="loginForm.hasError('tooManyRequests')">Too Many Request. Try again later</p>
+                 *ngIf="loginForm.hasError('tooManyRequests')">{{ 'Too Many Request. Try again later' | i18n | async }}</p>
 
               <p class="text-sm text-red-600"
-                 *ngIf="loginForm.hasError('somethingWentWrong')">Something went wrong. Try again later</p>
+                 *ngIf="loginForm.hasError('somethingWentWrong')">{{ 'Something went wrong. Try again later' | i18n | async}}</p>
             </div>
 
           </form>
         </div>
       </div>
+    </div>
+    <div class="absolute bottom-10 right-10">
+      <ng-content select="[langSelect]"></ng-content>
     </div>
   </div>
   <div class="relative hidden w-0 flex-1 lg:block">
