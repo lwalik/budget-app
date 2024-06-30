@@ -444,4 +444,12 @@ export const translations: TranslationType = {
     pl: 'Łącznie depozyty są',
     en: 'The total deposits are',
   },
+  'Account created successfully': {
+    pl: 'Konto zostało pomyślnie utworzone',
+    en: 'Account created successfully',
+  },
+  'You can now log in to your account.': {
+    pl: 'Możesz teraz zalogować się na swoje konto.',
+    en: 'You can now log in to your account.',
+  },
 };

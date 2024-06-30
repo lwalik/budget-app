@@ -13,6 +13,7 @@ import {
 } from '@angular/forms';
 import {
   LoadingComponent,
+  NotificationsService,
   SimpleInputFormComponent,
   SpinnerComponent,
   TranslationPipe,
@@ -21,7 +22,7 @@ import { confirmPasswordValidator } from '../../validators/confirm-password.vali
 import { Router, RouterLink } from '@angular/router';
 import { AuthState } from '../../state/auth.state';
 import { FirebaseError } from 'firebase/app';
-import { take, tap } from 'rxjs';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'lib-register',
@@ -60,7 +61,8 @@ export class RegisterFormComponent extends LoadingComponent {
   constructor(
     private readonly _authState: AuthState,
     private readonly _router: Router,
-    private readonly _cdr: ChangeDetectorRef
+    private readonly _cdr: ChangeDetectorRef,
+    private readonly notificationsService: NotificationsService
   ) {
     super();
   }
@@ -81,6 +83,10 @@ export class RegisterFormComponent extends LoadingComponent {
         complete: () => {
           this.setLoading(false);
           this._router.navigateByUrl('login');
+          this.notificationsService.openSuccessNotification(
+            'Account created successfully',
+            'You can now log in to your account.'
+          );
         },
         error: (err: FirebaseError) => {
           this.setLoading(false);

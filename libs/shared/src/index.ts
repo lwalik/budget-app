@@ -33,3 +33,5 @@ export * from './lib/validators/whitespace.validator';
 export * from './lib/dashboard-filters';
 // Pagination
 export * from './lib/pagination';
+// Notifications
+export * from './lib/notifications';
