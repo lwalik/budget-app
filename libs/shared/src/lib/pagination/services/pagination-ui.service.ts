@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
-import { PaginationViewModel } from '@budget-app/shared';
-import { map, Observable, of, ReplaySubject, startWith, take, tap } from 'rxjs';
+import {
+  map,
+  Observable,
+  ReplaySubject,
+  shareReplay,
+  startWith,
+  take,
+  tap,
+} from 'rxjs';
+import { PaginationViewModel } from '../view-models/pagination.view-model';
 
 const initialPaginationState: PaginationViewModel = {
   first: 1,
@@ -17,7 +25,7 @@ export class PaginationUiService {
   private readonly _pagination$: Observable<PaginationViewModel> =
     this._paginationSubject
       .asObservable()
-      .pipe(startWith(initialPaginationState));
+      .pipe(startWith(initialPaginationState), shareReplay(1));
 
   getPagination(): Observable<PaginationViewModel> {
     return this._pagination$;

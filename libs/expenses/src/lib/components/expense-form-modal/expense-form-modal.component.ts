@@ -26,6 +26,8 @@ import {
   TranslationPipe,
   WalletSelectListItemViewModel,
   formatDateToString,
+  LoadingComponent,
+  SpinnerComponent,
 } from '@budget-app/shared';
 import { WalletSelectListComponent } from '@budget-app/wallets';
 import { BehaviorSubject, Observable, map, of, take, tap } from 'rxjs';
@@ -51,12 +53,16 @@ interface ExpenseFormDialogData {
     WalletSelectListComponent,
     SimpleSelectListComponent,
     TranslationPipe,
+    SpinnerComponent,
   ],
   templateUrl: './expense-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpenseFormModalComponent implements OnInit {
+export class ExpenseFormModalComponent
+  extends LoadingComponent
+  implements OnInit
+{
   readonly header: string = this.dialogData.isEdit
     ? 'Update Expense'
     : 'New Expense';
@@ -110,7 +116,9 @@ export class ExpenseFormModalComponent implements OnInit {
     @Inject(DIALOG_DATA)
     readonly dialogData: ExpenseFormDialogData,
     private readonly _expenseState: ExpensesState
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     if (!this.dialogData.isEdit || !this.dialogData.expense) {
@@ -240,6 +248,8 @@ export class ExpenseFormModalComponent implements OnInit {
       quantity: +product.quantity,
     }));
 
+    this.setLoading(true);
+
     if (!this.dialogData.isEdit || !this.dialogData.expense) {
       this._expenseState
         .addExpense({
@@ -254,7 +264,10 @@ export class ExpenseFormModalComponent implements OnInit {
           createdAt: new Date(this.expenseForm.get('createdAt')?.value),
         })
         .pipe(take(1))
-        .subscribe(() => this._dialogRef.close());
+        .subscribe(() => {
+          this.setLoading(false);
+          this._dialogRef.close();
+        });
       return;
     }
 
@@ -272,7 +285,10 @@ export class ExpenseFormModalComponent implements OnInit {
         currency: this._getWalletFormGroup().get('currency')?.value,
       })
       .pipe(take(1))
-      .subscribe(() => this._dialogRef.close());
+      .subscribe(() => {
+        this.setLoading(false);
+        this._dialogRef.close();
+      });
   }
 
   private _addProductControl(product?: ExpenseProductModel): void {

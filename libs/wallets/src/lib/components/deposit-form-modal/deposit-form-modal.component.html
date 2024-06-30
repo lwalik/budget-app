@@ -44,6 +44,7 @@
     <button type="submit"
             [disabled]="!depositForm.valid"
             class="btn-warn">
+      <lib-spinner *ngIf="isLoading$ | async"></lib-spinner>
       {{ 'Save' | i18n | async}}
     </button>
   </form>

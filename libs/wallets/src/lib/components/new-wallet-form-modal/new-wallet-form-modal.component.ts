@@ -12,8 +12,10 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  LoadingComponent,
   SimpleInputFormComponent,
   SimpleModalComponent,
+  SpinnerComponent,
   TranslationPipe,
   whitespaceValidator,
 } from '@budget-app/shared';
@@ -29,12 +31,13 @@ import { WalletsState } from '../../states/wallets.state';
     SimpleInputFormComponent,
     SimpleModalComponent,
     TranslationPipe,
+    SpinnerComponent,
   ],
   templateUrl: './new-wallet-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewWalletFormModalComponent {
+export class NewWalletFormModalComponent extends LoadingComponent {
   readonly walletForm: FormGroup = new FormGroup({
     name: new FormControl('', {
       validators: [Validators.required, whitespaceValidator],
@@ -49,12 +52,16 @@ export class NewWalletFormModalComponent {
   constructor(
     private readonly _dialogRef: DialogRef,
     private readonly _walletsState: WalletsState
-  ) {}
+  ) {
+    super();
+  }
 
   onWalletFormSubmitted(form: FormGroup): void {
     if (!form.valid) {
       return;
     }
+
+    this.setLoading(true);
 
     this._walletsState
       .createWallet({
@@ -63,6 +70,9 @@ export class NewWalletFormModalComponent {
         currency: 'PLN',
       })
       .pipe(take(1))
-      .subscribe(() => this._dialogRef.close());
+      .subscribe(() => {
+        this.setLoading(false);
+        this._dialogRef.close();
+      });
   }
 }

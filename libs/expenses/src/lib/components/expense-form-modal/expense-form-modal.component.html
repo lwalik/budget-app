@@ -154,6 +154,7 @@
     <button type="submit"
             [disabled]="!expenseForm.valid"
             class="btn-warn">
+      <lib-spinner *ngIf="isLoading$ | async"></lib-spinner>
       {{ 'Save' | i18n | async }}
     </button>
   </form>

@@ -14,9 +14,11 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  LoadingComponent,
   SelectAutocompleteListComponent,
   SimpleInputFormComponent,
   SimpleModalComponent,
+  SpinnerComponent,
 } from '@budget-app/shared';
 import { Observable, of, shareReplay, switchMap, take, tap } from 'rxjs';
 import { ProductsState } from '../../states/products.state';
@@ -36,12 +38,16 @@ interface ProductFormDialogData {
     ReactiveFormsModule,
     SimpleInputFormComponent,
     SelectAutocompleteListComponent,
+    SpinnerComponent,
   ],
   templateUrl: './product-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductFormModalComponent implements OnInit {
+export class ProductFormModalComponent
+  extends LoadingComponent
+  implements OnInit
+{
   readonly header: string = this._dialogData.isEdit
     ? 'Update Product'
     : 'New Product';
@@ -66,7 +72,9 @@ export class ProductFormModalComponent implements OnInit {
     private readonly _dialogRef: DialogRef,
     @Inject(DIALOG_DATA)
     private readonly _dialogData: ProductFormDialogData
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     if (!this._dialogData.isEdit || !this._dialogData.product) {
@@ -81,6 +89,9 @@ export class ProductFormModalComponent implements OnInit {
 
   productFormSubmitted(form: FormGroup): void {
     const product: ProductModel | undefined = this._dialogData.product;
+
+    this.setLoading(true);
+
     if (!this._dialogData.isEdit || !product) {
       this._productsState
         .addProduct({
@@ -88,7 +99,10 @@ export class ProductFormModalComponent implements OnInit {
           category: form.get('category')?.value.trim().toLowerCase(),
         })
         .pipe(take(1))
-        .subscribe(() => this._dialogRef.close());
+        .subscribe(() => {
+          this.setLoading(false);
+          this._dialogRef.close();
+        });
       return;
     }
 
@@ -99,7 +113,10 @@ export class ProductFormModalComponent implements OnInit {
         productId: product.productId,
       })
       .pipe(take(1))
-      .subscribe(() => this._dialogRef.close());
+      .subscribe(() => {
+        this.setLoading(false);
+        this._dialogRef.close();
+      });
   }
 
   onCategoryOptionSelected(option: string): void {

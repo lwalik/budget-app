@@ -12,8 +12,10 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  LoadingComponent,
   SimpleInputFormComponent,
   SimpleModalComponent,
+  SpinnerComponent,
   TranslationPipe,
 } from '@budget-app/shared';
 import { take } from 'rxjs';
@@ -30,12 +32,13 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     CommonModule,
     TranslationPipe,
+    SpinnerComponent,
   ],
   templateUrl: './deposit-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DepositFormModalComponent {
+export class DepositFormModalComponent extends LoadingComponent {
   readonly depositForm: FormGroup = new FormGroup({
     amount: new FormControl('', {
       nonNullable: true,
@@ -52,12 +55,15 @@ export class DepositFormModalComponent {
     private readonly _dialogRef: DialogRef,
     @Inject(DIALOG_DATA)
     private readonly _dialogData: WalletOperationDialogDataViewModel
-  ) {}
+  ) {
+    super();
+  }
 
   onDepositFormSubmitted(form: FormGroup): void {
     if (!form.valid) {
       return;
     }
+    this.setLoading(true);
 
     const amount: number = +form.get('amount')?.value;
     const createdAt: Date = new Date(form.get('createdAt')?.value);
@@ -65,6 +71,9 @@ export class DepositFormModalComponent {
     this._walletsState
       .deposit(this._dialogData.walletId, amount, createdAt)
       .pipe(take(1))
-      .subscribe(() => this._dialogRef.close());
+      .subscribe(() => {
+        this.setLoading(false);
+        this._dialogRef.close();
+      });
   }
 }

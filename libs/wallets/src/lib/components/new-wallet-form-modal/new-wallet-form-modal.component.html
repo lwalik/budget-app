@@ -1,17 +1,24 @@
 <lib-simple-modal header="New Wallet">
-  <form class="flex flex-col gap-2"
-        [formGroup]="walletForm"
-        (ngSubmit)="onWalletFormSubmitted(walletForm)">
-    <lib-simple-input-form [control]="this.walletForm.get('name')"
-                           [label]="'Name'"
-                           [isRequired]="true"
-                           [type]="'text'"></lib-simple-input-form>
-    <lib-simple-input-form [control]="this.walletForm.get('balance')"
-                           [label]="'Balance (PLN)'"
-                           [isRequired]="true"
-                           [type]="'number'"></lib-simple-input-form>
-    <button type="submit"
-            [disabled]="!walletForm.valid"
-            class="btn-warn">{{ 'Save' | i18n | async }}</button>
+  <form
+    class="flex flex-col gap-2"
+    [formGroup]="walletForm"
+    (ngSubmit)="onWalletFormSubmitted(walletForm)"
+  >
+    <lib-simple-input-form
+      [control]="this.walletForm.get('name')"
+      [label]="'Name'"
+      [isRequired]="true"
+      [type]="'text'"
+    ></lib-simple-input-form>
+    <lib-simple-input-form
+      [control]="this.walletForm.get('balance')"
+      [label]="'Balance (PLN)'"
+      [isRequired]="true"
+      [type]="'number'"
+    ></lib-simple-input-form>
+    <button type="submit" [disabled]="!walletForm.valid" class="btn-warn">
+      <lib-spinner *ngIf="isLoading$ | async"></lib-spinner>
+      {{ 'Save' | i18n | async }}
+    </button>
   </form>
 </lib-simple-modal>

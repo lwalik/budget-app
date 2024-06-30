@@ -12,9 +12,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { SimpleInputFormComponent, TranslationPipe } from '@budget-app/shared';
+import {
+  LoadingComponent,
+  SimpleInputFormComponent,
+  SpinnerComponent,
+  TranslationPipe,
+} from '@budget-app/shared';
 import { FirebaseError } from 'firebase/app';
-import { take } from 'rxjs';
+import { take, tap } from 'rxjs';
 import { AuthState } from '../../state/auth.state';
 
 @Component({
@@ -26,12 +31,13 @@ import { AuthState } from '../../state/auth.state';
     CommonModule,
     RouterModule,
     TranslationPipe,
+    SpinnerComponent,
   ],
   templateUrl: './login-form.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginFormComponent {
+export class LoginFormComponent extends LoadingComponent {
   readonly loginForm: FormGroup = new FormGroup({
     email: new FormControl<string>('', {
       validators: [Validators.required, Validators.email],
@@ -47,13 +53,16 @@ export class LoginFormComponent {
     private readonly _authState: AuthState,
     private readonly _router: Router,
     private readonly _cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    super();
+  }
 
   onSignInBtnClicked(form: FormGroup): void {
     if (!form.valid) {
       return;
     }
 
+    this.setLoading(true);
     this._authState
       .login({
         email: form.get('email')?.value,
@@ -61,8 +70,13 @@ export class LoginFormComponent {
       })
       .pipe(take(1))
       .subscribe({
-        complete: () => this._router.navigateByUrl('/dashboard'),
+        complete: () => {
+          this.setLoading(false);
+          this._router.navigateByUrl('/dashboard');
+        },
         error: (err: FirebaseError) => {
+          this.setLoading(false);
+
           if (err.code === 'auth/invalid-credential') {
             this.loginForm.setErrors({
               invalidCredentials: true,

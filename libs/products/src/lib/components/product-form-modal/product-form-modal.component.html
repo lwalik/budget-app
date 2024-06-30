@@ -30,6 +30,7 @@
     <button type="submit"
             [disabled]="!productForm.valid"
             class="btn-warn">
+      <lib-spinner *ngIf="isLoading$ | async"></lib-spinner>
       Save
     </button>
   </form>
