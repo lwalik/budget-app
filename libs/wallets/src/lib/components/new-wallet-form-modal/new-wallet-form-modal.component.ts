@@ -13,6 +13,7 @@ import {
 } from '@angular/forms';
 import {
   LoadingComponent,
+  NotificationsService,
   SimpleInputFormComponent,
   SimpleModalComponent,
   SpinnerComponent,
@@ -51,7 +52,8 @@ export class NewWalletFormModalComponent extends LoadingComponent {
 
   constructor(
     private readonly _dialogRef: DialogRef,
-    private readonly _walletsState: WalletsState
+    private readonly _walletsState: WalletsState,
+    private readonly _notificationsService: NotificationsService
   ) {
     super();
   }
@@ -70,9 +72,18 @@ export class NewWalletFormModalComponent extends LoadingComponent {
         currency: 'PLN',
       })
       .pipe(take(1))
-      .subscribe(() => {
-        this.setLoading(false);
-        this._dialogRef.close();
+      .subscribe({
+        complete: () => {
+          this._notificationsService.openSuccessNotification(
+            'The wallet has been added'
+          );
+          this.setLoading(false);
+          this._dialogRef.close();
+        },
+        error: () => {
+          this.setLoading(false);
+          this._dialogRef.close();
+        },
       });
   }
 }

@@ -15,14 +15,15 @@ import {
 } from '@angular/forms';
 import {
   LoadingComponent,
+  NotificationsService,
   SelectAutocompleteListComponent,
   SimpleInputFormComponent,
   SimpleModalComponent,
   SpinnerComponent,
 } from '@budget-app/shared';
 import { Observable, of, shareReplay, switchMap, take, tap } from 'rxjs';
-import { ProductsState } from '../../states/products.state';
 import { ProductModel } from '../../models/product.model';
+import { ProductsState } from '../../states/products.state';
 
 interface ProductFormDialogData {
   readonly isEdit: boolean;
@@ -71,7 +72,8 @@ export class ProductFormModalComponent
     private readonly _productsState: ProductsState,
     private readonly _dialogRef: DialogRef,
     @Inject(DIALOG_DATA)
-    private readonly _dialogData: ProductFormDialogData
+    private readonly _dialogData: ProductFormDialogData,
+    private readonly _notificationsService: NotificationsService
   ) {
     super();
   }
@@ -99,9 +101,18 @@ export class ProductFormModalComponent
           category: form.get('category')?.value.trim().toLowerCase(),
         })
         .pipe(take(1))
-        .subscribe(() => {
-          this.setLoading(false);
-          this._dialogRef.close();
+        .subscribe({
+          complete: () => {
+            this._notificationsService.openSuccessNotification(
+              'The product has been added'
+            );
+            this.setLoading(false);
+            this._dialogRef.close();
+          },
+          error: () => {
+            this.setLoading(false);
+            this._dialogRef.close();
+          },
         });
       return;
     }
@@ -113,9 +124,18 @@ export class ProductFormModalComponent
         productId: product.productId,
       })
       .pipe(take(1))
-      .subscribe(() => {
-        this.setLoading(false);
-        this._dialogRef.close();
+      .subscribe({
+        complete: () => {
+          this._notificationsService.openSuccessNotification(
+            'The product has been edited'
+          );
+          this.setLoading(false);
+          this._dialogRef.close();
+        },
+        error: () => {
+          this.setLoading(false);
+          this._dialogRef.close();
+        },
       });
   }
 

@@ -9,6 +9,7 @@ import {
 import {
   GET_TRANSLATION,
   GetTranslation,
+  NotificationsService,
   PaginationComponent,
   PaginationUiService,
   PaginationViewModel,
@@ -26,6 +27,7 @@ import {
   shareReplay,
   switchMap,
   take,
+  tap,
 } from 'rxjs';
 import { ExpenseModel } from '../../models/expense.model';
 import { ExpensesState } from '../../states/expenses.state';
@@ -71,7 +73,8 @@ export class ExpensesTableComponent {
     private readonly _expensesState: ExpensesState,
     private readonly _dialog: Dialog,
     private readonly _paginationUiService: PaginationUiService,
-    @Inject(GET_TRANSLATION) private readonly _getTranslation: GetTranslation
+    @Inject(GET_TRANSLATION) private readonly _getTranslation: GetTranslation,
+    private readonly _notificationsService: NotificationsService
   ) {}
 
   onAddExpenseBtnClicked(): void {
@@ -134,6 +137,11 @@ export class ExpensesTableComponent {
               }
               return this._expensesState.deleteExpense(expense.expenseId).pipe(
                 take(1),
+                tap(() =>
+                  this._notificationsService.openSuccessNotification(
+                    'The expense has been removed'
+                  )
+                ),
                 switchMap(() =>
                   result === 1
                     ? this._expensesState.revertWalletBalance(expense)

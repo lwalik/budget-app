@@ -19,15 +19,16 @@ import {
   ProductsSelectListComponent,
 } from '@budget-app/products';
 import {
+  LoadingComponent,
+  NotificationsService,
   SimpleInputFormComponent,
   SimpleModalComponent,
   SimplePaginationViewModel,
   SimpleSelectListComponent,
+  SpinnerComponent,
   TranslationPipe,
   WalletSelectListItemViewModel,
   formatDateToString,
-  LoadingComponent,
-  SpinnerComponent,
 } from '@budget-app/shared';
 import { WalletSelectListComponent } from '@budget-app/wallets';
 import { BehaviorSubject, Observable, map, of, take, tap } from 'rxjs';
@@ -115,7 +116,8 @@ export class ExpenseFormModalComponent
     private readonly _dialogRef: DialogRef,
     @Inject(DIALOG_DATA)
     readonly dialogData: ExpenseFormDialogData,
-    private readonly _expenseState: ExpensesState
+    private readonly _expenseState: ExpensesState,
+    private readonly _notificationsService: NotificationsService
   ) {
     super();
   }
@@ -264,9 +266,18 @@ export class ExpenseFormModalComponent
           createdAt: new Date(this.expenseForm.get('createdAt')?.value),
         })
         .pipe(take(1))
-        .subscribe(() => {
-          this.setLoading(false);
-          this._dialogRef.close();
+        .subscribe({
+          complete: () => {
+            this._notificationsService.openSuccessNotification(
+              'The expense has been added'
+            );
+            this.setLoading(false);
+            this._dialogRef.close();
+          },
+          error: () => {
+            this.setLoading(false);
+            this._dialogRef.close();
+          },
         });
       return;
     }
@@ -285,9 +296,18 @@ export class ExpenseFormModalComponent
         currency: this._getWalletFormGroup().get('currency')?.value,
       })
       .pipe(take(1))
-      .subscribe(() => {
-        this.setLoading(false);
-        this._dialogRef.close();
+      .subscribe({
+        complete: () => {
+          this._notificationsService.openSuccessNotification(
+            'The expense has been edited'
+          );
+          this.setLoading(false);
+          this._dialogRef.close();
+        },
+        error: () => {
+          this.setLoading(false);
+          this._dialogRef.close();
+        },
       });
   }
 

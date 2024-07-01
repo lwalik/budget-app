@@ -1,4 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,6 +14,7 @@ import {
 } from '@angular/forms';
 import {
   LoadingComponent,
+  NotificationsService,
   SimpleInputFormComponent,
   SimpleModalComponent,
   SpinnerComponent,
@@ -21,7 +23,6 @@ import {
 import { take } from 'rxjs';
 import { WalletsState } from '../../states/wallets.state';
 import { WalletOperationDialogDataViewModel } from '../../view-models/wallet-operation-dialog-data.view-model';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lib-deposit-form-modal',
@@ -54,7 +55,8 @@ export class DepositFormModalComponent extends LoadingComponent {
     private readonly _walletsState: WalletsState,
     private readonly _dialogRef: DialogRef,
     @Inject(DIALOG_DATA)
-    private readonly _dialogData: WalletOperationDialogDataViewModel
+    private readonly _dialogData: WalletOperationDialogDataViewModel,
+    private readonly _notificationsService: NotificationsService
   ) {
     super();
   }
@@ -71,9 +73,18 @@ export class DepositFormModalComponent extends LoadingComponent {
     this._walletsState
       .deposit(this._dialogData.walletId, amount, createdAt)
       .pipe(take(1))
-      .subscribe(() => {
-        this.setLoading(false);
-        this._dialogRef.close();
+      .subscribe({
+        complete: () => {
+          this._notificationsService.openSuccessNotification(
+            'Deposit successful'
+          );
+          this.setLoading(false);
+          this._dialogRef.close();
+        },
+        error: () => {
+          this.setLoading(false);
+          this._dialogRef.close();
+        },
       });
   }
 }

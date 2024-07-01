@@ -452,4 +452,40 @@ export const translations: TranslationType = {
     pl: 'Możesz teraz zalogować się na swoje konto.',
     en: 'You can now log in to your account.',
   },
+  'Deposit successful': {
+    pl: 'Depozyt udany',
+    en: 'Deposit successful',
+  },
+  'The wallet has been added': {
+    pl: 'Portfel został dodany',
+    en: 'The wallet has been added',
+  },
+  'The wallet has been removed': {
+    pl: 'Portfel został usunięty',
+    en: 'The wallet has been removed',
+  },
+  'The product has been removed': {
+    pl: 'Produkt został usunięty',
+    en: 'The product has been removed',
+  },
+  'The product has been added': {
+    pl: 'Produkt został dodany',
+    en: 'The product has been added',
+  },
+  'The product has been edited': {
+    pl: 'Produkt został edytowany',
+    en: 'The product has been edited',
+  },
+  'The expense has been added': {
+    pl: 'Wydatek został dodany',
+    en: 'The expense has been added',
+  },
+  'The expense has been edited': {
+    pl: 'Wydatek został edytowany',
+    en: 'The expense has been edited',
+  },
+  'The expense has been removed': {
+    pl: 'Wydatek został usunięty',
+    en: 'The expense has been removed',
+  },
 };

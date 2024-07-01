@@ -8,6 +8,7 @@ import {
 import {
   ConfirmationModalComponent,
   ConfirmationModalViewModel,
+  NotificationsService,
   PaginationComponent,
   PaginationUiService,
   PaginationViewModel,
@@ -21,6 +22,7 @@ import {
   shareReplay,
   switchMap,
   take,
+  tap,
 } from 'rxjs';
 import { ProductModel } from '../../models/product.model';
 import { ProductsState } from '../../states/products.state';
@@ -59,7 +61,8 @@ export class ProductsTableComponent {
   constructor(
     private readonly _productsState: ProductsState,
     private readonly _dialog: Dialog,
-    private readonly _paginationUiService: PaginationUiService
+    private readonly _paginationUiService: PaginationUiService,
+    private readonly _notificationsService: NotificationsService
   ) {}
 
   onAddProductBtnClicked(): void {
@@ -101,7 +104,14 @@ export class ProductsTableComponent {
         take(1),
         switchMap((isConfirmed: boolean | undefined) =>
           isConfirmed
-            ? this._productsState.deleteProduct(product.productId).pipe(take(1))
+            ? this._productsState.deleteProduct(product.productId).pipe(
+                take(1),
+                tap(() =>
+                  this._notificationsService.openSuccessNotification(
+                    'The product has been removed'
+                  )
+                )
+              )
             : of(void 0)
         )
       )

@@ -13,9 +13,10 @@ import {
   ConfirmationModalViewModel,
   GET_TRANSLATION,
   GetTranslation,
+  NotificationsService,
   TranslationPipe,
 } from '@budget-app/shared';
-import { map, Observable, of, switchMap, take, tap } from 'rxjs';
+import { Observable, map, of, switchMap, take, tap } from 'rxjs';
 import { WalletModel } from '../../models/wallet.model';
 import { WalletsState } from '../../states/wallets.state';
 import { DepositFormModalComponent } from '../deposit-form-modal/deposit-form-modal.component';
@@ -38,7 +39,8 @@ export class WalletsListComponent {
   constructor(
     private readonly _walletsState: WalletsState,
     private readonly _dialog: Dialog,
-    @Inject(GET_TRANSLATION) private readonly _getTranslation: GetTranslation
+    @Inject(GET_TRANSLATION) private readonly _getTranslation: GetTranslation,
+    private readonly _notificationsService: NotificationsService
   ) {}
 
   onNewWalletBtnClicked(): void {
@@ -90,7 +92,12 @@ export class WalletsListComponent {
               isConfirmed
                 ? this._walletsState.deleteWallet(wallet.id).pipe(
                     take(1),
-                    tap(() => this.walletRemoved.emit(wallet.id))
+                    tap(() => {
+                      this.walletRemoved.emit(wallet.id);
+                      this._notificationsService.openSuccessNotification(
+                        'The wallet has been removed'
+                      );
+                    })
                   )
                 : of(void 0)
             )

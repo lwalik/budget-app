@@ -1,10 +1,22 @@
 import { Inject, Injectable } from '@angular/core';
 import { USER_CONTEXT, UserContext } from '@budget-app/core';
 import {
+  DashboardFiltersState,
+  DashboardFiltersStateModel,
+  IncomesData,
+  IncomesDataViewModel,
+  TransactionSummaryViewModel,
+  WalletBalance,
+  compareDatesWithoutTime,
+  getDayWithMonthAsString,
+  isAfterDate,
+  isBeforeDate,
+} from '@budget-app/shared';
+import {
   BehaviorSubject,
+  Observable,
   combineLatest,
   map,
-  Observable,
   of,
   switchMap,
   take,
@@ -15,18 +27,6 @@ import { WalletDepositModel } from '../models/wallet-deposit.model';
 import { WalletStateModel } from '../models/wallet-state.model';
 import { CreateWalletModel, WalletModel } from '../models/wallet.model';
 import { WalletsService } from '../services/wallets.service';
-import {
-  compareDatesWithoutTime,
-  DashboardFiltersState,
-  DashboardFiltersStateModel,
-  getDayWithMonthAsString,
-  IncomesData,
-  IncomesDataViewModel,
-  isAfterDate,
-  isBeforeDate,
-  TransactionSummaryViewModel,
-  WalletBalance,
-} from '@budget-app/shared';
 import { CurrentBalanceViewModel } from '../view-models/current-balance.view-model';
 import { DepositsSummaryViewModel } from '../view-models/deposits-summary.view-model';
 import { MostPopularWalletViewModel } from '../view-models/most-popular-wallet.view-model';

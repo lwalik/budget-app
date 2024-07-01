@@ -1,5 +1,5 @@
 import { Directive, HostListener } from '@angular/core';
-import { take } from 'rxjs';
+import { take, tap } from 'rxjs';
 import { ExpensesState } from '../states/expenses.state';
 
 @Directive({ selector: '[libDeleteWalletExpenses]', standalone: true })
@@ -10,7 +10,12 @@ export class DeleteWalletExpensesDirective {
   DeleteWalletExpensesDirective(event: string): void {
     this._expensesState
       .deleteAllWalletExpenses(event)
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        tap(() => {
+          console.log('test');
+        })
+      )
       .subscribe();
   }
 }
