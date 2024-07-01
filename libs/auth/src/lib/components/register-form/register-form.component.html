@@ -1,92 +1,67 @@
 <div class="flex min-h-full bg-primary">
-  <div
-    class="relative flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24"
-  >
+  <div class="relative flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
     <div class="mx-auto w-full max-w-sm lg:w-96">
       <div>
-        <h2
-          class="mt-8 text-2xl font-bold leading-9 tracking-tight text-secondary"
-        >
+        <h2 class="mt-8 text-2xl font-bold leading-9 tracking-tight text-secondary">
           {{ 'Create your account' | i18n | async }}
         </h2>
         <p class="mt-2 text-sm leading-6 text-gray-500">
           {{ 'Do you already have an account?' | i18n | async }}
-          <a
-            class="font-semibold cursor-pointer text-warn hover:text-accent"
-            routerLink="/login"
-            >{{ 'Log in' | i18n | async }}</a
-          >
+          <a class="font-semibold cursor-pointer text-warn hover:text-accent"
+             routerLink="/login">{{ 'Log in' | i18n | async }}</a>
         </p>
       </div>
 
       <div class="mt-10">
         <div>
-          <form
-            [formGroup]="registerForm"
-            (ngSubmit)="onCreateAccountBtnClicked(registerForm)"
-          >
-            <lib-simple-input-form
-              [control]="registerForm.get('email')"
-              [label]="'Email'"
-              [errorMsg]="'Wrong format'"
-              [isRequired]="true"
-              [type]="'text'"
-            ></lib-simple-input-form>
+          <form [formGroup]="registerForm"
+                (ngSubmit)="onCreateAccountBtnClicked(registerForm)">
+            <lib-simple-input-form [control]="registerForm.get('email')"
+                                   [label]="'Email'"
+                                   [errorMsg]="'Wrong format'"
+                                   [isRequired]="true"
+                                   [type]="'text'"></lib-simple-input-form>
 
-            <lib-simple-input-form
-              [control]="registerForm.get('password')"
-              [label]="'Password'"
-              [isRequired]="true"
-              [errorMsg]="'Password should be at least 6 characters long'"
-              [type]="'password'"
-            ></lib-simple-input-form>
+            <lib-simple-input-form [control]="registerForm.get('password')"
+                                   [label]="'Password'"
+                                   [isRequired]="true"
+                                   [errorMsg]="'Password should be at least 6 characters long'"
+                                   [type]="'password'"></lib-simple-input-form>
 
-            <lib-simple-input-form
-              [control]="registerForm.get('confirmPassword')"
-              [label]="'Confirm Password'"
-              [isRequired]="true"
-              [errorMsg]="'Password should be at least 6 characters long'"
-              [type]="'password'"
-            ></lib-simple-input-form>
+            <lib-simple-input-form [control]="registerForm.get('confirmPassword')"
+                                   [label]="'Confirm Password'"
+                                   [isRequired]="true"
+                                   [errorMsg]="'Password should be at least 6 characters long'"
+                                   [type]="'password'"></lib-simple-input-form>
 
-            <button
-              type="submit"
-              [disabled]="!registerForm.valid"
-              class="btn-warn mt-2 flex items-center"
-            >
+            <button type="submit"
+                    [disabled]="!registerForm.valid"
+                    class="btn-warn mt-2 flex items-center">
               <lib-spinner *ngIf="isLoading$ | async"></lib-spinner>
               {{ 'Create Account' | i18n | async }}
             </button>
 
             <div class="h-2 mt-2">
-              <p
-                class="text-sm text-red-600"
-                *ngIf="
+              <p class="text-sm text-red-600"
+                 *ngIf="
                   registerForm.hasError('passwordMismatch') &&
                   registerForm.get('confirmPassword')?.touched &&
                   registerForm.get('password')?.touched
-                "
-              >
+                ">
                 {{ 'The passwords should be the same' | i18n | async }}
               </p>
 
-              <p
-                class="text-sm text-red-600"
-                *ngIf="registerForm.hasError('tooManyRequests')"
-              >
+              <p class="text-sm text-red-600"
+                 *ngIf="registerForm.hasError('tooManyRequests')">
                 {{ 'Too Many Request. Try again later' | i18n | async }}
               </p>
 
-              <p
-                class="text-sm text-red-600"
-                *ngIf="registerForm.hasError('somethingWentWrong')"
-              >
+              <p class="text-sm text-red-600"
+                 *ngIf="registerForm.hasError('somethingWentWrong')">
                 {{ 'Something went wrong. Try again later' | i18n | async }}
               </p>
-              <p
-                class="text-sm text-red-600"
-                *ngIf="registerForm.hasError('emailAlreadyInUse')"
-              >
+              <p class="text-sm text-red-600"
+                 *ngIf="registerForm.hasError('emailAlreadyInUse')">
                 {{ 'The email address is already in use' | i18n | async }}
               </p>
             </div>
@@ -99,10 +74,8 @@
     </div>
   </div>
   <div class="relative hidden w-0 flex-1 lg:block">
-    <img
-      class="mx-auto absolute inset-0 h-full w-full object-cover"
-      src="/assets/images/bg-auth-form.png"
-      alt=""
-    />
+    <img class="mx-auto absolute inset-0 h-full w-full object-cover"
+         src="/assets/images/bg-auth-form.png"
+         alt="" />
   </div>
 </div>

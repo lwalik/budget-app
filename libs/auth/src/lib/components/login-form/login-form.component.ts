@@ -19,7 +19,7 @@ import {
   TranslationPipe,
 } from '@budget-app/shared';
 import { FirebaseError } from 'firebase/app';
-import { take, tap } from 'rxjs';
+import { take } from 'rxjs';
 import { AuthState } from '../../state/auth.state';
 
 @Component({

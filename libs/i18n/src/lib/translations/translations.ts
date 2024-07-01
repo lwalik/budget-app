@@ -488,4 +488,40 @@ export const translations: TranslationType = {
     pl: 'Wydatek został usunięty',
     en: 'The expense has been removed',
   },
+  'The wallet has not been removed': {
+    pl: 'Portfel nie został usunięty',
+    en: 'The wallet has not been removed',
+  },
+  'Try again later': {
+    pl: 'Spróbuj ponownie później',
+    en: 'Try again later',
+  },
+  'Registration failed': {
+    pl: 'Rejestracja nie powiodła się',
+    en: 'Registration failed',
+  },
+  'The expense has not been added': {
+    pl: 'Wydatek nie został dodany',
+    en: 'The expense has not been added',
+  },
+  'The expense has not been edited': {
+    pl: 'Wydatek nie został edytowany',
+    en: 'The expense has not been edited',
+  },
+  'The product has not been added': {
+    pl: 'Produkt nie został dodany',
+    en: 'The product has not been added',
+  },
+  'The product has not been edited': {
+    pl: 'Produkt nie został edytowany',
+    en: 'The product has not been edited',
+  },
+  'Deposit failed': {
+    pl: 'Depozyt nie powiódł się',
+    en: 'Deposit failed',
+  },
+  'The wallet has not been added': {
+    pl: 'Portfel nie został dodany',
+    en: 'The wallet has not been added',
+  },
 };

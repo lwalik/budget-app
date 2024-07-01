@@ -81,6 +81,10 @@ export class NewWalletFormModalComponent extends LoadingComponent {
           this._dialogRef.close();
         },
         error: () => {
+          this._notificationsService.openFailureNotification(
+            'The wallet has not been added',
+            'Try again later'
+          );
           this.setLoading(false);
           this._dialogRef.close();
         },

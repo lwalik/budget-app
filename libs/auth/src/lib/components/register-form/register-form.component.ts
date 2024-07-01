@@ -11,6 +11,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import {
   LoadingComponent,
   NotificationsService,
@@ -18,11 +19,10 @@ import {
   SpinnerComponent,
   TranslationPipe,
 } from '@budget-app/shared';
-import { confirmPasswordValidator } from '../../validators/confirm-password.validator';
-import { Router, RouterLink } from '@angular/router';
-import { AuthState } from '../../state/auth.state';
 import { FirebaseError } from 'firebase/app';
 import { take } from 'rxjs';
+import { AuthState } from '../../state/auth.state';
+import { confirmPasswordValidator } from '../../validators/confirm-password.validator';
 
 @Component({
   selector: 'lib-register',
@@ -62,7 +62,7 @@ export class RegisterFormComponent extends LoadingComponent {
     private readonly _authState: AuthState,
     private readonly _router: Router,
     private readonly _cdr: ChangeDetectorRef,
-    private readonly notificationsService: NotificationsService
+    private readonly _notificationsService: NotificationsService
   ) {
     super();
   }
@@ -83,13 +83,18 @@ export class RegisterFormComponent extends LoadingComponent {
         complete: () => {
           this.setLoading(false);
           this._router.navigateByUrl('login');
-          this.notificationsService.openSuccessNotification(
+          this._notificationsService.openSuccessNotification(
             'Account created successfully',
             'You can now log in to your account.'
           );
         },
         error: (err: FirebaseError) => {
           this.setLoading(false);
+
+          this._notificationsService.openFailureNotification(
+            'Registration failed',
+            'Try again later'
+          );
           if (err.code === 'auth/email-already-in-use') {
             form.setErrors({
               emailAlreadyInUse: true,

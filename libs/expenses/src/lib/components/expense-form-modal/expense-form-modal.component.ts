@@ -275,6 +275,10 @@ export class ExpenseFormModalComponent
             this._dialogRef.close();
           },
           error: () => {
+            this._notificationsService.openFailureNotification(
+              'The expense has not been added',
+              'Try again later'
+            );
             this.setLoading(false);
             this._dialogRef.close();
           },
@@ -305,6 +309,10 @@ export class ExpenseFormModalComponent
           this._dialogRef.close();
         },
         error: () => {
+          this._notificationsService.openFailureNotification(
+            'The expense has not been edited',
+            'Try again later'
+          );
           this.setLoading(false);
           this._dialogRef.close();
         },

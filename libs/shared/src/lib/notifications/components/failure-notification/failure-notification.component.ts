@@ -11,14 +11,14 @@ import { SimpleNotificationViewModel } from '../../view-models/simple-notificati
 import { SimpleNotificationComponent } from '../simple-notification/simple-notification.component';
 
 @Component({
-  selector: 'lib-success-notification',
+  selector: 'lib-failure-notification',
   standalone: true,
   imports: [NgIf, AsyncPipe, TranslationPipe, SimpleNotificationComponent],
-  templateUrl: './success-notification.component.html',
+  templateUrl: './failure-notification.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SuccessNotificationComponent {
+export class FailureNotificationComponent {
   constructor(
     @Inject(DIALOG_DATA)
     readonly dialogData: SimpleNotificationViewModel

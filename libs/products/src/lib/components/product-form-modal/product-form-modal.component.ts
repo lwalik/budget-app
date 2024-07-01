@@ -110,6 +110,10 @@ export class ProductFormModalComponent
             this._dialogRef.close();
           },
           error: () => {
+            this._notificationsService.openFailureNotification(
+              'The product has not been added',
+              'Try again later'
+            );
             this.setLoading(false);
             this._dialogRef.close();
           },
@@ -133,6 +137,10 @@ export class ProductFormModalComponent
           this._dialogRef.close();
         },
         error: () => {
+          this._notificationsService.openFailureNotification(
+            'The product has not been edited',
+            'Try again later'
+          );
           this.setLoading(false);
           this._dialogRef.close();
         },

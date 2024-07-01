@@ -104,6 +104,13 @@ export class WalletsListComponent {
           )
         )
       )
-      .subscribe();
+      .subscribe({
+        error: () => {
+          this._notificationsService.openFailureNotification(
+            'The wallet has not been removed',
+            'Try again later'
+          );
+        },
+      });
   }
 }

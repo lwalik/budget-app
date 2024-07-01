@@ -82,6 +82,10 @@ export class DepositFormModalComponent extends LoadingComponent {
           this._dialogRef.close();
         },
         error: () => {
+          this._notificationsService.openFailureNotification(
+            'Deposit failed',
+            'Try again later'
+          );
           this.setLoading(false);
           this._dialogRef.close();
         },
