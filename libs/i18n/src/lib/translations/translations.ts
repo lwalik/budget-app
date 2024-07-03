@@ -524,4 +524,8 @@ export const translations: TranslationType = {
     pl: 'Portfel nie został dodany',
     en: 'The wallet has not been added',
   },
+  Search: {
+    pl: 'Szukaj',
+    en: 'Search',
+  },
 };

@@ -47,6 +47,7 @@ export class ExpensesState {
   private readonly _expensesState$: Observable<ExpensesStateModel> =
     this._expensesStateSubject.asObservable();
 
+  // TODO move this to expensesState
   private readonly _sortStateSubject: BehaviorSubject<SortModel> =
     new BehaviorSubject<SortModel>({
       sortBy: SORT_TYPE.CREATED_AT,

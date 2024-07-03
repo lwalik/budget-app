@@ -1,12 +1,11 @@
 <div class="h-24">
-       <label
-              *ngIf="!!label"
+       <label *ngIf="!!label"
               class="block text-sm font-medium leading-6 text-secondary">{{ label | i18n | async }}</label>
        <div class="relative mt-2 rounded-md shadow-sm">
               <input [type]="type"
                      [formControl]="formControl"
                      autocomplete="off"
-                     class="block w-full rounded-md border-0 py-1.5 pl-2 pr-12 text-primary ring-1 ring-inset ring-primary focus:ring-2 focus:ring-inset focus:ring-warn sm:text-sm sm:leading-6"
+                     class="block w-full rounded-md border-0 py-1.5 pl-2 pr-12 text-primary ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-warn sm:text-sm sm:leading-6"
                      [ngClass]="{'ring-red-500': !formControl.valid && formControl.touched}"
                      aria-invalid="true"
                      aria-describedby="error">

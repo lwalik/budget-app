@@ -17,9 +17,14 @@ import {
   TranslationPipe,
   TwoOptionConfirmationModalComponent,
   TwoOptionConfirmationViewModel,
+  WalletSelectListItemViewModel,
 } from '@budget-app/shared';
-import { WalletNameComponent } from '@budget-app/wallets';
 import {
+  WalletNameComponent,
+  WalletSelectListComponent,
+} from '@budget-app/wallets';
+import {
+  BehaviorSubject,
   Observable,
   combineLatest,
   map,
@@ -34,6 +39,11 @@ import { ExpensesState } from '../../states/expenses.state';
 import { ExpenseFormModalComponent } from '../expense-form-modal/expense-form-modal.component';
 import { ExpensesSortComponent } from '../expenses-sort/expenses-sort.component';
 
+interface WalletFilterViewModel {
+  readonly id: string | undefined;
+  readonly name: string;
+}
+
 @Component({
   selector: 'lib-expenses-table',
   standalone: true,
@@ -44,6 +54,7 @@ import { ExpensesSortComponent } from '../expenses-sort/expenses-sort.component'
     PaginationComponent,
     SimpleSelectListComponent,
     TranslationPipe,
+    WalletSelectListComponent,
   ],
   templateUrl: './expenses-table.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -52,21 +63,37 @@ import { ExpensesSortComponent } from '../expenses-sort/expenses-sort.component'
 export class ExpensesTableComponent {
   private readonly _pagination$: Observable<PaginationViewModel> =
     this._paginationUiService.getPagination();
+
+  private readonly _walletFilerSubject: BehaviorSubject<WalletFilterViewModel> =
+    new BehaviorSubject<WalletFilterViewModel>({ id: undefined, name: 'All' });
+  readonly walletFilter$: Observable<WalletFilterViewModel> =
+    this._walletFilerSubject.asObservable().pipe(shareReplay(1));
+
   readonly allExpenses$: Observable<ExpenseModel[]> = this._expensesState
     .getExpenses()
     .pipe(shareReplay(1));
   readonly expenses$: Observable<ExpenseModel[]> = combineLatest([
     this._pagination$,
     this.allExpenses$,
+    this.walletFilter$,
   ]).pipe(
-    map(([pagination, expenses]: [PaginationViewModel, ExpenseModel[]]) => {
-      const start: number =
-        pagination.current === 1
-          ? 0
-          : pagination.limit * (pagination.current - 1);
-      const end: number = pagination.current * pagination.limit;
-      return expenses.slice(start, end);
-    })
+    map(
+      ([pagination, expenses, walletFilter]: [
+        PaginationViewModel,
+        ExpenseModel[],
+        WalletFilterViewModel
+      ]) => {
+        const start: number =
+          pagination.current === 1
+            ? 0
+            : pagination.limit * (pagination.current - 1);
+        const end: number = pagination.current * pagination.limit;
+        const filteredExpenses: ExpenseModel[] = !!walletFilter.id
+          ? expenses.filter((e) => e.walletId === walletFilter.id)
+          : expenses;
+        return filteredExpenses.slice(start, end);
+      }
+    )
   );
 
   constructor(
@@ -153,5 +180,12 @@ export class ExpensesTableComponent {
         )
       )
       .subscribe();
+  }
+
+  onWalletSelected(event: WalletSelectListItemViewModel): void {
+    this._walletFilerSubject.next({
+      id: event.id,
+      name: event.name,
+    });
   }
 }
