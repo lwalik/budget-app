@@ -11,7 +11,6 @@ import {
   NavLayoutComponent,
   SidebarNavComponent,
 } from '@budget-app/navigation';
-import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -27,17 +26,4 @@ import { BehaviorSubject, Observable } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoggedInPage {
-  private readonly _isMobileNavVisible: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
-  readonly isMobileNavVisible$: Observable<boolean> =
-    this._isMobileNavVisible.asObservable();
-
-  openMobileNav(): void {
-    this._isMobileNavVisible.next(true);
-  }
-
-  closeMobileNav(): void {
-    this._isMobileNavVisible.next(false);
-  }
-}
+export class LoggedInPage {}
