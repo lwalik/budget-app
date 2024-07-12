@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,11 +7,10 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { ProductsState } from '../../states/products.state';
+import { SimpleSelectListComponent } from '@budget-app/shared';
 import { BehaviorSubject, map, Observable, shareReplay, take, tap } from 'rxjs';
 import { ProductModel } from '../../models/product.model';
-import { SimpleSelectListComponent } from '@budget-app/shared';
-import { CommonModule } from '@angular/common';
+import { ProductsState } from '../../states/products.state';
 import { ProductSelectListItemViewModel } from '../../view-models/product-select-list-item.view-model';
 
 @Component({
@@ -38,7 +38,9 @@ export class ProductsSelectListComponent {
     .pipe(shareReplay(1));
   readonly productsName$: Observable<string[]> = this.products$.pipe(
     map((products: ProductModel[]) =>
-      products.map((product: ProductModel) => product.name)
+      products
+        .map((product: ProductModel) => product.name)
+        .sort((a: string, b: string) => (a > b ? 1 : -1))
     )
   );
 
