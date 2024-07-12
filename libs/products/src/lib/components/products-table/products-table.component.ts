@@ -42,7 +42,14 @@ export class ProductsTableComponent {
 
   readonly allProducts$: Observable<ProductModel[]> = this._productsState
     .getAllProducts()
-    .pipe(shareReplay(1));
+    .pipe(
+      shareReplay(1),
+      map((products: ProductModel[]) =>
+        products.sort((a: ProductModel, b: ProductModel) =>
+          a.name > b.name ? 1 : -1
+        )
+      )
+    );
 
   readonly products$: Observable<ProductModel[]> = combineLatest([
     this._pagination$,
