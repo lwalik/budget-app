@@ -395,10 +395,6 @@ export class WalletsState implements WalletBalance, IncomesData {
     operation: WALLET_BALANCE_OPERATION_TYPE,
     createdAt?: Date
   ): Observable<void> {
-    // value =
-    //   operation === WALLET_BALANCE_OPERATION_TYPE.EXPENSE ? -value : value;
-    console.log('_updateWalletBalance, value: ', value);
-    console.log('WALLET_BALANCE_OPERATION_TYPE: ', operation);
     return this._walletsState$.pipe(
       take(1),
       switchMap((state: WalletStateModel) => {

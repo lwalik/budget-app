@@ -44,7 +44,8 @@
 
       <div class="flex flex-col gap-2"
            *ngIf="getProductControl(pagination.currentIdx) as control">
-        <lib-products-select-list [selectedOption]="control.get('name')?.value"
+        <lib-products-select-list [control]="control.get('name')"
+                                  [selectedOption]="control.get('name')?.value"
                                   (optionSelected)="onProductOptionSelected($event, control)"></lib-products-select-list>
 
         <div class="grid grid-cols-3 gap-2">

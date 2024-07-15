@@ -224,6 +224,7 @@ export class ExpenseFormModalComponent
       name: event.name,
       category: event.category,
     });
+    control.markAsPristine();
   }
 
   onWalletOptionSelected(event: WalletSelectListItemViewModel): void {

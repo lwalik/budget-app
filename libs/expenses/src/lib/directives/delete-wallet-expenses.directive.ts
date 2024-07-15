@@ -10,12 +10,7 @@ export class DeleteWalletExpensesDirective {
   DeleteWalletExpensesDirective(event: string): void {
     this._expensesState
       .deleteAllWalletExpenses(event)
-      .pipe(
-        take(1),
-        tap(() => {
-          console.log('test');
-        })
-      )
+      .pipe(take(1))
       .subscribe();
   }
 }

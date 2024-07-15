@@ -528,4 +528,8 @@ export const translations: TranslationType = {
     pl: 'Szukaj',
     en: 'Search',
   },
+  Uncategorized: {
+    pl: 'Nieskategoryzowane',
+    en: 'Uncategorized',
+  },
 };
