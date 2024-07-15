@@ -46,11 +46,6 @@ export class ProductsSelectListComponent {
   readonly selectedOption$: Observable<string | null> =
     this._selectedOptionSubject.asObservable();
 
-  private readonly _autocompleteShouldBeVisibleSubject: BehaviorSubject<boolean> =
-    new BehaviorSubject<boolean>(false);
-  readonly autocompleteShouldBeVisible$: Observable<boolean> =
-    this._autocompleteShouldBeVisibleSubject.asObservable();
-
   readonly products$: Observable<ProductModel[]> = this._productsState
     .getAllProducts()
     .pipe(shareReplay(1));
@@ -64,38 +59,11 @@ export class ProductsSelectListComponent {
 
   constructor(private readonly _productsState: ProductsState) {}
 
-  onFocus(): void {
-    this._autocompleteShouldBeVisibleSubject.next(true);
-  }
-
-  hideAutocomplete(): void {
-    this._autocompleteShouldBeVisibleSubject.next(false);
-  }
-
   onOptionSelected(event: string): void {
     this.optionSelected.emit({
       name: event,
       category: 'Uncategorized',
     });
     this.control?.setValue(event);
-    this._autocompleteShouldBeVisibleSubject.next(false);
-    // this.products$
-    //   .pipe(
-    //     take(1),
-    //     map((products: ProductModel[]) =>
-    //       products.find((product: ProductModel) => product.name === event)
-    //     ),
-    //     tap((selectedProduct: ProductModel | undefined) => {
-    //       if (!selectedProduct) {
-    //         return;
-    //       }
-
-    //       this.optionSelected.emit({
-    //         name: selectedProduct.name,
-    //         category: selectedProduct.category,
-    //       });
-    //     })
-    //   )
-    //   .subscribe();
   }
 }

@@ -1,17 +1,7 @@
-<!-- <lib-simple-select-list *ngIf="productsName$ | async as productsName"
-                        [options]="productsName"
-                        label="Name"
-                        [selectedOption]="selectedOption$ | async"
-                        (optionSelected)="onOptionSelected($event)"></lib-simple-select-list> -->
-
-<div class="relative"
-     #selectList
-     (libOnClickOutsideTheElement)="hideAutocomplete()"
-     [element]="selectList">
+<div class="relative">
   <lib-simple-input-form [control]="control"
                          [label]="'Name'"
                          [isRequired]="true"
-                         (inputFocus)="onFocus()"
                          [type]="'text'"></lib-simple-input-form>
   <div class="absolute top-3/4 left-0 w-full z-10"
        *ngIf="productsName$ | async as productsName">

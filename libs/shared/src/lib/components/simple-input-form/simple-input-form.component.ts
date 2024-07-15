@@ -2,9 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   Input,
-  Output,
   ViewEncapsulation,
 } from '@angular/core';
 import {
@@ -31,18 +29,7 @@ export class SimpleInputFormComponent {
   @Input() errorMsg = '';
   @Input() type: simpleInputType = 'text';
 
-  @Output() inputFocus: EventEmitter<void> = new EventEmitter<void>();
-  @Output() inputBlur: EventEmitter<void> = new EventEmitter<void>();
-
   get formControl(): FormControl {
     return this.control as FormControl;
-  }
-
-  onFocus(): void {
-    this.inputFocus.emit();
-  }
-
-  onBlur(): void {
-    this.inputBlur.emit();
   }
 }

@@ -1,5 +1,5 @@
 import { Directive, HostListener } from '@angular/core';
-import { take, tap } from 'rxjs';
+import { take } from 'rxjs';
 import { ExpensesState } from '../states/expenses.state';
 
 @Directive({ selector: '[libDeleteWalletExpenses]', standalone: true })
