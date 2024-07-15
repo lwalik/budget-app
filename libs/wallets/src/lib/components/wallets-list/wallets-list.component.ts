@@ -16,11 +16,12 @@ import {
   NotificationsService,
   TranslationPipe,
 } from '@budget-app/shared';
-import { Observable, map, of, switchMap, take, tap } from 'rxjs';
+import { map, Observable, of, switchMap, take, tap } from 'rxjs';
 import { WalletModel } from '../../models/wallet.model';
 import { WalletsState } from '../../states/wallets.state';
 import { DepositFormModalComponent } from '../deposit-form-modal/deposit-form-modal.component';
 import { NewWalletFormModalComponent } from '../new-wallet-form-modal/new-wallet-form-modal.component';
+import { TransferFormModalComponent } from '../transfer-form-modal/transfer-form-modal.component';
 
 @Component({
   selector: 'lib-wallets-list',
@@ -54,6 +55,16 @@ export class WalletsListComponent {
       hasBackdrop: true,
       data: {
         walletId,
+      },
+    });
+  }
+
+  onTransferBtnClicked(wallet: WalletModel): void {
+    this._dialog.open(TransferFormModalComponent, {
+      hasBackdrop: true,
+      data: {
+        walletId: wallet.id,
+        balance: wallet.balance,
       },
     });
   }

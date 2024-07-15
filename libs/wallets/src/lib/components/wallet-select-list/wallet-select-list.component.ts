@@ -13,14 +13,14 @@ import {
 } from '@budget-app/shared';
 import {
   BehaviorSubject,
-  Observable,
+  combineLatest,
   map,
+  Observable,
+  ReplaySubject,
   shareReplay,
+  switchMap,
   take,
   tap,
-  combineLatest,
-  switchMap,
-  ReplaySubject,
 } from 'rxjs';
 import { WalletModel } from '../../models/wallet.model';
 import { WalletsState } from '../../states/wallets.state';
@@ -35,6 +35,7 @@ import { WalletsState } from '../../states/wallets.state';
 })
 export class WalletSelectListComponent {
   @Input() label = '';
+  @Input() excludedIds: string[] = [];
   @Input() set allOptionAvailable(value: boolean) {
     this._allOptionAvailableSubject.next(value);
   }
@@ -88,8 +89,11 @@ export class WalletSelectListComponent {
     this.allOptionAvailable$,
   ]).pipe(
     map(([wallets, allOptionAvailable]: [WalletModel[], boolean]) => {
-      const walletsName: string[] = wallets.map(
-        (wallet: WalletModel) => wallet.name
+      console.log('Test: ', this.excludedIds);
+      const walletsName: string[] = wallets.reduce(
+        (acc: string[], cur: WalletModel) =>
+          !this.excludedIds.includes(cur.id) ? [...acc, cur.name] : acc,
+        []
       );
 
       if (allOptionAvailable) {

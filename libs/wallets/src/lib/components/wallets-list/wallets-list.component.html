@@ -36,6 +36,10 @@
                   (click)="onDepositBtnClicked(wallet.id)">
             {{ 'Deposit' | i18n | async }}
           </button>
+          <button class="btn-info" [disabled]="wallet.balance === 0"
+                  (click)="onTransferBtnClicked(wallet)">
+            {{ 'Transfer' | i18n | async }}
+          </button>
           <button class="btn-error"
                   (click)="onRemoveWalletBtnClicked(wallet)">
             {{ 'Remove' | i18n | async}}

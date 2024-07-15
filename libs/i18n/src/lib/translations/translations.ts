@@ -183,6 +183,10 @@ export const translations: TranslationType = {
     pl: 'Kwota powinna być większa niż 0',
     en: 'Amount should be greater than 0',
   },
+  'The amount should not be higher than the Balance': {
+    pl: 'Kwota nie powinna być wyższa niż Saldo',
+    en: 'The amount should not be higher than the Balance',
+  },
   'Amount is required': {
     pl: 'Kwota jest wymagana',
     en: 'Amount is required',
@@ -531,5 +535,9 @@ export const translations: TranslationType = {
   Uncategorized: {
     pl: 'Nieskategoryzowane',
     en: 'Uncategorized',
+  },
+  Transfer: {
+    pl: 'Transfer',
+    en: 'Transfer',
   },
 };
