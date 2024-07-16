@@ -20,6 +20,7 @@ import {
   SimpleInputFormComponent,
   SimpleModalComponent,
   SpinnerComponent,
+  TranslationPipe,
 } from '@budget-app/shared';
 import { Observable, of, shareReplay, switchMap, take, tap } from 'rxjs';
 import { ProductModel } from '../../models/product.model';
@@ -40,6 +41,7 @@ interface ProductFormDialogData {
     SimpleInputFormComponent,
     SelectAutocompleteListComponent,
     SpinnerComponent,
+    TranslationPipe,
   ],
   templateUrl: './product-form-modal.component.html',
   encapsulation: ViewEncapsulation.None,

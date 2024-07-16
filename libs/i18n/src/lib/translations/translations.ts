@@ -548,4 +548,21 @@ export const translations: TranslationType = {
     pl: 'Transfer nie powiódł się',
     en: 'Transfer failed',
   },
+  'Create a Report that allows you to see your summary of expenses from selected categories, products and date range.':
+    {
+      pl: 'Stwórz Raport, który pozwoli Ci zobaczyć Twoje podsumowanie wydatków z wybranych kategorii, produktów oraz zakresu dat.',
+      en: 'Create a Report that allows you to see your summary of expenses from selected categories, products and date range.',
+    },
+  'Create Report': {
+    pl: 'Utwórz Raport',
+    en: 'Create Report',
+  },
+  Report: {
+    pl: 'Raport',
+    en: 'Report',
+  },
+  Deposits: {
+    pl: 'Depozyty',
+    en: 'Deposits',
+  },
 };

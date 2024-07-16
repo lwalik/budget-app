@@ -31,7 +31,7 @@
             [disabled]="!productForm.valid"
             class="btn-warn">
       <lib-spinner *ngIf="isLoading$ | async"></lib-spinner>
-      Save
+      {{ 'Save' | i18n | async }}
     </button>
   </form>
 </lib-simple-modal>

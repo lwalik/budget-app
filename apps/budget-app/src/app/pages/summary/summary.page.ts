@@ -7,6 +7,7 @@ import {
   CategoryExpensesSummaryCardComponent,
   LowPriorityExpensesSummaryCardComponent,
 } from '@budget-app/expenses';
+import { CreateReportCardComponent } from '@budget-app/products';
 import { DepositsSummaryCardComponent } from '@budget-app/wallets';
 
 @Component({
@@ -15,6 +16,7 @@ import { DepositsSummaryCardComponent } from '@budget-app/wallets';
     LowPriorityExpensesSummaryCardComponent,
     CategoryExpensesSummaryCardComponent,
     DepositsSummaryCardComponent,
+    CreateReportCardComponent,
   ],
   templateUrl: './summary.page.html',
   encapsulation: ViewEncapsulation.None,
