@@ -5,18 +5,18 @@ import {
   combineLatest,
   map,
   Observable,
-  of,
   switchMap,
   take,
   tap,
 } from 'rxjs';
 import { ProductModel } from '../models/product.model';
 import { ProductsStateModel } from '../models/products-state.model';
-import { ProductsService } from '../services/products.service';
 import { ProductsCategoryService } from '../services/products-category.service';
+import { ProductsService } from '../services/products.service';
 
 const initialState: ProductsStateModel = {
   products: [],
+  reportConfiguration: undefined,
 };
 
 @Injectable({ providedIn: 'root' })

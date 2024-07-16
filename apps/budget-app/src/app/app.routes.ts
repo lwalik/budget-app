@@ -3,7 +3,7 @@ import { AuthGuard } from '@budget-app/auth';
 import { LoadExpensesResolver } from '@budget-app/expenses';
 import { LoadProductsResolver } from '@budget-app/products';
 import { LoadWalletsResolver } from '@budget-app/wallets';
-import { CreateReportPage } from './pages/create-report/create-report.page';
+import { ReportPage } from './pages/report/report.page';
 import { DashboardPage } from './pages/dashboard/dashboard.page';
 import { ExpensesPage } from './pages/expenses/expenses.page';
 import { LoggedInPage } from './pages/logged-in/logged-in.page';
@@ -42,8 +42,8 @@ export const appRoutes: Route[] = [
         component: SummaryPage,
       },
       {
-        path: 'create-report',
-        component: CreateReportPage,
+        path: 'report',
+        component: ReportPage,
       },
     ],
   },

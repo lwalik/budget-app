@@ -3,12 +3,13 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
+import { ReportFlowComponent } from '@budget-app/products';
 
 @Component({
   standalone: true,
-  imports: [],
-  templateUrl: './create-report.page.html',
+  imports: [ReportFlowComponent],
+  templateUrl: './report.page.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateReportPage {}
+export class ReportPage {}
