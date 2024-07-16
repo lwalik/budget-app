@@ -1,22 +1,22 @@
 import { Inject, Injectable } from '@angular/core';
 import { USER_CONTEXT, UserContext } from '@budget-app/core';
 import {
+  compareDatesWithoutTime,
   DashboardFiltersState,
   DashboardFiltersStateModel,
+  getDayWithMonthAsString,
   IncomesData,
   IncomesDataViewModel,
-  TransactionSummaryViewModel,
-  WalletBalance,
-  compareDatesWithoutTime,
-  getDayWithMonthAsString,
   isAfterDate,
   isBeforeDate,
+  TransactionSummaryViewModel,
+  WalletBalance,
 } from '@budget-app/shared';
 import {
   BehaviorSubject,
-  Observable,
   combineLatest,
   map,
+  Observable,
   of,
   switchMap,
   take,
@@ -386,6 +386,30 @@ export class WalletsState implements WalletBalance, IncomesData {
             totalDepositsAmountInCurrentMonth - totalDepositsAmountInLastMonth,
         };
       })
+    );
+  }
+
+  transferBetweenWallets(
+    fromWalletId: string,
+    toWalletId: string,
+    amount: number,
+    createdAt: Date
+  ): Observable<void> {
+    return this._updateWalletBalance(
+      fromWalletId,
+      -amount,
+      WALLET_BALANCE_OPERATION_TYPE.TRANSFER_FROM,
+      createdAt
+    ).pipe(
+      switchMap(() =>
+        this._updateWalletBalance(
+          toWalletId,
+          amount,
+          WALLET_BALANCE_OPERATION_TYPE.TRANSFER_TO,
+          createdAt
+        ).pipe(take(1))
+      ),
+      map(() => void 0)
     );
   }
 

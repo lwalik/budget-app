@@ -24,6 +24,7 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { WalletOperationDialogDataViewModel } from '../../view-models/wallet-operation-dialog-data.view-model';
 import { WalletsState } from '../../states/wallets.state';
 import { WalletSelectListComponent } from '../wallet-select-list/wallet-select-list.component';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'lib-transfer-form-modal',
@@ -90,7 +91,36 @@ export class TransferFormModalComponent extends LoadingComponent {
   }
 
   onTransferFormSubmitted(form: FormGroup): void {
-    return;
+    const transferToFormGroup: FormGroup = this._getTransferToFormGroup();
+    const createdAt: Date = new Date(form.get('createdAt')?.value);
+
+    // TODO handle in statistic maybe
+    this.setLoading(true);
+    this._walletsState
+      .transferBetweenWallets(
+        this.dialogData.walletId,
+        transferToFormGroup.get('id')?.value,
+        +form.get('amount')?.value,
+        createdAt
+      )
+      .pipe(take(1))
+      .subscribe({
+        complete: () => {
+          this._notificationsService.openSuccessNotification(
+            'Transfer successful'
+          );
+          this.setLoading(false);
+          this._dialogRef.close();
+        },
+        error: () => {
+          this._notificationsService.openFailureNotification(
+            'Transfer failed',
+            'Try again later'
+          );
+          this.setLoading(false);
+          this._dialogRef.close();
+        },
+      });
   }
 
   private _getTransferToFormGroup(): FormGroup {

@@ -540,4 +540,12 @@ export const translations: TranslationType = {
     pl: 'Transfer',
     en: 'Transfer',
   },
+  'Transfer successful': {
+    pl: 'Transfer udany',
+    en: 'Transfer successful',
+  },
+  'Transfer failed': {
+    pl: 'Transfer nie powiódł się',
+    en: 'Transfer failed',
+  },
 };
