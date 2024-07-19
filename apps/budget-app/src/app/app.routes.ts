@@ -1,9 +1,6 @@
 import { Route } from '@angular/router';
 import { AuthGuard } from '@budget-app/auth';
-import {
-  LoadExpensesResolver,
-  LoadReportConfigurationResolver,
-} from '@budget-app/expenses';
+import { LoadExpensesResolver } from '@budget-app/expenses';
 import { LoadProductsResolver } from '@budget-app/products';
 import { LoadWalletsResolver } from '@budget-app/wallets';
 import { ReportPage } from './pages/report/report.page';
@@ -47,7 +44,6 @@ export const appRoutes: Route[] = [
       {
         path: 'report',
         component: ReportPage,
-        resolve: [LoadReportConfigurationResolver],
       },
     ],
   },

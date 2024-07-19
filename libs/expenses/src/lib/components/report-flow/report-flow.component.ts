@@ -20,11 +20,17 @@ import {
 import { CommonModule } from '@angular/common';
 import { CategoriesReportFormComponent } from '../categories-report-form/categories-report-form.component';
 import { TranslationPipe } from '@budget-app/shared';
+import { ProductsReportFormComponent } from '../products-report-form/products-report-form.component';
 
 @Component({
   selector: 'lib-report-flow',
   standalone: true,
-  imports: [CommonModule, TranslationPipe, CategoriesReportFormComponent],
+  imports: [
+    CommonModule,
+    TranslationPipe,
+    CategoriesReportFormComponent,
+    ProductsReportFormComponent,
+  ],
   templateUrl: './report-flow.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
