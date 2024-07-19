@@ -4,8 +4,9 @@
     class="divide-y divide-gray-300 rounded-md border border-gray-300 md:flex md:divide-y-0"
   >
     <li
-      class="relative md:flex md:flex-1 cursor-pointer"
-      (click)="onStepClicked(step.idx)"
+      class="relative md:flex md:flex-1"
+      [ngClass]="{'cursor-pointer': step.isCompleted}"
+      (click)="onStepClicked(step.idx, step.isCompleted)"
       *ngFor="let step of steps$ | async; last as isLast"
     >
       <span class="group flex w-full items-center">
@@ -33,9 +34,6 @@
             [ngClass]="{
               'border-warn': step.isActive,
               'text-warn': step.isActive,
-              'group-hover:border-gray-400':
-                !step.isActive && !step.isCompleted,
-              'group-hover:text-gray-900': !step.isActive && !step.isCompleted
             }"
           >
             <span>{{ step.idx + 1 }}</span>
@@ -43,11 +41,11 @@
           <span
             class="ml-4 text-sm font-medium text-gray-500"
             [ngClass]="{
-              'group-hover:text-gray-900': !step.isActive && !step.isCompleted,
+              'group-hover:text-warn': !step.isActive && step.isCompleted,
               'text-warn': step.isActive,
               'text-gray-900': step.isCompleted
             }"
-            >{{ step.name }}</span
+            >{{ step.name | i18n | async }}</span
           >
         </span>
       </span>
@@ -76,7 +74,9 @@
 
 <ng-container *ngIf="stepsState$ | async as stepsState">
   <div class="mt-10" [ngSwitch]="stepsState.activeStepIdx">
-    <div *ngSwitchCase="0">Categories</div>
+    <div *ngSwitchCase="0">
+      <lib-categories-report-form class="flex items-center justify-center" (stepCompleted)="onStepCompleted(0)"></lib-categories-report-form>
+    </div>
     <div *ngSwitchCase="1">Products</div>
     <div *ngSwitchCase="2">Dates</div>
     <div *ngSwitchCase="3">Preview</div>

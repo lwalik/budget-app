@@ -18,11 +18,13 @@ import {
   ReportFlowStepsViewModel,
 } from '../../view-models/report-flow-state.view-model';
 import { CommonModule } from '@angular/common';
+import { CategoriesReportFormComponent } from '../categories-report-form/categories-report-form.component';
+import { TranslationPipe } from '@budget-app/shared';
 
 @Component({
   selector: 'lib-report-flow',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslationPipe, CategoriesReportFormComponent],
   templateUrl: './report-flow.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,10 +49,15 @@ export class ReportFlowComponent {
         isCompleted: stepsState.completedStepsIdx.includes(idx),
         isActive: stepsState.activeStepIdx === idx,
       }))
-    )
+    ),
+    shareReplay(1)
   );
 
-  onStepClicked(idx: number): void {
+  onStepClicked(idx: number, isCompleted: boolean): void {
+    if (!isCompleted) {
+      return;
+    }
+
     this.stepsState$
       .pipe(
         take(1),
@@ -58,6 +65,21 @@ export class ReportFlowComponent {
           this._stepsStateSubject.next({
             ...state,
             activeStepIdx: idx,
+          })
+        )
+      )
+      .subscribe();
+  }
+
+  onStepCompleted(stepIdx: number): void {
+    this.stepsState$
+      .pipe(
+        take(1),
+        tap((state: ReportFlowStepsViewModel) =>
+          this._stepsStateSubject.next({
+            ...state,
+            activeStepIdx: stepIdx + 1,
+            completedStepsIdx: [...state.completedStepsIdx, stepIdx],
           })
         )
       )

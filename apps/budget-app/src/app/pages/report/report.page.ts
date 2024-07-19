@@ -3,7 +3,7 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { ReportFlowComponent } from '@budget-app/products';
+import { ReportFlowComponent } from '@budget-app/expenses';
 
 @Component({
   standalone: true,

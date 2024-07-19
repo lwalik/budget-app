@@ -565,4 +565,16 @@ export const translations: TranslationType = {
     pl: 'Depozyty',
     en: 'Deposits',
   },
+  Categories: {
+    pl: 'Kategorie',
+    en: 'Categories',
+  },
+  'Date Range': {
+    pl: 'Przedział Dat',
+    en: 'Date Range',
+  },
+  Preview: {
+    pl: 'Podgląd',
+    en: 'Preview',
+  },
 };

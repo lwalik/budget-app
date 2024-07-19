@@ -16,7 +16,6 @@ import { ProductsService } from '../services/products.service';
 
 const initialState: ProductsStateModel = {
   products: [],
-  reportConfiguration: undefined,
 };
 
 @Injectable({ providedIn: 'root' })

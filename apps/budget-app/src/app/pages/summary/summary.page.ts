@@ -5,9 +5,9 @@ import {
 } from '@angular/core';
 import {
   CategoryExpensesSummaryCardComponent,
+  CreateReportCardComponent,
   LowPriorityExpensesSummaryCardComponent,
 } from '@budget-app/expenses';
-import { CreateReportCardComponent } from '@budget-app/products';
 import { DepositsSummaryCardComponent } from '@budget-app/wallets';
 
 @Component({

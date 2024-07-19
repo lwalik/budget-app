@@ -1,21 +1,21 @@
 import { Inject, Injectable } from '@angular/core';
 import { USER_CONTEXT, UserContext } from '@budget-app/core';
 import {
+  compareDatesWithoutTime,
   DashboardFiltersState,
   DashboardFiltersStateModel,
-  TransactionSummaryViewModel,
-  WALLET_BALANCE,
-  WalletBalance,
-  compareDatesWithoutTime,
   getDayWithMonthAsString,
   isAfterDate,
   isBeforeDate,
+  TransactionSummaryViewModel,
+  WALLET_BALANCE,
+  WalletBalance,
 } from '@budget-app/shared';
 import {
   BehaviorSubject,
-  Observable,
   combineLatest,
   map,
+  Observable,
   of,
   switchMap,
   take,
@@ -35,9 +35,12 @@ import { HighestExpensesCategoryViewModel } from '../view-models/highest-expense
 import { HighestExpenseProductViewModel } from '../view-models/highest-expenses-product.view-model';
 import { PrioritySummaryViewModel } from '../view-models/priority-summary.view-model';
 import { SortListViewModel } from '../view-models/sort-list.view-model';
+import { ProductReportConfigurationStateModel } from '../models/product-report-configuration-state.model';
+import { CategoriesReportStepItemViewModel } from '../view-models/categories-report-step-item.view-model';
 
 const initialState: ExpensesStateModel = {
   expenses: [],
+  reportConfiguration: undefined,
 };
 
 @Injectable({ providedIn: 'root' })
@@ -564,6 +567,56 @@ export class ExpensesState {
             highestExpenseCategoryInCurrentMonth.price,
         };
       })
+    );
+  }
+
+  getAllExpenseCategories(): Observable<CategoriesReportStepItemViewModel[]> {
+    return this._expensesState$.pipe(
+      map((state: ExpensesStateModel) => {
+        const categories: string[] = state.expenses.reduce(
+          (total: string[], expense: ExpenseModel) => {
+            const curExpenseCategories: string[] = expense.products.map(
+              (product: ExpenseProductModel) => product.category
+            );
+
+            return [...new Set([...total, ...curExpenseCategories])];
+          },
+          []
+        );
+
+        return categories.map((category: string) => ({
+          name: category,
+          isSelected:
+            !!state.reportConfiguration &&
+            state.reportConfiguration.categories.includes(category),
+        }));
+      })
+    );
+  }
+
+  patchReportConfiguration(
+    config: Partial<ProductReportConfigurationStateModel>
+  ): Observable<void> {
+    return this._expensesState$.pipe(
+      take(1),
+      tap((state: ExpensesStateModel) =>
+        this._expensesStateSubject.next({
+          ...state,
+          reportConfiguration: !!state.reportConfiguration
+            ? {
+                ...state.reportConfiguration,
+                ...config,
+              }
+            : {
+                products: [],
+                categories: [],
+                fromDate: undefined,
+                toDate: undefined,
+                ...config,
+              },
+        })
+      ),
+      map(() => void 0)
     );
   }
 
