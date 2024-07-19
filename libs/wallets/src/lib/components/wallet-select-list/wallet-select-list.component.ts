@@ -89,7 +89,6 @@ export class WalletSelectListComponent {
     this.allOptionAvailable$,
   ]).pipe(
     map(([wallets, allOptionAvailable]: [WalletModel[], boolean]) => {
-      console.log('Test: ', this.excludedIds);
       const walletsName: string[] = wallets.reduce(
         (acc: string[], cur: WalletModel) =>
           !this.excludedIds.includes(cur.id) ? [...acc, cur.name] : acc,

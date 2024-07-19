@@ -35,3 +35,5 @@ export * from './lib/dashboard-filters';
 export * from './lib/pagination';
 // Notifications
 export * from './lib/notifications';
+// Local Storage
+export * from './lib/local-storage';

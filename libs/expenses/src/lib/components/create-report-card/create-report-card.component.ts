@@ -4,15 +4,29 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslationPipe } from '@budget-app/shared';
+import { ExpensesState } from '../../states/expenses.state';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'lib-create-report-card',
   standalone: true,
-  imports: [TranslationPipe, CommonModule, RouterLink],
+  imports: [TranslationPipe, CommonModule],
   templateUrl: './create-report-card.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateReportCardComponent {}
+export class CreateReportCardComponent {
+  constructor(
+    private readonly _expensesState: ExpensesState,
+    private readonly _router: Router
+  ) {}
+
+  onCreateReportBtnClicked(): void {
+    this._expensesState
+      .clearReportConfigurationInStorage()
+      .pipe(take(1))
+      .subscribe(() => this._router.navigateByUrl('/report'));
+  }
+}

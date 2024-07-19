@@ -32,7 +32,7 @@ import { CategoriesReportStepItemViewModel } from '../../view-models/categories-
 export class CategoriesReportFormComponent extends LoadingComponent {
   readonly form: FormGroup = new FormGroup({});
   readonly categories$: Observable<CategoriesReportStepItemViewModel[]> =
-    this._expensesState.getAllExpenseCategories().pipe(
+    this._expensesState.getAllExpenseCategoriesForReportConfiguration().pipe(
       tap((categories: CategoriesReportStepItemViewModel[]) => {
         categories.forEach((category: CategoriesReportStepItemViewModel) => {
           const control: FormControl = new FormControl(category.isSelected, {

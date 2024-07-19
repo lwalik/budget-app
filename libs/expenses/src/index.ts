@@ -8,5 +8,6 @@ export * from './lib/components/create-report-card/create-report-card.component'
 export * from './lib/components/report-flow/report-flow.component';
 // Resolvers
 export * from './lib/resolvers/load-expenses.resolver';
+export * from './lib/resolvers/load-report-configuration.resolver';
 // Directives
 export * from './lib/directives/delete-wallet-expenses.directive';

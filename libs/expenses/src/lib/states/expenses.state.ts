@@ -7,6 +7,7 @@ import {
   getDayWithMonthAsString,
   isAfterDate,
   isBeforeDate,
+  LocalStorageService,
   TransactionSummaryViewModel,
   WALLET_BALANCE,
   WalletBalance,
@@ -14,6 +15,7 @@ import {
 import {
   BehaviorSubject,
   combineLatest,
+  filter,
   map,
   Observable,
   of,
@@ -64,7 +66,8 @@ export class ExpensesState {
     @Inject(USER_CONTEXT) private readonly _userContext: UserContext,
     @Inject(WALLET_BALANCE)
     private readonly _walletBalance: WalletBalance,
-    private readonly dashboardFiltersState: DashboardFiltersState
+    private readonly _dashboardFiltersState: DashboardFiltersState,
+    private readonly _storage: LocalStorageService
   ) {}
 
   loadExpenses(): Observable<void> {
@@ -241,7 +244,7 @@ export class ExpensesState {
   getExpenseSummary(): Observable<TransactionSummaryViewModel> {
     return combineLatest([
       this._expensesState$,
-      this.dashboardFiltersState.getFilters(),
+      this._dashboardFiltersState.getFilters(),
     ]).pipe(
       map(
         ([state, filters]: [
@@ -313,8 +316,8 @@ export class ExpensesState {
   getExpensesData(): Observable<ExpensesDataViewModel> {
     return combineLatest([
       this._expensesState$,
-      this.dashboardFiltersState.getFilters(),
-      this.dashboardFiltersState.createEmptyDateRangeObject(),
+      this._dashboardFiltersState.getFilters(),
+      this._dashboardFiltersState.createEmptyDateRangeObject(),
     ]).pipe(
       map(
         ([state, filters, datesObject]: [
@@ -570,8 +573,11 @@ export class ExpensesState {
     );
   }
 
-  getAllExpenseCategories(): Observable<CategoriesReportStepItemViewModel[]> {
+  getAllExpenseCategoriesForReportConfiguration(): Observable<
+    CategoriesReportStepItemViewModel[]
+  > {
     return this._expensesState$.pipe(
+      filter((state: ExpensesStateModel) => !!state.reportConfiguration),
       map((state: ExpensesStateModel) => {
         const categories: string[] = state.expenses.reduce(
           (total: string[], expense: ExpenseModel) => {
@@ -584,12 +590,14 @@ export class ExpensesState {
           []
         );
 
-        return categories.map((category: string) => ({
-          name: category,
-          isSelected:
-            !!state.reportConfiguration &&
-            state.reportConfiguration.categories.includes(category),
-        }));
+        return categories.map((category: string) => {
+          return {
+            name: category,
+            isSelected:
+              !!state.reportConfiguration &&
+              state.reportConfiguration.categories.includes(category),
+          };
+        });
       })
     );
   }
@@ -599,10 +607,9 @@ export class ExpensesState {
   ): Observable<void> {
     return this._expensesState$.pipe(
       take(1),
-      tap((state: ExpensesStateModel) =>
-        this._expensesStateSubject.next({
-          ...state,
-          reportConfiguration: !!state.reportConfiguration
+      tap((state: ExpensesStateModel) => {
+        const updatedConfig: ProductReportConfigurationStateModel =
+          !!state.reportConfiguration
             ? {
                 ...state.reportConfiguration,
                 ...config,
@@ -613,10 +620,46 @@ export class ExpensesState {
                 fromDate: undefined,
                 toDate: undefined,
                 ...config,
-              },
-        })
-      ),
+              };
+        this._storage.setItem<ProductReportConfigurationStateModel>(
+          'reportConfiguration',
+          updatedConfig
+        );
+        this._expensesStateSubject.next({
+          ...state,
+          reportConfiguration: updatedConfig,
+        });
+      }),
       map(() => void 0)
+    );
+  }
+
+  loadReportConfigurationFromStorage(): Observable<void> {
+    return this._expensesState$.pipe(
+      take(1),
+      tap((state: ExpensesStateModel) => {
+        const config: ProductReportConfigurationStateModel =
+          this._storage.getItem<ProductReportConfigurationStateModel>(
+            'reportConfiguration'
+          );
+
+        this._expensesStateSubject.next({
+          ...state,
+          reportConfiguration: config || {
+            products: [],
+            categories: [],
+            fromDate: undefined,
+            toDate: undefined,
+          },
+        });
+      }),
+      map(() => void 0)
+    );
+  }
+
+  clearReportConfigurationInStorage(): Observable<void> {
+    return of(void 0).pipe(
+      tap(() => this._storage.removeItem('reportConfiguration'))
     );
   }
 

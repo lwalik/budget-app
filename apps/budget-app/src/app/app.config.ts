@@ -21,6 +21,7 @@ import * as ChartDataLabels from 'chartjs-plugin-datalabels';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { environment } from '../environments/environment';
 import { appRoutes } from './app.routes';
+import { LOCAL_STORAGE_TOKEN } from '@budget-app/shared';
 
 registerLocaleData(localePl);
 Chart.register(ChartDataLabels);
@@ -45,6 +46,10 @@ export const appConfig: ApplicationConfig = {
     {
       provide: ENV_CONFIG,
       useValue: environment,
+    },
+    {
+      provide: LOCAL_STORAGE_TOKEN,
+      useValue: localStorage,
     },
   ],
 };

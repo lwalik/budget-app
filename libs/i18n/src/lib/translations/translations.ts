@@ -41,6 +41,7 @@ export const translations: TranslationType = {
     pl: 'Zapisz',
     en: 'Save',
   },
+  // TODO Przerobić aby to były klucze np. Current_Balance zamiast stringi, i tak wszędzie tutaj
   'Current Balance': {
     pl: 'Aktualne Saldo',
     en: 'Current Balance',
@@ -576,5 +577,9 @@ export const translations: TranslationType = {
   Preview: {
     pl: 'Podgląd',
     en: 'Preview',
+  },
+  Next_step: {
+    pl: 'Dalej',
+    en: 'Next',
   },
 };
