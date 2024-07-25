@@ -14,7 +14,7 @@ import {
   SimpleInputFormComponent,
   SimpleSelectListComponent,
 } from '@budget-app/shared';
-import { BehaviorSubject, map, Observable, shareReplay } from 'rxjs';
+import { BehaviorSubject, map, Observable, shareReplay, take, tap } from 'rxjs';
 import { ProductModel } from '../../models/product.model';
 import { ProductsState } from '../../states/products.state';
 import { ProductSelectListItemViewModel } from '../../view-models/product-select-list-item.view-model';
@@ -60,10 +60,30 @@ export class ProductsSelectListComponent {
   constructor(private readonly _productsState: ProductsState) {}
 
   onOptionSelected(event: string): void {
-    this.optionSelected.emit({
-      name: event,
-      category: 'Uncategorized',
-    });
-    this.control?.setValue(event);
+    this.products$
+      .pipe(
+        take(1),
+        tap((products: ProductModel[]) => {
+          const selectedProduct: ProductModel | undefined = products.find(
+            (product: ProductModel) =>
+              product.name.toLowerCase() === event.toLowerCase()
+          );
+          this.control?.setValue(event);
+
+          if (!selectedProduct) {
+            this.optionSelected.emit({
+              name: event,
+              category: 'Uncategorized',
+            });
+            return;
+          }
+
+          this.optionSelected.emit({
+            name: event,
+            category: selectedProduct.category,
+          });
+        })
+      )
+      .subscribe();
   }
 }

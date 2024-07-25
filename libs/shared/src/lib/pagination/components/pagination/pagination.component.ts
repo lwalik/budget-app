@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import { Observable, of, shareReplay, switchMap, take } from 'rxjs';
 import { SimpleSelectListComponent } from '../../../components/simple-select-list/simple-select-list.component';
+import { TranslationPipe } from '../../../pipes/translation.pipe';
 import { PaginationUiService } from '../../services/pagination-ui.service';
 import { PaginationViewModel } from '../../view-models/pagination.view-model';
-import { TranslationPipe } from '../../../pipes/translation.pipe';
 
 @Component({
   selector: 'lib-pagination',
@@ -117,10 +117,15 @@ export class PaginationComponent {
         take(1),
         switchMap((pagination: PaginationViewModel) => {
           const newLimit: number = +limit;
+          const lastPage: number = Math.max(
+            1,
+            Math.ceil(pagination.totalItems / newLimit)
+          );
           const newPaginationState: PaginationViewModel = {
             ...pagination,
+            current: Math.min(pagination.current, lastPage),
             limit: newLimit,
-            last: Math.max(1, Math.ceil(pagination.totalItems / newLimit)),
+            last: lastPage,
           };
           return this._paginationUiService
             .setPagination(newPaginationState)
