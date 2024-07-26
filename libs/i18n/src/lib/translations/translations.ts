@@ -578,8 +578,16 @@ export const translations: TranslationType = {
     pl: 'Podgląd',
     en: 'Preview',
   },
-  Next_step: {
+  'Next step': {
     pl: 'Dalej',
     en: 'Next',
+  },
+  'Select All': {
+    pl: 'Zaznacz wszystkio',
+    en: 'Select All',
+  },
+  Back: {
+    pl: 'Wstecz',
+    en: 'Back',
   },
 };

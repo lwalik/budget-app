@@ -1,71 +1,47 @@
 <nav aria-label="Progress">
-  <ol
-    role="list"
-    class="divide-y divide-gray-300 rounded-md border border-gray-300 md:flex md:divide-y-0"
-  >
-    <li
-      class="relative md:flex md:flex-1"
-      [ngClass]="{'cursor-pointer': step.isCompleted}"
-      (click)="onStepClicked(step.idx, step.isCompleted)"
-      *ngFor="let step of steps$ | async; last as isLast"
-    >
+  <ol role="list"
+      class="divide-y divide-gray-300 rounded-md border border-gray-300 md:flex md:divide-y-0">
+    <li class="relative md:flex md:flex-1"
+        *ngFor="let step of steps$ | async; last as isLast">
       <span class="group flex w-full items-center">
         <span class="flex items-center px-6 py-4 text-sm font-medium">
-          <span
-            *ngIf="step.isCompleted"
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-warn"
-          >
-            <svg
-              class="h-6 w-6 text-white"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z"
-                clip-rule="evenodd"
-              />
+          <span *ngIf="step.isCompleted"
+                class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-warn">
+            <svg class="h-6 w-6 text-white"
+                 viewBox="0 0 24 24"
+                 fill="currentColor"
+                 aria-hidden="true">
+              <path fill-rule="evenodd"
+                    d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z"
+                    clip-rule="evenodd" />
             </svg>
           </span>
-          <span
-            *ngIf="!step.isCompleted"
-            class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2"
-            [ngClass]="{
+          <span *ngIf="!step.isCompleted"
+                class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2"
+                [ngClass]="{
               'border-warn': step.isActive,
               'text-warn': step.isActive,
-            }"
-          >
+            }">
             <span>{{ step.idx + 1 }}</span>
           </span>
-          <span
-            class="ml-4 text-sm font-medium text-gray-500"
-            [ngClass]="{
-              'group-hover:text-warn': !step.isActive && step.isCompleted,
+          <span class="ml-4 text-sm font-medium text-gray-500"
+                [ngClass]="{
               'text-warn': step.isActive,
               'text-gray-900': step.isCompleted
-            }"
-            >{{ step.name | i18n | async }}</span
-          >
+            }">{{ step.name | i18n | async }}</span>
         </span>
       </span>
-      <div
-        *ngIf="!isLast"
-        class="absolute right-0 top-0 hidden h-full w-5 md:block"
-        aria-hidden="true"
-      >
-        <svg
-          class="h-full w-full text-gray-300"
-          viewBox="0 0 22 80"
-          fill="none"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0 -2L20 40L0 82"
-            vector-effect="non-scaling-stroke"
-            stroke="currentcolor"
-            stroke-linejoin="round"
-          />
+      <div *ngIf="!isLast"
+           class="absolute right-0 top-0 hidden h-full w-5 md:block"
+           aria-hidden="true">
+        <svg class="h-full w-full text-gray-300"
+             viewBox="0 0 22 80"
+             fill="none"
+             preserveAspectRatio="none">
+          <path d="M0 -2L20 40L0 82"
+                vector-effect="non-scaling-stroke"
+                stroke="currentcolor"
+                stroke-linejoin="round" />
         </svg>
       </div>
     </li>
@@ -73,11 +49,14 @@
 </nav>
 
 <ng-container *ngIf="stepsState$ | async as stepsState">
-  <div class="mt-10" [ngSwitch]="stepsState.activeStepIdx">
+  <div class="mt-10"
+       [ngSwitch]="stepsState.activeStepIdx">
     <div *ngSwitchCase="0">
       <lib-categories-report-form (stepCompleted)="onStepCompleted(0)"></lib-categories-report-form>
     </div>
-    <div *ngSwitchCase="1"><lib-products-report-form (stepCompleted)="onStepCompleted(1)"></lib-products-report-form></div>
+    <div *ngSwitchCase="1"><lib-products-report-form (stepCompleted)="onStepCompleted(1)"
+                                (stepBack)="onStepBack(1)"></lib-products-report-form>
+    </div>
     <div *ngSwitchCase="2">Dates</div>
     <div *ngSwitchCase="3">Preview</div>
   </div>

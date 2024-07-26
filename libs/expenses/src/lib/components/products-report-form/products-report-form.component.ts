@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,16 +6,15 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   LoadingComponent,
   SpinnerComponent,
   TranslationPipe,
 } from '@budget-app/shared';
-import { ExpensesState } from '../../states/expenses.state';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Observable, shareReplay, take, tap } from 'rxjs';
+import { ExpensesState } from '../../states/expenses.state';
 import { ProductReportStepItemViewModel } from '../../view-models/product-report-step-item.view-model';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lib-products-report-form',
@@ -47,6 +47,7 @@ export class ProductsReportFormComponent extends LoadingComponent {
     );
 
   @Output() stepCompleted: EventEmitter<void> = new EventEmitter<void>();
+  @Output() stepBack: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private readonly _expensesState: ExpensesState) {
     super();
@@ -57,17 +58,38 @@ export class ProductsReportFormComponent extends LoadingComponent {
     return selectedCategories.length === 0;
   }
 
+  get isAllItemsSelected(): boolean {
+    const selectedCategories: string[] = this._getSelectedProducts();
+    return Object.keys(this.form.value).length === selectedCategories.length;
+  }
+
   onProductFormSubmitted(): void {
     this.setLoading(true);
-    const selectedCategories: string[] = this._getSelectedProducts();
+    const selectedProducts: string[] = this._getSelectedProducts();
     this._expensesState
       .patchReportConfiguration({
-        products: selectedCategories,
+        products: selectedProducts,
       })
       .pipe(take(1))
       .subscribe(() => {
         this.setLoading(false);
         this.stepCompleted.emit();
+      });
+  }
+
+  onSelectAllClicked(): void {
+    this._updateAllValues(true);
+  }
+
+  onBackBtnClicked(): void {
+    this._expensesState
+      .patchReportConfiguration({
+        products: [],
+      })
+      .pipe(take(1))
+      .subscribe(() => {
+        this._updateAllValues(false);
+        this.stepBack.emit();
       });
   }
 
@@ -77,5 +99,11 @@ export class ProductsReportFormComponent extends LoadingComponent {
         isSelected ? [...acc, product] : acc,
       []
     );
+  }
+
+  private _updateAllValues(value: boolean): void {
+    Object.keys(this.form.value).forEach((key) => {
+      this.form.get(key)?.setValue(value);
+    });
   }
 }

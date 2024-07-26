@@ -2,6 +2,13 @@
       class="flex flex-col items-center justify-center w-full max-h gap-2 p-2 border-gray-300 border rounded"
       *ngIf="products$ | async as products"
       (ngSubmit)="onProductFormSubmitted()">
+  <div class="w-full flex justify-end items-center">
+    <button type="button"
+            class="btn-warn"
+            (click)="onSelectAllClicked()">
+      {{ 'Select All' | i18n | async }}
+    </button>
+  </div>
   <div class="w-full h-80 md:h-auto overflow-y-auto grid grid-cols-2 md:grid-cols-4">
     <label [for]="item.name"
            class="relative flex items-start pb-4 pt-3.5 cursor-pointer hover:bg-warn/75 px-4 rounded border border-gray-300"
@@ -17,10 +24,17 @@
       </div>
     </label>
   </div>
-  <button type="submit"
-          [disabled]="isSubmitBtnDisabled"
-          class="btn-warn">
-    <lib-spinner *ngIf="isLoading$ | async"></lib-spinner>
-    {{ 'Next_step' | i18n | async }}
-  </button>
+  <div class="flex gap-2">
+    <button type="button"
+            class="btn-warn"
+            (click)="onBackBtnClicked()">
+      {{ 'Back' | i18n | async }}
+    </button>
+    <button type="submit"
+            [disabled]="isSubmitBtnDisabled"
+            class="btn-warn">
+      <lib-spinner *ngIf="isLoading$ | async"></lib-spinner>
+      {{ 'Next step' | i18n | async }}
+    </button>
+  </div>
 </form>

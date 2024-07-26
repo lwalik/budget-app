@@ -1,8 +1,10 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
 } from '@angular/core';
+import { TranslationPipe } from '@budget-app/shared';
 import {
   BehaviorSubject,
   combineLatest,
@@ -17,9 +19,7 @@ import {
   ReportFlowStepItemViewModel,
   ReportFlowStepsViewModel,
 } from '../../view-models/report-flow-state.view-model';
-import { CommonModule } from '@angular/common';
 import { CategoriesReportFormComponent } from '../categories-report-form/categories-report-form.component';
-import { TranslationPipe } from '@budget-app/shared';
 import { ProductsReportFormComponent } from '../products-report-form/products-report-form.component';
 
 @Component({
@@ -59,24 +59,6 @@ export class ReportFlowComponent {
     shareReplay(1)
   );
 
-  onStepClicked(idx: number, isCompleted: boolean): void {
-    if (!isCompleted) {
-      return;
-    }
-
-    this.stepsState$
-      .pipe(
-        take(1),
-        tap((state: ReportFlowStepsViewModel) =>
-          this._stepsStateSubject.next({
-            ...state,
-            activeStepIdx: idx,
-          })
-        )
-      )
-      .subscribe();
-  }
-
   onStepCompleted(stepIdx: number): void {
     this.stepsState$
       .pipe(
@@ -86,6 +68,23 @@ export class ReportFlowComponent {
             ...state,
             activeStepIdx: stepIdx + 1,
             completedStepsIdx: [...state.completedStepsIdx, stepIdx],
+          })
+        )
+      )
+      .subscribe();
+  }
+
+  onStepBack(stepIdx: number): void {
+    this.stepsState$
+      .pipe(
+        take(1),
+        tap((state: ReportFlowStepsViewModel) =>
+          this._stepsStateSubject.next({
+            ...state,
+            activeStepIdx: Math.max(stepIdx - 1, 0),
+            completedStepsIdx: state.completedStepsIdx.filter(
+              (curIdx: number) => curIdx !== stepIdx
+            ),
           })
         )
       )
