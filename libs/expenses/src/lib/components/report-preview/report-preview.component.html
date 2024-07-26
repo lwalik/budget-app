@@ -1,0 +1,3 @@
+<div class="p-2 bg-white shadow-xl rounded-md">
+    <p *ngIf="report$ | async as report">{{ report | json }}</p>
+</div>

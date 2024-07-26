@@ -671,6 +671,15 @@ export class ExpensesState {
     );
   }
 
+  // TODO Ulepszyć
+  getReportPreview(): Observable<
+    ProductReportConfigurationStateModel | undefined
+  > {
+    return this._expensesState$.pipe(
+      map((state: ExpensesStateModel) => state.reportConfiguration)
+    );
+  }
+
   private _updateWalletBalance(
     allExpenses: ExpenseModel[],
     updatedExpense: ExpenseModel

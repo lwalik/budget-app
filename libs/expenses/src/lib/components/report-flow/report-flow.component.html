@@ -1,6 +1,6 @@
 <nav aria-label="Progress">
   <ol role="list"
-      class="divide-y divide-gray-300 rounded-md border border-gray-300 md:flex md:divide-y-0">
+      class="divide-y divide-gray-300 md:flex md:divide-y-0 bg-white shadow-xl rounded-md">
     <li class="relative md:flex md:flex-1"
         *ngFor="let step of steps$ | async; last as isLast">
       <span class="group flex w-full items-center">
@@ -61,6 +61,8 @@
       <lib-dates-report-form (stepCompleted)="onStepCompleted(2)"
                              (stepBack)="onStepBack(2)"></lib-dates-report-form>
     </div>
-    <div *ngSwitchCase="3">Preview</div>
+    <div *ngSwitchCase="3">
+      <lib-report-preview></lib-report-preview>
+    </div>
   </div>
 </ng-container>

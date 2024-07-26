@@ -22,6 +22,7 @@ import {
 import { CategoriesReportFormComponent } from '../categories-report-form/categories-report-form.component';
 import { DatesReportFormComponent } from '../dates-report-form/dates-report-form.component';
 import { ProductsReportFormComponent } from '../products-report-form/products-report-form.component';
+import { ReportPreviewComponent } from '../report-preview/report-preview.component';
 
 @Component({
   selector: 'lib-report-flow',
@@ -32,6 +33,7 @@ import { ProductsReportFormComponent } from '../products-report-form/products-re
     CategoriesReportFormComponent,
     ProductsReportFormComponent,
     DatesReportFormComponent,
+    ReportPreviewComponent,
   ],
   templateUrl: './report-flow.component.html',
   encapsulation: ViewEncapsulation.None,
