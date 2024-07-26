@@ -3,7 +3,7 @@ import {
   compareDatesWithoutTime,
   isAfterDate,
   isBeforeDate,
-} from '../../utils/dates';
+} from '../utils/dates';
 
 export const fromToDatesValidator: ValidatorFn = (
   control: AbstractControl

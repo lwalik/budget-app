@@ -20,6 +20,7 @@ import {
   ReportFlowStepsViewModel,
 } from '../../view-models/report-flow-state.view-model';
 import { CategoriesReportFormComponent } from '../categories-report-form/categories-report-form.component';
+import { DatesReportFormComponent } from '../dates-report-form/dates-report-form.component';
 import { ProductsReportFormComponent } from '../products-report-form/products-report-form.component';
 
 @Component({
@@ -30,6 +31,7 @@ import { ProductsReportFormComponent } from '../products-report-form/products-re
     TranslationPipe,
     CategoriesReportFormComponent,
     ProductsReportFormComponent,
+    DatesReportFormComponent,
   ],
   templateUrl: './report-flow.component.html',
   encapsulation: ViewEncapsulation.None,

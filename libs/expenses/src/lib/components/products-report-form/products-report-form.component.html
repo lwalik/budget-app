@@ -2,7 +2,7 @@
       class="flex flex-col items-center justify-center w-full max-h gap-2 p-2 border-gray-300 border rounded"
       *ngIf="products$ | async as products"
       (ngSubmit)="onProductFormSubmitted()">
-  <div class="w-full flex justify-end items-center">
+  <div class="w-full flex justify-start items-center">
     <button type="button"
             class="btn-warn"
             (click)="onSelectAllClicked()">

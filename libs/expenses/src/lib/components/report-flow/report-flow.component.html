@@ -57,7 +57,10 @@
     <div *ngSwitchCase="1"><lib-products-report-form (stepCompleted)="onStepCompleted(1)"
                                 (stepBack)="onStepBack(1)"></lib-products-report-form>
     </div>
-    <div *ngSwitchCase="2">Dates</div>
+    <div *ngSwitchCase="2">
+      <lib-dates-report-form (stepCompleted)="onStepCompleted(2)"
+                             (stepBack)="onStepBack(2)"></lib-dates-report-form>
+    </div>
     <div *ngSwitchCase="3">Preview</div>
   </div>
 </ng-container>

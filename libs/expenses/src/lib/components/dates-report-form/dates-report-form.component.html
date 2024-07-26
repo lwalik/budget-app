@@ -1,0 +1,35 @@
+<form class="flex flex-col items-center justify-center gap-2 text-primary p-2 border-gray-300 border rounded"
+      [formGroup]="dateForm"
+      (ngSubmit)="onDateFormSubmitted(dateForm)">
+    <div class="flex items-center justify-center gap-2">
+        <label for="from">{{'From' | i18n | async}}</label>
+        <input id="from"
+               type="date"
+               formControlName="fromDate"
+               class="simple-datepicker-input"
+               [ngClass]="{'ring-red-600': dateForm.hasError('wrongDateRange')}" />
+    </div>
+    <div class="flex items-center justify-center gap-2">
+        <label for="to">{{'To' | i18n | async}}</label>
+        <input id="to"
+               type="date"
+               formControlName="toDate"
+               class="simple-datepicker-input"
+               [ngClass]="{'ring-red-600': dateForm.hasError('wrongDateRange')}" />
+    </div>
+
+
+    <div class="flex justify-center items-center gap-2">
+        <button type="button"
+                class="btn-warn"
+                (click)="onBackBtnClicked()">
+            {{ 'Back' | i18n | async }}
+        </button>
+        <button type="submit"
+                [disabled]="!dateForm.valid || !dateForm.dirty"
+                class="btn-warn">
+            <lib-spinner *ngIf="isLoading$ | async"></lib-spinner>
+            {{ 'Next step' | i18n | async }}
+        </button>
+    </div>
+</form>

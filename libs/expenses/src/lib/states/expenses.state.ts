@@ -27,17 +27,17 @@ import { SORT_TYPE } from '../enums/sort-type.enum';
 import { ExpenseProductModel } from '../models/expense-product.model';
 import { ExpenseModel } from '../models/expense.model';
 import { ExpensesStateModel } from '../models/expenses-state.model';
+import { ProductReportConfigurationStateModel } from '../models/product-report-configuration-state.model';
 import { SortModel } from '../models/sort.model';
 import { ExpensesService } from '../services/expenses.service';
+import { CategoriesReportStepItemViewModel } from '../view-models/categories-report-step-item.view-model';
 import { CategorySummaryViewModel } from '../view-models/category-summary.view-model';
 import { ExpensesDataViewModel } from '../view-models/expenses-data.view-model';
 import { HighestExpensesCategoryViewModel } from '../view-models/highest-expenses-category.view-model';
 import { HighestExpenseProductViewModel } from '../view-models/highest-expenses-product.view-model';
 import { PrioritySummaryViewModel } from '../view-models/priority-summary.view-model';
-import { SortListViewModel } from '../view-models/sort-list.view-model';
-import { ProductReportConfigurationStateModel } from '../models/product-report-configuration-state.model';
-import { CategoriesReportStepItemViewModel } from '../view-models/categories-report-step-item.view-model';
 import { ProductReportStepItemViewModel } from '../view-models/product-report-step-item.view-model';
+import { SortListViewModel } from '../view-models/sort-list.view-model';
 
 const initialState: ExpensesStateModel = {
   expenses: [],
@@ -656,8 +656,10 @@ export class ExpensesState {
             : {
                 products: [],
                 categories: [],
-                fromDate: undefined,
-                toDate: undefined,
+                dates: {
+                  fromDate: undefined,
+                  toDate: undefined,
+                },
                 ...config,
               };
         this._expensesStateSubject.next({
