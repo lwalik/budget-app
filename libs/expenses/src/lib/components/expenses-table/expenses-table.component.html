@@ -20,7 +20,7 @@
     </div>
   </div>
   <ng-container *ngIf="expenses$ | async as expenses">
-    <div class="mt-4 sm:w-full grid grid-cols-10 gap-1">
+    <div class="mt-4 sm:w-full grid grid-cols-1 md:grid-cols-10 gap-1">
       <div class="col-span-2 flex flex-col justify-center gap-1 items-start">
         <p>{{ 'Wallet' | i18n | async}}</p>
         <lib-wallet-select-list class="w-full"
