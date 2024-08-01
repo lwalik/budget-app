@@ -15,11 +15,12 @@ import {
   TranslationPipe,
 } from '@budget-app/shared';
 import {
-  Observable,
   combineLatest,
   map,
+  Observable,
   of,
   shareReplay,
+  startWith,
   switchMap,
   take,
   tap,
@@ -27,11 +28,17 @@ import {
 import { ProductModel } from '../../models/product.model';
 import { ProductsState } from '../../states/products.state';
 import { ProductFormModalComponent } from '../product-form-modal/product-form-modal.component';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'lib-products-table',
   standalone: true,
-  imports: [CommonModule, PaginationComponent, TranslationPipe],
+  imports: [
+    CommonModule,
+    PaginationComponent,
+    TranslationPipe,
+    ReactiveFormsModule,
+  ],
   templateUrl: './products-table.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,16 +47,25 @@ export class ProductsTableComponent {
   private readonly _pagination$: Observable<PaginationViewModel> =
     this._paginationUiService.getPagination();
 
-  readonly allProducts$: Observable<ProductModel[]> = this._productsState
-    .getAllProducts()
-    .pipe(
-      shareReplay(1),
-      map((products: ProductModel[]) =>
-        products.sort((a: ProductModel, b: ProductModel) =>
-          a.name > b.name ? 1 : -1
+  readonly searchForm: FormControl = new FormControl('', {
+    nonNullable: true,
+  });
+
+  readonly allProducts$: Observable<ProductModel[]> = combineLatest([
+    this._productsState.getAllProducts(),
+    this.searchForm.valueChanges.pipe(startWith('')),
+  ]).pipe(
+    shareReplay(1),
+    map(([products, search]: [ProductModel[], string]) =>
+      products
+        .filter(
+          (product: ProductModel) =>
+            product.name.toLowerCase().includes(search.toLowerCase()) ||
+            product.category.toLowerCase().includes(search.toLowerCase())
         )
-      )
-    );
+        .sort((a: ProductModel, b: ProductModel) => (a.name > b.name ? 1 : -1))
+    )
+  );
 
   readonly products$: Observable<ProductModel[]> = combineLatest([
     this._pagination$,
