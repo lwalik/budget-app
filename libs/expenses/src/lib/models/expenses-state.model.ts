@@ -3,7 +3,5 @@ import { ProductReportConfigurationStateModel } from './product-report-configura
 
 export interface ExpensesStateModel {
   readonly expenses: ExpenseModel[];
-  readonly reportConfiguration:
-    | ProductReportConfigurationStateModel
-    | undefined;
+  readonly reportConfiguration: ProductReportConfigurationStateModel;
 }

@@ -45,6 +45,7 @@ export class CategoriesReportFormComponent extends LoadingComponent {
     );
 
   @Output() stepCompleted: EventEmitter<void> = new EventEmitter<void>();
+  @Output() stepBack: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private readonly _expensesState: ExpensesState) {
     super();
@@ -53,6 +54,18 @@ export class CategoriesReportFormComponent extends LoadingComponent {
   get isSubmitBtnDisabled(): boolean {
     const selectedCategories: string[] = this._getSelectedCategories();
     return selectedCategories.length === 0;
+  }
+
+  onBackBtnClicked(): void {
+    this._expensesState
+      .patchReportConfiguration({
+        categories: [],
+      })
+      .pipe(take(1))
+      .subscribe(() => {
+        this._updateAllValues(false);
+        this.stepBack.emit();
+      });
   }
 
   onCategoryFormSubmitted(): void {
@@ -75,5 +88,11 @@ export class CategoriesReportFormComponent extends LoadingComponent {
         isSelected ? [...acc, category] : acc,
       []
     );
+  }
+
+  private _updateAllValues(value: boolean): void {
+    Object.keys(this.form.value).forEach((key) => {
+      this.form.get(key)?.setValue(value);
+    });
   }
 }

@@ -39,10 +39,19 @@ import { PrioritySummaryViewModel } from '../view-models/priority-summary.view-m
 import { ProductReportStepItemViewModel } from '../view-models/product-report-step-item.view-model';
 import { SortListViewModel } from '../view-models/sort-list.view-model';
 import { WalletsReportStepItemViewModel } from '../view-models/wallets-report-step-item.view-model';
+import { ReportPreviewViewModel } from '../view-models/report-preview.view-model';
 
 const initialState: ExpensesStateModel = {
   expenses: [],
-  reportConfiguration: undefined,
+  reportConfiguration: {
+    walletsIds: [],
+    products: [],
+    categories: [],
+    dates: {
+      fromDate: undefined,
+      toDate: undefined,
+    },
+  },
 };
 
 @Injectable({ providedIn: 'root' })
@@ -587,9 +596,7 @@ export class ExpensesState {
         return walletsIds.map((id: string) => {
           return {
             id,
-            isSelected:
-              !!state.reportConfiguration &&
-              state.reportConfiguration.walletsIds.includes(id),
+            isSelected: state.reportConfiguration.walletsIds.includes(id),
           };
         });
       })
@@ -615,9 +622,7 @@ export class ExpensesState {
         return categories.map((category: string) => {
           return {
             name: category,
-            isSelected:
-              !!state.reportConfiguration &&
-              state.reportConfiguration.categories.includes(category),
+            isSelected: state.reportConfiguration.categories.includes(category),
           };
         });
       })
@@ -630,9 +635,7 @@ export class ExpensesState {
     return this._expensesState$.pipe(
       map((state: ExpensesStateModel) => {
         const selectedCategories: string[] =
-          !!state.reportConfiguration && !!state.reportConfiguration.categories
-            ? state.reportConfiguration.categories
-            : [];
+          state.reportConfiguration.categories;
         const products: string[] = state.expenses.reduce(
           (total: string[], expense: ExpenseModel) => {
             const curExpenseProducts: string[] = expense.products.reduce(
@@ -657,9 +660,7 @@ export class ExpensesState {
         return products.map((category: string) => {
           return {
             name: category,
-            isSelected:
-              !!state.reportConfiguration &&
-              state.reportConfiguration.products.includes(category),
+            isSelected: state.reportConfiguration.products.includes(category),
           };
         });
       })
@@ -672,22 +673,10 @@ export class ExpensesState {
     return this._expensesState$.pipe(
       take(1),
       tap((state: ExpensesStateModel) => {
-        const updatedConfig: ProductReportConfigurationStateModel =
-          !!state.reportConfiguration
-            ? {
-                ...state.reportConfiguration,
-                ...config,
-              }
-            : {
-                walletsIds: [],
-                products: [],
-                categories: [],
-                dates: {
-                  fromDate: undefined,
-                  toDate: undefined,
-                },
-                ...config,
-              };
+        const updatedConfig: ProductReportConfigurationStateModel = {
+          ...state.reportConfiguration,
+          ...config,
+        };
         this._expensesStateSubject.next({
           ...state,
           reportConfiguration: updatedConfig,
@@ -697,12 +686,97 @@ export class ExpensesState {
     );
   }
 
-  // TODO Ulepszyć
-  getReportPreview(): Observable<
-    ProductReportConfigurationStateModel | undefined
-  > {
+  clearReportConfiguration(): Observable<void> {
     return this._expensesState$.pipe(
-      map((state: ExpensesStateModel) => state.reportConfiguration)
+      take(1),
+      tap((state: ExpensesStateModel) => {
+        const updatedConfig: ProductReportConfigurationStateModel = {
+          walletsIds: [],
+          products: [],
+          categories: [],
+          dates: {
+            fromDate: undefined,
+            toDate: undefined,
+          },
+        };
+        this._expensesStateSubject.next({
+          ...state,
+          reportConfiguration: updatedConfig,
+        });
+      }),
+      map(() => void 0)
+    );
+  }
+
+  getReportPreview(): Observable<ReportPreviewViewModel | null> {
+    return this._expensesState$.pipe(
+      map((state: ExpensesStateModel) => {
+        const reportConfiguration:
+          | ProductReportConfigurationStateModel
+          | undefined = state.reportConfiguration;
+
+        if (!reportConfiguration) {
+          return null;
+        }
+
+        const fromDate: Date | undefined = reportConfiguration.dates.fromDate;
+        const toDate: Date | undefined = reportConfiguration.dates.toDate;
+        const selectedWalletsIds: string[] = reportConfiguration.walletsIds;
+
+        if (!fromDate || !toDate || selectedWalletsIds.length === 0) {
+          return null;
+        }
+
+        const filteredExpenses: ReportPreviewViewModel = state.expenses.reduce(
+          (acc: ReportPreviewViewModel, expense: ExpenseModel) => {
+            if (!selectedWalletsIds.includes(expense.walletId)) {
+              return acc;
+            }
+
+            const filteredProducts: ExpenseProductModel[] =
+              expense.products.filter(
+                (product: ExpenseProductModel) =>
+                  reportConfiguration.categories.includes(product.category) &&
+                  reportConfiguration.products.includes(product.name)
+              );
+
+            if (filteredProducts.length === 0) {
+              return acc;
+            }
+
+            const updatedExpenseTotalPrice: number = filteredProducts.reduce(
+              (total: number, product: ExpenseProductModel) =>
+                total + product.price * product.quantity,
+              0
+            );
+            const updatedExpense: ExpenseModel = {
+              ...expense,
+              products: filteredProducts,
+              totalPrice: updatedExpenseTotalPrice,
+            };
+
+            return {
+              expenses: [...acc.expenses, updatedExpense],
+              totalCost: acc.totalCost + updatedExpenseTotalPrice,
+            };
+          },
+          {
+            expenses: [],
+            totalCost: 0,
+          }
+        );
+
+        return {
+          ...filteredExpenses,
+          expenses: this._sortExpenses(
+            {
+              sortBy: SORT_TYPE.CREATED_AT,
+              direction: SORT_DIRECTION.ASC,
+            },
+            filteredExpenses.expenses
+          ),
+        };
+      })
     );
   }
 

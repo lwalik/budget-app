@@ -17,10 +17,18 @@
       </div>
     </label>
   </div>
-  <button type="submit"
-          [disabled]="isSubmitBtnDisabled"
-          class="btn-warn">
-    <lib-spinner *ngIf="isLoading$ | async"></lib-spinner>
-    {{ 'Next step' | i18n | async }}
-  </button>
+  <div class="flex gap-2">
+    <button type="button"
+            class="btn-warn"
+            (click)="onBackBtnClicked()">
+      {{ 'Back' | i18n | async }}
+    </button>
+    <button type="submit"
+            [disabled]="isSubmitBtnDisabled"
+            class="btn-warn">
+      <lib-spinner *ngIf="isLoading$ | async"></lib-spinner>
+      {{ 'Next step' | i18n | async }}
+    </button>
+  </div>
+
 </form>

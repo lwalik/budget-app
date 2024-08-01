@@ -96,4 +96,11 @@ export class ReportFlowComponent {
       )
       .subscribe();
   }
+
+  onCreateNew(): void {
+    this._stepsStateSubject.next({
+      activeStepIdx: 0,
+      completedStepsIdx: [],
+    });
+  }
 }

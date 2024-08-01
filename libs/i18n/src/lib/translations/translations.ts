@@ -590,4 +590,20 @@ export const translations: TranslationType = {
     pl: 'Wstecz',
     en: 'Back',
   },
+  'Total Cost': {
+    pl: 'Całkowity koszt',
+    en: 'Total Cost',
+  },
+  'A list of all the expenses based on selected parameters.': {
+    pl: 'Lista wszystkich wydatków na podstawie wybranych parametrów.',
+    en: 'A list of all the expenses based on selected parameters.',
+  },
+  'Create new Report': {
+    pl: 'Stwórz nowy Raport',
+    en: 'Create new Report',
+  },
+  'No Expenses to display': {
+    pl: 'Brak wydatków do wyświetlenia',
+    en: 'No Expenses to display',
+  },
 };
