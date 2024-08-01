@@ -23,6 +23,7 @@ import { CategoriesReportFormComponent } from '../categories-report-form/categor
 import { DatesReportFormComponent } from '../dates-report-form/dates-report-form.component';
 import { ProductsReportFormComponent } from '../products-report-form/products-report-form.component';
 import { ReportPreviewComponent } from '../report-preview/report-preview.component';
+import { WalletsReportFormComponent } from '../wallets-report-form/wallets-report-form.component';
 
 @Component({
   selector: 'lib-report-flow',
@@ -34,6 +35,7 @@ import { ReportPreviewComponent } from '../report-preview/report-preview.compone
     ProductsReportFormComponent,
     DatesReportFormComponent,
     ReportPreviewComponent,
+    WalletsReportFormComponent,
   ],
   templateUrl: './report-flow.component.html',
   encapsulation: ViewEncapsulation.None,
@@ -50,7 +52,7 @@ export class ReportFlowComponent {
 
   readonly steps$: Observable<ReportFlowStepItemViewModel[]> = combineLatest([
     this.stepsState$,
-    of(['Categories', 'Products', 'Date Range', 'Preview']),
+    of(['Wallets', 'Categories', 'Products', 'Date Range', 'Preview']),
   ]).pipe(
     map(([stepsState, stepNames]: [ReportFlowStepsViewModel, string[]]) =>
       stepNames.map((name: string, idx: number) => ({

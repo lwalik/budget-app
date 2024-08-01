@@ -38,6 +38,7 @@ import { HighestExpenseProductViewModel } from '../view-models/highest-expenses-
 import { PrioritySummaryViewModel } from '../view-models/priority-summary.view-model';
 import { ProductReportStepItemViewModel } from '../view-models/product-report-step-item.view-model';
 import { SortListViewModel } from '../view-models/sort-list.view-model';
+import { WalletsReportStepItemViewModel } from '../view-models/wallets-report-step-item.view-model';
 
 const initialState: ExpensesStateModel = {
   expenses: [],
@@ -571,6 +572,30 @@ export class ExpensesState {
     );
   }
 
+  getAllExpenseWalletsIdsForReportConfiguration(): Observable<
+    WalletsReportStepItemViewModel[]
+  > {
+    return this._expensesState$.pipe(
+      map((state: ExpensesStateModel) => {
+        const walletsIds: string[] = state.expenses.reduce(
+          (total: string[], expense: ExpenseModel) => {
+            return [...new Set([...total, expense.walletId])];
+          },
+          []
+        );
+
+        return walletsIds.map((id: string) => {
+          return {
+            id,
+            isSelected:
+              !!state.reportConfiguration &&
+              state.reportConfiguration.walletsIds.includes(id),
+          };
+        });
+      })
+    );
+  }
+
   getAllExpenseCategoriesForReportConfiguration(): Observable<
     CategoriesReportStepItemViewModel[]
   > {
@@ -654,6 +679,7 @@ export class ExpensesState {
                 ...config,
               }
             : {
+                walletsIds: [],
                 products: [],
                 categories: [],
                 dates: {

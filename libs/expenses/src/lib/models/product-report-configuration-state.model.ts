@@ -1,4 +1,5 @@
 export interface ProductReportConfigurationStateModel {
+  readonly walletsIds: string[];
   readonly products: string[];
   readonly categories: string[];
   readonly dates: {
