@@ -2,7 +2,7 @@
      *ngIf="sortList$ | async as sortList">
   <p>{{ 'Sort By' | i18n | async}}</p>
   <div class="grid grid-cols-10 gap-1 place-items-center w-full">
-    <lib-simple-select-list class="col-span-6 w-full"
+    <lib-simple-select-list class="col-span-9 md:col-span-6 w-full"
                             [options]="sortList.items"
                             [selectedOption]="sortList.selectedItem"
                             (optionSelected)="onOptionSelected($event)">

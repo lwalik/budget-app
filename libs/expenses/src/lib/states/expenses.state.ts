@@ -771,7 +771,7 @@ export class ExpensesState {
           expenses: this._sortExpenses(
             {
               sortBy: SORT_TYPE.CREATED_AT,
-              direction: SORT_DIRECTION.ASC,
+              direction: SORT_DIRECTION.DESC,
             },
             filteredExpenses.expenses
           ),
