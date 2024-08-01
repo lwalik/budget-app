@@ -28,7 +28,7 @@ import { PrioritySummaryViewModel } from '../../view-models/priority-summary.vie
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LowPriorityExpensesSummaryCardComponent {
-  readonly summary$: Observable<PrioritySummaryViewModel> =
+  readonly summary$: Observable<PrioritySummaryViewModel | null> =
     this._expensesState.getPriorityExpensesSummary(
       EXPENSE_PRODUCT_PRIORITY.LOW
     );

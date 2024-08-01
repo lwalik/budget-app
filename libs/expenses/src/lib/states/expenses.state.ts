@@ -376,9 +376,13 @@ export class ExpensesState {
 
   getPriorityExpensesSummary(
     priority: EXPENSE_PRODUCT_PRIORITY
-  ): Observable<PrioritySummaryViewModel> {
+  ): Observable<PrioritySummaryViewModel | null> {
     return this._expensesState$.pipe(
       map((state: ExpensesStateModel) => {
+        if (state.expenses.length === 0) {
+          return null;
+        }
+
         const now: Date = new Date();
         const lastMonth: Date = new Date(
           now.getFullYear(),

@@ -269,7 +269,7 @@ export const translations: TranslationType = {
     en: 'HIGH',
   },
   'No Expenses to display. Add First Expense.': {
-    pl: 'Brak wydatków do wyświetlenia. Dodaj pierwszy wydanej.',
+    pl: 'Brak wydatków do wyświetlenia. Dodaj pierwszy wydatek.',
     en: 'No Expenses to display. Add First Expense.',
   },
   'Insufficient Balance': {
@@ -605,5 +605,19 @@ export const translations: TranslationType = {
   'No Expenses to display': {
     pl: 'Brak wydatków do wyświetlenia',
     en: 'No Expenses to display',
+  },
+  'You do not have any deposits in the last month. Add your deposits to get a deposits summary.':
+    {
+      pl: 'Nie masz żadnych depozytów w ostatnim miesiącu. Dodaj swoje depozyty, aby uzyskać podsumowanie depozytów.',
+      en: 'You do not have any deposits in the last month. Add your deposits to get a deposits summary.',
+    },
+  'You do not have any expenses in the last month. Add your expenses to get a priority summary.':
+    {
+      pl: 'Nie posiadasz żadnych wydatków w ostatnim miesiącu. Dodaj swoje wydatki aby otrzymać podsumowanie priorytetów.',
+      en: 'You do not have any expenses in the last month. Add your expenses to get a priority summary.',
+    },
+  'You must have a Wallet to add expenses.': {
+    pl: 'Musisz posiadać Portfel aby móc dodawać wydatki.',
+    en: 'You must have a Wallet to add expenses.',
   },
 };

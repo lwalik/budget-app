@@ -1,4 +1,10 @@
 <div class="flex flex-col gap-6">
   <lib-create-report-card></lib-create-report-card>
-  <lib-expenses-table></lib-expenses-table>
+  <lib-expenses-table *libHasWallet="addWalletTemplate"></lib-expenses-table>
+
+  <ng-template #addWalletTemplate>
+    <div class="bg-white rounded-md border-2 border-warn flex items-center justify-center p-12">
+      <p class="text-primary font-bold">{{ 'You must have a Wallet to add expenses.' | i18n | async }}</p>
+    </div>
+  </ng-template>
 </div>

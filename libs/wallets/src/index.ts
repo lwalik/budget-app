@@ -12,3 +12,5 @@ export * from './lib/resolvers/load-wallets.resolver';
 // Providers
 export * from './lib/providers/wallet-balance.provider';
 export * from './lib/providers/incomes-data.provider';
+// Directives
+export * from './lib/directives/has-wallet.directive';
