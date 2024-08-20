@@ -9,7 +9,7 @@
         <button class="btn-error"
                 type="button"
                 (click)="removeProductControl()"
-                [disabled]="pagination.currentIdx === 0">
+                [disabled]="pagination.currentIdx === 0 && pagination.lastPageIdx === 0">
           <svg xmlns="http://www.w3.org/2000/svg"
                fill="none"
                viewBox="0 0 24 24"
