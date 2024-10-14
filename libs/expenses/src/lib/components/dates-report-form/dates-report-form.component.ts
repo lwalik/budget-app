@@ -75,8 +75,8 @@ export class DatesReportFormComponent extends LoadingComponent {
     this._expensesState
       .patchReportConfiguration({
         dates: {
-          fromDate: form.get('fromDate')?.value || undefined,
-          toDate: form.get('toDate')?.value || undefined,
+          fromDate: new Date(form.get('fromDate')?.value) || undefined,
+          toDate: new Date(form.get('toDate')?.value) || undefined,
         },
       })
       .pipe(take(1))

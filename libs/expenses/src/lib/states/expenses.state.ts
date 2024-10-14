@@ -37,9 +37,9 @@ import { HighestExpensesCategoryViewModel } from '../view-models/highest-expense
 import { HighestExpenseProductViewModel } from '../view-models/highest-expenses-product.view-model';
 import { PrioritySummaryViewModel } from '../view-models/priority-summary.view-model';
 import { ProductReportStepItemViewModel } from '../view-models/product-report-step-item.view-model';
+import { ReportPreviewViewModel } from '../view-models/report-preview.view-model';
 import { SortListViewModel } from '../view-models/sort-list.view-model';
 import { WalletsReportStepItemViewModel } from '../view-models/wallets-report-step-item.view-model';
-import { ReportPreviewViewModel } from '../view-models/report-preview.view-model';
 
 const initialState: ExpensesStateModel = {
   expenses: [],
@@ -612,16 +612,15 @@ export class ExpensesState {
   > {
     return this._expensesState$.pipe(
       map((state: ExpensesStateModel) => {
-        const categories: string[] = state.expenses.reduce(
-          (total: string[], expense: ExpenseModel) => {
+        const categories: string[] = state.expenses
+          .reduce((total: string[], expense: ExpenseModel) => {
             const curExpenseCategories: string[] = expense.products.map(
               (product: ExpenseProductModel) => product.category
             );
 
             return [...new Set([...total, ...curExpenseCategories])];
-          },
-          []
-        );
+          }, [])
+          .sort((a, b) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1));
 
         return categories.map((category: string) => {
           return {
@@ -640,8 +639,8 @@ export class ExpensesState {
       map((state: ExpensesStateModel) => {
         const selectedCategories: string[] =
           state.reportConfiguration.categories;
-        const products: string[] = state.expenses.reduce(
-          (total: string[], expense: ExpenseModel) => {
+        const products: string[] = state.expenses
+          .reduce((total: string[], expense: ExpenseModel) => {
             const curExpenseProducts: string[] = expense.products.reduce(
               (acc: string[], product: ExpenseProductModel) => {
                 if (
@@ -657,9 +656,8 @@ export class ExpensesState {
             );
 
             return [...new Set([...total, ...curExpenseProducts])];
-          },
-          []
-        );
+          }, [])
+          .sort((a, b) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1));
 
         return products.map((category: string) => {
           return {
@@ -733,7 +731,17 @@ export class ExpensesState {
 
         const filteredExpenses: ReportPreviewViewModel = state.expenses.reduce(
           (acc: ReportPreviewViewModel, expense: ExpenseModel) => {
-            if (!selectedWalletsIds.includes(expense.walletId)) {
+            const isExpenseIncludedInDates: boolean =
+              !compareDatesWithoutTime(
+                expense.createdAt,
+                fromDate,
+                isBeforeDate
+              ) &&
+              !compareDatesWithoutTime(expense.createdAt, toDate, isAfterDate);
+            if (
+              !selectedWalletsIds.includes(expense.walletId) ||
+              !isExpenseIncludedInDates
+            ) {
               return acc;
             }
 
