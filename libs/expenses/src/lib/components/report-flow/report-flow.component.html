@@ -52,20 +52,25 @@
   <div class="mt-10"
        [ngSwitch]="stepsState.activeStepIdx">
     <div *ngSwitchCase="0">
-      <lib-wallets-report-form (stepCompleted)="onStepCompleted(0)"></lib-wallets-report-form>
+      <lib-wallets-report-form (stepCompleted)="onStepCompleted(0)" />
     </div>
     <div *ngSwitchCase="1">
-      <lib-categories-report-form (stepCompleted)="onStepCompleted(1)" (stepBack)="onStepBack(1)"></lib-categories-report-form>
+      <lib-dates-report-form (stepCompleted)="onStepCompleted(1)"
+                             (stepBack)="onStepBack(1)" />
     </div>
-    <div *ngSwitchCase="2"><lib-products-report-form (stepCompleted)="onStepCompleted(2)"
-                                (stepBack)="onStepBack(2)"></lib-products-report-form>
+    <div *ngSwitchCase="2">
+      <lib-categories-report-form
+        (stepCompleted)="onStepCompleted(2)"
+        (stepBack)="onStepBack(2)" />
+
     </div>
     <div *ngSwitchCase="3">
-      <lib-dates-report-form (stepCompleted)="onStepCompleted(3)"
-                             (stepBack)="onStepBack(3)"></lib-dates-report-form>
+      <lib-products-report-form (stepCompleted)="onStepCompleted(3)"
+                                (stepBack)="onStepBack(3)" />
     </div>
+
     <div *ngSwitchCase="4">
-      <lib-report-preview (createNew)="onCreateNew()"></lib-report-preview>
+      <lib-report-preview (createNew)="onCreateNew()" />
     </div>
   </div>
 </ng-container>

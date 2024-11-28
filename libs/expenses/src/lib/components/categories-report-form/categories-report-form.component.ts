@@ -56,6 +56,10 @@ export class CategoriesReportFormComponent extends LoadingComponent {
     return selectedCategories.length === 0;
   }
 
+  onSelectAllClicked(): void {
+    this._updateAllValues(true);
+  }
+
   onBackBtnClicked(): void {
     this._expensesState
       .patchReportConfiguration({

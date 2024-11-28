@@ -52,7 +52,7 @@ export class ReportFlowComponent {
 
   readonly steps$: Observable<ReportFlowStepItemViewModel[]> = combineLatest([
     this.stepsState$,
-    of(['Wallets', 'Categories', 'Products', 'Date Range', 'Preview']),
+    of(['Wallets', 'Date Range', 'Categories', 'Products', 'Preview']),
   ]).pipe(
     map(([stepsState, stepNames]: [ReportFlowStepsViewModel, string[]]) =>
       stepNames.map((name: string, idx: number) => ({

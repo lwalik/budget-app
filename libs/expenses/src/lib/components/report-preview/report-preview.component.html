@@ -9,6 +9,9 @@
       <p class="text-red-600 text-xl">
         {{ report.totalCost | currency : 'PLN' }}
       </p>
+      <p class="text-blue-500 text-xl">
+        From: {{ report.selectedDates.from | date }} To: {{ report.selectedDates.to | date }}
+      </p>
     </div>
 
     <svg class="h-16 w-16 fill-red-600" viewBox="0 0 512 512">

@@ -37,9 +37,9 @@ import { HighestExpensesCategoryViewModel } from '../view-models/highest-expense
 import { HighestExpenseProductViewModel } from '../view-models/highest-expenses-product.view-model';
 import { PrioritySummaryViewModel } from '../view-models/priority-summary.view-model';
 import { ProductReportStepItemViewModel } from '../view-models/product-report-step-item.view-model';
-import { ReportPreviewViewModel } from '../view-models/report-preview.view-model';
 import { SortListViewModel } from '../view-models/sort-list.view-model';
 import { WalletsReportStepItemViewModel } from '../view-models/wallets-report-step-item.view-model';
+import { ReportPreviewViewModel } from '../view-models/report-preview.view-model';
 
 const initialState: ExpensesStateModel = {
   expenses: [],
@@ -612,8 +612,30 @@ export class ExpensesState {
   > {
     return this._expensesState$.pipe(
       map((state: ExpensesStateModel) => {
+        const selectedWalletsIds: string[] =
+          state.reportConfiguration.walletsIds;
+        const fromDate: Date | undefined =
+          state.reportConfiguration.dates.fromDate;
+        const toDate: Date | undefined = state.reportConfiguration.dates.toDate;
+
         const categories: string[] = state.expenses
           .reduce((total: string[], expense: ExpenseModel) => {
+            if (!selectedWalletsIds.includes(expense.walletId)) {
+              return total;
+            }
+
+            if (
+              !!fromDate &&
+              !!toDate &&
+              !this._isExpenseIncludedInDates(
+                expense.createdAt,
+                fromDate,
+                toDate
+              )
+            ) {
+              return total;
+            }
+
             const curExpenseCategories: string[] = expense.products.map(
               (product: ExpenseProductModel) => product.category
             );
@@ -637,10 +659,32 @@ export class ExpensesState {
   > {
     return this._expensesState$.pipe(
       map((state: ExpensesStateModel) => {
+        const selectedWalletsIds: string[] =
+          state.reportConfiguration.walletsIds;
         const selectedCategories: string[] =
           state.reportConfiguration.categories;
+        const fromDate: Date | undefined =
+          state.reportConfiguration.dates.fromDate;
+        const toDate: Date | undefined = state.reportConfiguration.dates.toDate;
+
         const products: string[] = state.expenses
           .reduce((total: string[], expense: ExpenseModel) => {
+            if (!selectedWalletsIds.includes(expense.walletId)) {
+              return total;
+            }
+
+            if (
+              !!fromDate &&
+              !!toDate &&
+              !this._isExpenseIncludedInDates(
+                expense.createdAt,
+                fromDate,
+                toDate
+              )
+            ) {
+              return total;
+            }
+
             const curExpenseProducts: string[] = expense.products.reduce(
               (acc: string[], product: ExpenseProductModel) => {
                 if (
@@ -731,16 +775,13 @@ export class ExpensesState {
 
         const filteredExpenses: ReportPreviewViewModel = state.expenses.reduce(
           (acc: ReportPreviewViewModel, expense: ExpenseModel) => {
-            const isExpenseIncludedInDates: boolean =
-              !compareDatesWithoutTime(
-                expense.createdAt,
-                fromDate,
-                isBeforeDate
-              ) &&
-              !compareDatesWithoutTime(expense.createdAt, toDate, isAfterDate);
             if (
               !selectedWalletsIds.includes(expense.walletId) ||
-              !isExpenseIncludedInDates
+              !this._isExpenseIncludedInDates(
+                expense.createdAt,
+                fromDate,
+                toDate
+              )
             ) {
               return acc;
             }
@@ -768,6 +809,7 @@ export class ExpensesState {
             };
 
             return {
+              ...acc,
               expenses: [...acc.expenses, updatedExpense],
               totalCost: acc.totalCost + updatedExpenseTotalPrice,
             };
@@ -775,6 +817,10 @@ export class ExpensesState {
           {
             expenses: [],
             totalCost: 0,
+            selectedDates: {
+              from: fromDate,
+              to: toDate,
+            },
           }
         );
 
@@ -878,5 +924,16 @@ export class ExpensesState {
 
       return acc;
     }, []);
+  }
+
+  private _isExpenseIncludedInDates(
+    createdAt: Date,
+    fromDate: Date,
+    toDate: Date
+  ): boolean {
+    return (
+      !compareDatesWithoutTime(createdAt, fromDate, isBeforeDate) &&
+      !compareDatesWithoutTime(createdAt, toDate, isAfterDate)
+    );
   }
 }
