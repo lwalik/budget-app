@@ -6,15 +6,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  BehaviorSubject,
-  combineLatest,
-  map,
-  Observable,
-  shareReplay,
-  take,
-  tap,
-} from 'rxjs';
+import { combineLatest, map, Observable, shareReplay, take } from 'rxjs';
 import { ExpensesState } from '../../states/expenses.state';
 import { ReportPreviewViewModel } from '../../view-models/report-preview.view-model';
 import {
@@ -40,41 +32,11 @@ import { ExpenseModel } from '../../models/expense.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportPreviewComponent {
-  private readonly _selectedCategorySubject: BehaviorSubject<string | null> =
-    new BehaviorSubject<string | null>(null);
-  readonly selectedCategory$: Observable<string | null> =
-    this._selectedCategorySubject.asObservable().pipe(shareReplay(1));
-
   private readonly _pagination$: Observable<PaginationViewModel> =
     this._paginationUiService.getPagination();
 
-  readonly report$: Observable<ReportPreviewViewModel | null> = combineLatest([
-    this.selectedCategory$,
-    this._expensesState.getReportPreview(),
-  ]).pipe(
-    map(
-      ([selectedCategory, report]: [
-        string | null,
-        ReportPreviewViewModel | null
-      ]) => {
-        if (!report) {
-          return report;
-        }
-
-        if (!selectedCategory) {
-          return report;
-        }
-
-        return {
-          ...report,
-          expenses: report.expenses.filter((e) =>
-            e.products.some((p) => p.category === selectedCategory)
-          ),
-        };
-      }
-    ),
-    shareReplay(1)
-  );
+  readonly report$: Observable<ReportPreviewViewModel | null> =
+    this._expensesState.getReportPreview().pipe(shareReplay(1));
 
   readonly filteredExpenses$: Observable<ExpenseModel[]> = combineLatest([
     this.report$,
@@ -115,18 +77,6 @@ export class ReportPreviewComponent {
   }
 
   onCategoryClicked(category: string): void {
-    this.selectedCategory$
-      .pipe(
-        take(1),
-        tap((selectedCategory: string | null) => {
-          if (selectedCategory === category) {
-            this._selectedCategorySubject.next(null);
-            return;
-          }
-
-          this._selectedCategorySubject.next(category);
-        })
-      )
-      .subscribe();
+    this._expensesState.selectPreviewCategory(category).subscribe();
   }
 }

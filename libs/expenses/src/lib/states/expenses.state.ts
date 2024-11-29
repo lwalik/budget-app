@@ -51,6 +51,7 @@ const initialState: ExpensesStateModel = {
       fromDate: undefined,
       toDate: undefined,
     },
+    selectedPreviewCategory: null,
   },
 };
 
@@ -744,6 +745,7 @@ export class ExpensesState {
             fromDate: undefined,
             toDate: undefined,
           },
+          selectedPreviewCategory: null,
         };
         this._expensesStateSubject.next({
           ...state,
@@ -786,11 +788,24 @@ export class ExpensesState {
               return acc;
             }
 
+            expense.products.forEach((product: ExpenseProductModel) => {
+              const productCost: number = product.price * product.quantity;
+              const productCategory: string = product.category;
+              acc.categoriesCostMap[productCategory] = acc.categoriesCostMap[
+                productCategory
+              ]
+                ? acc.categoriesCostMap[productCategory] + productCost
+                : productCost;
+            });
+
             const filteredProducts: ExpenseProductModel[] =
               expense.products.filter(
                 (product: ExpenseProductModel) =>
                   reportConfiguration.categories.includes(product.category) &&
-                  reportConfiguration.products.includes(product.name)
+                  reportConfiguration.products.includes(product.name) &&
+                  (!reportConfiguration.selectedPreviewCategory ||
+                    reportConfiguration.selectedPreviewCategory ===
+                      product.category)
               );
 
             if (filteredProducts.length === 0) {
@@ -800,12 +815,12 @@ export class ExpensesState {
             const updatedExpenseTotalPrice: number = filteredProducts.reduce(
               (total: number, product: ExpenseProductModel) => {
                 const productCost: number = product.price * product.quantity;
-                const productCategory: string = product.category;
-                acc.categoriesCostMap[productCategory] = acc.categoriesCostMap[
-                  productCategory
-                ]
-                  ? acc.categoriesCostMap[productCategory] + productCost
-                  : productCost;
+                // const productCategory: string = product.category;
+                // acc.categoriesCostMap[productCategory] = acc.categoriesCostMap[
+                //   productCategory
+                // ]
+                //   ? acc.categoriesCostMap[productCategory] + productCost
+                //   : productCost;
                 return total + productCost;
               },
               0
@@ -829,8 +844,15 @@ export class ExpensesState {
               from: fromDate,
               to: toDate,
             },
-            categoriesCostMap: {},
+            categoriesCostMap: reportConfiguration.categories.reduce(
+              (acc: Record<string, number>, cur: string) => {
+                acc[cur] = 0;
+                return acc;
+              },
+              {}
+            ),
             categoriesCost: [],
+            selectedCategory: reportConfiguration.selectedPreviewCategory,
           }
         );
 
@@ -848,6 +870,25 @@ export class ExpensesState {
             .sort((a, b) => b.cost - a.cost),
         };
       })
+    );
+  }
+
+  selectPreviewCategory(category: string): Observable<void> {
+    return this._expensesState$.pipe(
+      take(1),
+      tap((state: ExpensesStateModel) =>
+        this._expensesStateSubject.next({
+          ...state,
+          reportConfiguration: {
+            ...state.reportConfiguration,
+            selectedPreviewCategory:
+              state.reportConfiguration.selectedPreviewCategory === category
+                ? null
+                : category,
+          },
+        })
+      ),
+      map(() => void 0)
     );
   }
 

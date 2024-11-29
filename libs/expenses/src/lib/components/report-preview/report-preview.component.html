@@ -29,7 +29,7 @@
           <div class="flex w-16 shrink-0 items-center justify-center rounded-l-md bg-primary text-sm font-medium text-white">{{ idx + 1 }}</div>
           <div
             class="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 hover:bg-warn/75 cursor-pointer"
-            [ngClass]="{'bg-warn': (selectedCategory$ | async) === item.category, 'bg-white': (selectedCategory$ | async) !== item.category}"
+            [ngClass]="{'bg-warn': report.selectedCategory === item.category, 'bg-white': report.selectedCategory !== item.category}"
             (click)="onCategoryClicked(item.category)"
           >
             <div class="flex-1 truncate px-4 py-2 text-sm">

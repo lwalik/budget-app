@@ -12,4 +12,5 @@ export interface ReportPreviewViewModel {
     readonly category: string;
     readonly cost: number;
   }[];
+  readonly selectedCategory: string | null;
 }
