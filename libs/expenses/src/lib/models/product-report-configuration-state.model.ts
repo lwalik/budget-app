@@ -6,5 +6,5 @@ export interface ProductReportConfigurationStateModel {
     readonly fromDate: Date | undefined;
     readonly toDate: Date | undefined;
   };
-  readonly selectedPreviewCategory: string | null;
+  readonly selectedPreviewCategories: string[];
 }

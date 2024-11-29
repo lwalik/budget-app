@@ -51,7 +51,7 @@ const initialState: ExpensesStateModel = {
       fromDate: undefined,
       toDate: undefined,
     },
-    selectedPreviewCategory: null,
+    selectedPreviewCategories: [],
   },
 };
 
@@ -745,7 +745,7 @@ export class ExpensesState {
             fromDate: undefined,
             toDate: undefined,
           },
-          selectedPreviewCategory: null,
+          selectedPreviewCategories: [],
         };
         this._expensesStateSubject.next({
           ...state,
@@ -803,9 +803,10 @@ export class ExpensesState {
                 (product: ExpenseProductModel) =>
                   reportConfiguration.categories.includes(product.category) &&
                   reportConfiguration.products.includes(product.name) &&
-                  (!reportConfiguration.selectedPreviewCategory ||
-                    reportConfiguration.selectedPreviewCategory ===
-                      product.category)
+                  (reportConfiguration.selectedPreviewCategories.length === 0 ||
+                    reportConfiguration.selectedPreviewCategories.includes(
+                      product.category
+                    ))
               );
 
             if (filteredProducts.length === 0) {
@@ -852,7 +853,7 @@ export class ExpensesState {
               {}
             ),
             categoriesCost: [],
-            selectedCategory: reportConfiguration.selectedPreviewCategory,
+            selectedCategories: reportConfiguration.selectedPreviewCategories,
           }
         );
 
@@ -881,10 +882,17 @@ export class ExpensesState {
           ...state,
           reportConfiguration: {
             ...state.reportConfiguration,
-            selectedPreviewCategory:
-              state.reportConfiguration.selectedPreviewCategory === category
-                ? null
-                : category,
+            selectedPreviewCategories:
+              state.reportConfiguration.selectedPreviewCategories.includes(
+                category
+              )
+                ? state.reportConfiguration.selectedPreviewCategories.filter(
+                    (c) => c !== category
+                  )
+                : [
+                    ...state.reportConfiguration.selectedPreviewCategories,
+                    category,
+                  ],
           },
         })
       ),
