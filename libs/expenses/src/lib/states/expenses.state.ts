@@ -798,8 +798,16 @@ export class ExpensesState {
             }
 
             const updatedExpenseTotalPrice: number = filteredProducts.reduce(
-              (total: number, product: ExpenseProductModel) =>
-                total + product.price * product.quantity,
+              (total: number, product: ExpenseProductModel) => {
+                const productCost: number = product.price * product.quantity;
+                const productCategory: string = product.category;
+                acc.categoriesCostMap[productCategory] = acc.categoriesCostMap[
+                  productCategory
+                ]
+                  ? acc.categoriesCostMap[productCategory] + productCost
+                  : productCost;
+                return total + productCost;
+              },
               0
             );
             const updatedExpense: ExpenseModel = {
@@ -821,6 +829,8 @@ export class ExpensesState {
               from: fromDate,
               to: toDate,
             },
+            categoriesCostMap: {},
+            categoriesCost: [],
           }
         );
 
@@ -833,6 +843,9 @@ export class ExpensesState {
             },
             filteredExpenses.expenses
           ),
+          categoriesCost: Object.entries(filteredExpenses.categoriesCostMap)
+            .map(([k, v]) => ({ category: k, cost: v }))
+            .sort((a, b) => b.cost - a.cost),
         };
       })
     );

@@ -6,7 +6,15 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { combineLatest, map, Observable, shareReplay, take } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  map,
+  Observable,
+  shareReplay,
+  take,
+  tap,
+} from 'rxjs';
 import { ExpensesState } from '../../states/expenses.state';
 import { ReportPreviewViewModel } from '../../view-models/report-preview.view-model';
 import {
@@ -15,7 +23,6 @@ import {
   PaginationViewModel,
   TranslationPipe,
 } from '@budget-app/shared';
-import { ExpensesSortComponent } from '../expenses-sort/expenses-sort.component';
 import { WalletNameComponent } from '@budget-app/wallets';
 import { ExpenseModel } from '../../models/expense.model';
 
@@ -25,7 +32,6 @@ import { ExpenseModel } from '../../models/expense.model';
   imports: [
     CommonModule,
     TranslationPipe,
-    ExpensesSortComponent,
     PaginationComponent,
     WalletNameComponent,
   ],
@@ -34,6 +40,11 @@ import { ExpenseModel } from '../../models/expense.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportPreviewComponent {
+  private readonly _selectedCategorySubject: BehaviorSubject<string | null> =
+    new BehaviorSubject<string | null>(null);
+  readonly selectedCategory$: Observable<string | null> =
+    this._selectedCategorySubject.asObservable().pipe(shareReplay(1));
+
   private readonly _pagination$: Observable<PaginationViewModel> =
     this._paginationUiService.getPagination();
 
@@ -43,11 +54,13 @@ export class ReportPreviewComponent {
   readonly filteredExpenses$: Observable<ExpenseModel[]> = combineLatest([
     this.report$,
     this._pagination$,
+    this.selectedCategory$,
   ]).pipe(
     map(
-      ([report, pagination]: [
+      ([report, pagination, selectedCategory]: [
         ReportPreviewViewModel | null,
-        PaginationViewModel
+        PaginationViewModel,
+        string | null
       ]) => {
         if (!report) {
           return [];
@@ -59,7 +72,13 @@ export class ReportPreviewComponent {
             : pagination.limit * (pagination.current - 1);
         const end: number = pagination.current * pagination.limit;
 
-        return report.expenses.slice(start, end);
+        const expenses: ExpenseModel[] = selectedCategory
+          ? report.expenses.filter((e) =>
+              e.products.some((p) => p.category === selectedCategory)
+            )
+          : report.expenses;
+
+        return expenses.slice(start, end);
       }
     )
   );
@@ -76,5 +95,21 @@ export class ReportPreviewComponent {
       .clearReportConfiguration()
       .pipe(take(1))
       .subscribe(() => this.createNew.emit());
+  }
+
+  onCategoryClicked(category: string): void {
+    this.selectedCategory$
+      .pipe(
+        take(1),
+        tap((selectedCategory: string | null) => {
+          if (selectedCategory === category) {
+            this._selectedCategorySubject.next(null);
+            return;
+          }
+
+          this._selectedCategorySubject.next(category);
+        })
+      )
+      .subscribe();
   }
 }

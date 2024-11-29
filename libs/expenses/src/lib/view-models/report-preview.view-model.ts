@@ -7,4 +7,9 @@ export interface ReportPreviewViewModel {
     readonly from: Date;
     readonly to: Date;
   };
+  readonly categoriesCostMap: Record<string, number>;
+  readonly categoriesCost: {
+    readonly category: string;
+    readonly cost: number;
+  }[];
 }
