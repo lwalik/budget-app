@@ -583,8 +583,12 @@ export const translations: TranslationType = {
     en: 'Next',
   },
   'Select All': {
-    pl: 'Zaznacz wszystkio',
+    pl: 'Zaznacz wszystko',
     en: 'Select All',
+  },
+  'Unselect All': {
+    pl: 'Odznacz wszystko',
+    en: 'Unselect All',
   },
   Back: {
     pl: 'Wstecz',

@@ -5,8 +5,8 @@
   <div class="w-full flex justify-start items-center">
     <button type="button"
             class="btn-warn"
-            (click)="onSelectAllClicked()">
-      {{ 'Select All' | i18n | async }}
+            (click)="onToggleAllClicked()">
+      {{ (areAllChecked ? 'Unselect All' : 'Select All') | i18n | async }}
     </button>
   </div>
   <div class="w-full h-80 md:h-auto overflow-y-auto grid grid-cols-2 md:grid-cols-4 gap-2">

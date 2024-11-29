@@ -56,8 +56,8 @@ export class CategoriesReportFormComponent extends LoadingComponent {
     return selectedCategories.length === 0;
   }
 
-  onSelectAllClicked(): void {
-    this._updateAllValues(true);
+  onToggleAllClicked(): void {
+    this._updateAllValues(!this.areAllChecked);
   }
 
   onBackBtnClicked(): void {
@@ -84,6 +84,12 @@ export class CategoriesReportFormComponent extends LoadingComponent {
         this.setLoading(false);
         this.stepCompleted.emit();
       });
+  }
+
+  get areAllChecked(): boolean {
+    const values: boolean[] = Object.values(this.form.value);
+    const selectedValues: boolean[] = values.filter((v) => v);
+    return values.length === selectedValues.length;
   }
 
   private _getSelectedCategories(): string[] {

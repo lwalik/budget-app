@@ -77,8 +77,8 @@ export class ProductsReportFormComponent extends LoadingComponent {
       });
   }
 
-  onSelectAllClicked(): void {
-    this._updateAllValues(true);
+  onToggleAllClicked(): void {
+    this._updateAllValues(!this.areAllChecked);
   }
 
   onBackBtnClicked(): void {
@@ -91,6 +91,12 @@ export class ProductsReportFormComponent extends LoadingComponent {
         this._updateAllValues(false);
         this.stepBack.emit();
       });
+  }
+
+  get areAllChecked(): boolean {
+    const values: boolean[] = Object.values(this.form.value);
+    const selectedValues: boolean[] = values.filter((v) => v);
+    return values.length === selectedValues.length;
   }
 
   private _getSelectedProducts(): string[] {

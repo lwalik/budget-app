@@ -48,19 +48,42 @@ export class ReportPreviewComponent {
   private readonly _pagination$: Observable<PaginationViewModel> =
     this._paginationUiService.getPagination();
 
-  readonly report$: Observable<ReportPreviewViewModel | null> =
-    this._expensesState.getReportPreview().pipe(shareReplay(1));
+  readonly report$: Observable<ReportPreviewViewModel | null> = combineLatest([
+    this.selectedCategory$,
+    this._expensesState.getReportPreview(),
+  ]).pipe(
+    map(
+      ([selectedCategory, report]: [
+        string | null,
+        ReportPreviewViewModel | null
+      ]) => {
+        if (!report) {
+          return report;
+        }
+
+        if (!selectedCategory) {
+          return report;
+        }
+
+        return {
+          ...report,
+          expenses: report.expenses.filter((e) =>
+            e.products.some((p) => p.category === selectedCategory)
+          ),
+        };
+      }
+    ),
+    shareReplay(1)
+  );
 
   readonly filteredExpenses$: Observable<ExpenseModel[]> = combineLatest([
     this.report$,
     this._pagination$,
-    this.selectedCategory$,
   ]).pipe(
     map(
-      ([report, pagination, selectedCategory]: [
+      ([report, pagination]: [
         ReportPreviewViewModel | null,
-        PaginationViewModel,
-        string | null
+        PaginationViewModel
       ]) => {
         if (!report) {
           return [];
@@ -72,13 +95,7 @@ export class ReportPreviewComponent {
             : pagination.limit * (pagination.current - 1);
         const end: number = pagination.current * pagination.limit;
 
-        const expenses: ExpenseModel[] = selectedCategory
-          ? report.expenses.filter((e) =>
-              e.products.some((p) => p.category === selectedCategory)
-            )
-          : report.expenses;
-
-        return expenses.slice(start, end);
+        return report.expenses.slice(start, end);
       }
     )
   );
