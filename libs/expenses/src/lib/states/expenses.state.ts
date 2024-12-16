@@ -37,9 +37,9 @@ import { HighestExpensesCategoryViewModel } from '../view-models/highest-expense
 import { HighestExpenseProductViewModel } from '../view-models/highest-expenses-product.view-model';
 import { PrioritySummaryViewModel } from '../view-models/priority-summary.view-model';
 import { ProductReportStepItemViewModel } from '../view-models/product-report-step-item.view-model';
+import { ReportPreviewViewModel } from '../view-models/report-preview.view-model';
 import { SortListViewModel } from '../view-models/sort-list.view-model';
 import { WalletsReportStepItemViewModel } from '../view-models/wallets-report-step-item.view-model';
-import { ReportPreviewViewModel } from '../view-models/report-preview.view-model';
 
 const initialState: ExpensesStateModel = {
   expenses: [],
@@ -788,7 +788,14 @@ export class ExpensesState {
               return acc;
             }
 
-            expense.products.forEach((product: ExpenseProductModel) => {
+            const filteredProducts: ExpenseProductModel[] =
+              expense.products.filter(
+                (product: ExpenseProductModel) =>
+                  reportConfiguration.categories.includes(product.category) &&
+                  reportConfiguration.products.includes(product.name)
+              );
+
+            filteredProducts.forEach((product: ExpenseProductModel) => {
               const productCost: number = product.price * product.quantity;
               const productCategory: string = product.category;
               acc.categoriesCostMap[productCategory] = acc.categoriesCostMap[
@@ -798,37 +805,30 @@ export class ExpensesState {
                 : productCost;
             });
 
-            const filteredProducts: ExpenseProductModel[] =
-              expense.products.filter(
+            const filteredPreviewProducts: ExpenseProductModel[] =
+              filteredProducts.filter(
                 (product: ExpenseProductModel) =>
-                  reportConfiguration.categories.includes(product.category) &&
-                  reportConfiguration.products.includes(product.name) &&
-                  (reportConfiguration.selectedPreviewCategories.length === 0 ||
-                    reportConfiguration.selectedPreviewCategories.includes(
-                      product.category
-                    ))
+                  reportConfiguration.selectedPreviewCategories.length === 0 ||
+                  reportConfiguration.selectedPreviewCategories.includes(
+                    product.category
+                  )
               );
 
-            if (filteredProducts.length === 0) {
+            if (filteredPreviewProducts.length === 0) {
               return acc;
             }
 
-            const updatedExpenseTotalPrice: number = filteredProducts.reduce(
-              (total: number, product: ExpenseProductModel) => {
-                const productCost: number = product.price * product.quantity;
-                // const productCategory: string = product.category;
-                // acc.categoriesCostMap[productCategory] = acc.categoriesCostMap[
-                //   productCategory
-                // ]
-                //   ? acc.categoriesCostMap[productCategory] + productCost
-                //   : productCost;
-                return total + productCost;
-              },
-              0
-            );
+            const updatedExpenseTotalPrice: number =
+              filteredPreviewProducts.reduce(
+                (total: number, product: ExpenseProductModel) => {
+                  const productCost: number = product.price * product.quantity;
+                  return total + productCost;
+                },
+                0
+              );
             const updatedExpense: ExpenseModel = {
               ...expense,
-              products: filteredProducts,
+              products: filteredPreviewProducts,
               totalPrice: updatedExpenseTotalPrice,
             };
 
