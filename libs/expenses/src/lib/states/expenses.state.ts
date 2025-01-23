@@ -107,7 +107,7 @@ export class ExpensesState {
   }
 
   addExpense(
-    expense: Omit<ExpenseModel, 'id' | 'ownerId' | 'expenseId'>
+    expense: Omit<ExpenseModel, 'ownerId' | 'expenseId'>
   ): Observable<void> {
     return combineLatest([
       this._userContext.getUserId(),
