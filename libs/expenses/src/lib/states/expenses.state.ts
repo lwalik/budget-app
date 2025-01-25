@@ -425,17 +425,11 @@ export class ExpensesState {
             { name: '', price: 0 }
           );
 
-        const totalCostInCurrentMonth: number = productsInCurrentMonth.reduce(
-          (total: number, cur: ExpenseProductModel) =>
-            total + cur.price * cur.quantity,
-          0
+        const totalCostInCurrentMonth: number = this._getProductsTotalPrice(
+          productsInCurrentMonth
         );
-
-        const totalCostInLastMonth: number = productsInLastMonth.reduce(
-          (total: number, cur: ExpenseProductModel) =>
-            total + cur.price * cur.quantity,
-          0
-        );
+        const totalCostInLastMonth: number =
+          this._getProductsTotalPrice(productsInLastMonth);
 
         return {
           totalCost: totalCostInCurrentMonth,
@@ -761,7 +755,6 @@ export class ExpensesState {
         const reportConfiguration:
           | ProductReportConfigurationStateModel
           | undefined = state.reportConfiguration;
-
         if (!reportConfiguration) {
           return null;
         }
@@ -788,43 +781,26 @@ export class ExpensesState {
             }
 
             const filteredProducts: ExpenseProductModel[] =
-              expense.products.filter(
-                (product: ExpenseProductModel) =>
-                  reportConfiguration.categories.includes(product.category) &&
-                  reportConfiguration.products.includes(product.name)
+              this._getProductByConfiguration(
+                expense.products,
+                reportConfiguration
               );
 
             filteredProducts.forEach((product: ExpenseProductModel) => {
-              const productCost: number = product.price * product.quantity;
-              const productCategory: string = product.category;
-              acc.categoriesCostMap[productCategory] = acc.categoriesCostMap[
-                productCategory
-              ]
-                ? acc.categoriesCostMap[productCategory] + productCost
-                : productCost;
+              this._fillCategoriesCostMap(acc.categoriesCostMap, product);
             });
 
             const filteredPreviewProducts: ExpenseProductModel[] =
-              filteredProducts.filter(
-                (product: ExpenseProductModel) =>
-                  reportConfiguration.selectedPreviewCategories.length === 0 ||
-                  reportConfiguration.selectedPreviewCategories.includes(
-                    product.category
-                  )
+              this._getProductsIncludedInReportPreview(
+                filteredProducts,
+                reportConfiguration
               );
-
             if (filteredPreviewProducts.length === 0) {
               return acc;
             }
 
             const updatedExpenseTotalPrice: number =
-              filteredPreviewProducts.reduce(
-                (total: number, product: ExpenseProductModel) => {
-                  const productCost: number = product.price * product.quantity;
-                  return total + productCost;
-                },
-                0
-              );
+              this._getProductsTotalPrice(filteredPreviewProducts);
             const updatedExpense: ExpenseModel = {
               ...expense,
               products: filteredPreviewProducts,
@@ -840,16 +816,9 @@ export class ExpensesState {
           {
             expenses: [],
             totalCost: 0,
-            selectedDates: {
-              from: fromDate,
-              to: toDate,
-            },
-            categoriesCostMap: reportConfiguration.categories.reduce(
-              (acc: Record<string, number>, cur: string) => {
-                acc[cur] = 0;
-                return acc;
-              },
-              {}
+            selectedDates: { from: fromDate, to: toDate },
+            categoriesCostMap: this._getInitialCategoriesCostMap(
+              reportConfiguration.categories
             ),
             categoriesCost: [],
             selectedCategories: reportConfiguration.selectedPreviewCategories,
@@ -859,10 +828,7 @@ export class ExpensesState {
         return {
           ...filteredExpenses,
           expenses: this._sortExpenses(
-            {
-              sortBy: SORT_TYPE.CREATED_AT,
-              direction: SORT_DIRECTION.DESC,
-            },
+            { sortBy: SORT_TYPE.CREATED_AT, direction: SORT_DIRECTION.DESC },
             filteredExpenses.expenses
           ),
           categoriesCost: Object.entries(filteredExpenses.categoriesCostMap)
@@ -897,6 +863,55 @@ export class ExpensesState {
       ),
       map(() => void 0)
     );
+  }
+
+  private _getProductByConfiguration(
+    products: ExpenseProductModel[],
+    config: ProductReportConfigurationStateModel
+  ): ExpenseProductModel[] {
+    return products.filter(
+      (product: ExpenseProductModel) =>
+        config.categories.includes(product.category) &&
+        config.products.includes(product.name)
+    );
+  }
+
+  private _getProductsIncludedInReportPreview(
+    products: ExpenseProductModel[],
+    config: ProductReportConfigurationStateModel
+  ): ExpenseProductModel[] {
+    return products.filter(
+      (product: ExpenseProductModel) =>
+        config.selectedPreviewCategories.length === 0 ||
+        config.selectedPreviewCategories.includes(product.category)
+    );
+  }
+
+  private _getProductsTotalPrice(products: ExpenseProductModel[]): number {
+    return products.reduce((total: number, product: ExpenseProductModel) => {
+      const productCost: number = product.price * product.quantity;
+      return total + productCost;
+    }, 0);
+  }
+
+  private _getInitialCategoriesCostMap(
+    categories: string[]
+  ): Record<string, number> {
+    return categories.reduce((acc: Record<string, number>, cur: string) => {
+      acc[cur] = 0;
+      return acc;
+    }, {});
+  }
+
+  private _fillCategoriesCostMap(
+    categoriesCostMap: Record<string, number>,
+    product: ExpenseProductModel
+  ): void {
+    const productCost: number = product.price * product.quantity;
+    const productCategory: string = product.category;
+    categoriesCostMap[productCategory] = categoriesCostMap[productCategory]
+      ? categoriesCostMap[productCategory] + productCost
+      : productCost;
   }
 
   private _updateWalletBalance(
