@@ -53,7 +53,7 @@ export class ProductFormModalComponent
 {
   readonly header: string = this._dialogData.isEdit
     ? 'Update Product'
-    : 'New Product';
+    : 'Add Product';
 
   readonly categoryList$: Observable<string[]> = this._productsState
     .getCategoriesList()
