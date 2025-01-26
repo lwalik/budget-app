@@ -111,6 +111,10 @@ export const translations: TranslationType = {
       pl: 'Lista wszystkich produktów na koncie wraz z ich nazwą i kategorią.',
       en: 'A list of all the products in your account including their name and category.',
     },
+  product: {
+    pl: 'produkt',
+    en: 'product',
+  },
   'Add Product': {
     pl: 'Dodaj Produkt',
     en: 'Add Product',
@@ -492,6 +496,10 @@ export const translations: TranslationType = {
   'The expense has been removed': {
     pl: 'Wydatek został usunięty',
     en: 'The expense has been removed',
+  },
+  'The product has not been removed': {
+    pl: 'Produkt nie został usunięty',
+    en: 'The product has not been removed',
   },
   'The wallet has not been removed': {
     pl: 'Portfel nie został usunięty',

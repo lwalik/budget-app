@@ -3,11 +3,15 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  Inject,
   ViewEncapsulation,
 } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
   ConfirmationModalComponent,
   ConfirmationModalViewModel,
+  GET_TRANSLATION,
+  GetTranslation,
   NotificationsService,
   PaginationComponent,
   PaginationUiService,
@@ -28,7 +32,6 @@ import {
 import { ProductModel } from '../../models/product.model';
 import { ProductsState } from '../../states/products.state';
 import { ProductFormModalComponent } from '../product-form-modal/product-form-modal.component';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'lib-products-table',
@@ -85,7 +88,8 @@ export class ProductsTableComponent {
     private readonly _productsState: ProductsState,
     private readonly _dialog: Dialog,
     private readonly _paginationUiService: PaginationUiService,
-    private readonly _notificationsService: NotificationsService
+    private readonly _notificationsService: NotificationsService,
+    @Inject(GET_TRANSLATION) private readonly _getTranslation: GetTranslation
   ) {}
 
   onAddProductBtnClicked(): void {
@@ -112,32 +116,54 @@ export class ProductsTableComponent {
   }
 
   onDeleteProductBtnClicked(product: ProductModel): void {
-    const dialogData: ConfirmationModalViewModel = {
-      header: 'Confirm',
-      text: `Are you sure you want to remove "${product.name}" Product?`,
-    };
-    const dialogRef: DialogRef<boolean | undefined> = this._dialog.open<
-      boolean | undefined
-    >(ConfirmationModalComponent, {
-      hasBackdrop: true,
-      data: dialogData,
-    });
-    dialogRef.closed
+    this._getTranslation
+      .getAllTranslations([
+        'Are you sure you want to remove',
+        `"${product.name}"`,
+        'product',
+        '?',
+      ])
       .pipe(
         take(1),
-        switchMap((isConfirmed: boolean | undefined) =>
-          isConfirmed
-            ? this._productsState.deleteProduct(product.productId).pipe(
-                take(1),
-                tap(() =>
-                  this._notificationsService.openSuccessNotification(
-                    'The product has been removed'
+        map((translations: string[]) => {
+          const dialogData: ConfirmationModalViewModel = {
+            header: 'Confirm',
+            text: translations.join(' '),
+          };
+          const dialogRef: DialogRef<boolean | undefined> = this._dialog.open<
+            boolean | undefined
+          >(ConfirmationModalComponent, {
+            hasBackdrop: true,
+            data: dialogData,
+          });
+
+          return dialogRef;
+        }),
+        switchMap((dialogRef: DialogRef<boolean | undefined>) =>
+          dialogRef.closed.pipe(
+            take(1),
+            switchMap((isConfirmed: boolean | undefined) =>
+              isConfirmed
+                ? this._productsState.deleteProduct(product.productId).pipe(
+                    take(1),
+                    tap(() =>
+                      this._notificationsService.openSuccessNotification(
+                        'The product has been removed'
+                      )
+                    )
                   )
-                )
-              )
-            : of(void 0)
+                : of(void 0)
+            )
+          )
         )
       )
-      .subscribe();
+      .subscribe({
+        error: () => {
+          this._notificationsService.openFailureNotification(
+            'The product has not been removed',
+            'Try again later'
+          );
+        },
+      });
   }
 }
