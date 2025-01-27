@@ -119,6 +119,10 @@ export const translations: TranslationType = {
     pl: 'Dodaj Produkt',
     en: 'Add Product',
   },
+  'Update Product': {
+    pl: 'Edytuj Produkt',
+    en: 'Update Product',
+  },
   Category: {
     pl: 'Kategoria',
     en: 'Category',
