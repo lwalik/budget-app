@@ -292,6 +292,18 @@ export const translations: TranslationType = {
     pl: 'Cena jest wymagana',
     en: 'Price is required',
   },
+  'Password is required': {
+    pl: 'Hasło jest wymagane',
+    en: 'Password is required',
+  },
+  'Confirm Password is required': {
+    pl: 'Potwierdzenie hasła jest wymagane',
+    en: 'Confirm Password is required',
+  },
+  'Email is required': {
+    pl: 'Email jest wymagany',
+    en: 'Email is required',
+  },
   'Update Expense': {
     pl: 'Aktualizacja wydatku',
     en: 'Update Expense',
