@@ -2,6 +2,8 @@
 
 # Nazwa aplikacji: BudgetApp
 
+Projekt zrealizowany z wykorzystaniem framework Angular.
+
 # Wymagania w celu uruchomienia aplikacji
 
 1. node v22.12.0
